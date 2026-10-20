@@ -156,7 +156,10 @@ def extract_tags(customer_id, chat, names=()):
     user = f"customer_id: {customer_id}\nChat history:\n" + "\n".join(lines)
     out = complete_json(EXTRACT_SYSTEM, user)
     out["customer_id"] = customer_id
-    out["tags"] = [t for t in out.get("tags", []) if t.get("type") in TAG_TYPES and t.get("evidence")]
+    # Keep only tags whose evidence is really quoted from the chat (no invented evidence)
+    chat_text = " ".join(lines).lower()
+    out["tags"] = [t for t in out.get("tags", []) if t.get("type") in TAG_TYPES and t.get("evidence")
+                   and t["evidence"].strip(" .\"'“”").lower() in chat_text]
     return out
 
 
