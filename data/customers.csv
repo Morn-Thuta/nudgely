@@ -1,0 +1,31 @@
+customer_id,name,channel,mantago_client_id,p_no_msg,p_msg,uplift,label,visits_per_month,avg_spend_sgd,days_since_last_visit,lenta_row
+C001,Aisha Rahman,whatsapp,,0.2833,0.3948,0.1116,Persuadable,4.4,62.85,18,385180
+C002,Marcus Lim,whatsapp,,0.2911,0.401,0.1099,Persuadable,4.7,65.73,12,58143
+C003,Priya Nair,whatsapp,,0.6592,0.7668,0.1076,Persuadable,9.5,26.31,10,658158
+C004,Daniel Tan,whatsapp,,0.2727,0.3501,0.0774,Persuadable,3.7,48.02,16,21920
+C005,Siti Nurhaliza Osman,whatsapp,,0.3189,0.3673,0.0484,Persuadable,4.6,32.97,15,339006
+C006,Kelvin Ong,whatsapp,,0.0975,0.1455,0.048,Persuadable,1.2,45.19,42,491673
+C007,Meera Pillai,whatsapp,,0.1419,0.1777,0.0358,Persuadable,2.4,22.25,19,252120
+C008,Jason Goh,whatsapp,,0.1883,0.2223,0.034,Persuadable,3.8,87.59,16,580154
+C009,Nurul Huda,whatsapp,,0.0751,0.1062,0.0312,Persuadable,1.2,31.13,40,596080
+C010,Cheryl Teo,whatsapp,,0.191,0.2194,0.0283,Persuadable,2.7,65.38,17,482518
+C011,Ravi Kumar,whatsapp,,0.0184,0.0255,0.0071,Lost Cause,1.0,37.53,46,524562
+C012,Grace Chua,whatsapp,,0.0213,0.0262,0.0049,Lost Cause,0.9,80.56,50,356811
+C013,Farid Ismail,whatsapp,,0.0218,0.0247,0.0029,Lost Cause,0.8,64.67,62,476714
+C014,Wei Ling Ng,whatsapp,,0.0314,0.0331,0.0018,Lost Cause,0.3,24.87,120,162855
+C015,Arjun Menon,whatsapp,,0.0257,0.0265,0.0008,Lost Cause,0.7,78.38,71,444666
+C016,Hui Min Koh,whatsapp,,0.236,0.2355,-0.0005,Sure Thing,4.1,85.87,19,583322
+C017,Zainal Abidin,whatsapp,,0.022,0.0213,-0.0007,Lost Cause,0.2,82.79,120,151811
+C018,Rachel Seah,whatsapp,,0.0239,0.0221,-0.0018,Lost Cause,0.5,57.73,91,623206
+C019,Vikram Singh,whatsapp,,0.0552,0.052,-0.0032,Lost Cause,0.2,25.91,120,111867
+C020,Joanne Lee,whatsapp,,0.0696,0.0604,-0.0092,Lost Cause,0.6,29.43,85,93471
+C021,Hafiz Rahim,whatsapp,,0.3406,0.3299,-0.0107,Sure Thing,4.1,84.59,15,191399
+C022,Michelle Yeo,whatsapp,,0.163,0.1505,-0.0126,Sure Thing,2.5,56.42,24,411667
+C023,Suresh Raman,whatsapp,,0.154,0.1386,-0.0154,Sure Thing,1.8,28.54,25,442680
+C024,Emily Wong,whatsapp,,0.0906,0.072,-0.0186,Lost Cause,1.8,81.3,28,306062
+C025,Iskandar Yusof,whatsapp,,0.2055,0.187,-0.0186,Sure Thing,3.4,63.12,14,609042
+C026,Pei Shan Lau,whatsapp,,0.1339,0.1123,-0.0217,Sure Thing,2.2,57.73,24,296837
+C027,Lakshmi Devi,whatsapp,,0.1423,0.1128,-0.0295,Sure Thing,0.9,43.22,50,652952
+C028,Benjamin Ho,whatsapp,,0.1675,0.1222,-0.0452,Sure Thing,2.4,45.82,22,77419
+C029,Amirah Salleh,whatsapp,,0.6796,0.6277,-0.0519,Sure Thing,9.9,32.96,12,539045
+C030,Terence Quek,whatsapp,,0.2827,0.2006,-0.0821,Sure Thing,4.4,17.85,14,142967

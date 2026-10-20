@@ -1,0 +1,112 @@
+{
+  "dataset": "Lenta (687k grocery customers, SMS test)",
+  "features_dropped": [
+    "gender",
+    "age",
+    "children"
+  ],
+  "train_sample": 0.5,
+  "n_test": 103055,
+  "visit_rate_no_msg": 0.1025786358297738,
+  "visit_rate_msg": 0.11012576275654594,
+  "uplift_at_30": 0.013103879690528814,
+  "qini_auc": 0.00991630147129725,
+  "top30_capture_share": 0.5285976433398111,
+  "label_thresholds": {
+    "uplift_top30": 0.009445958443335286,
+    "p_no_msg_top30": 0.10720477363228123
+  },
+  "label_counts": {
+    "Lost Cause": 55688,
+    "Persuadable": 30917,
+    "Sure Thing": 16450
+  },
+  "deciles": [
+    {
+      "decile": 1,
+      "n": 10306,
+      "visit_rate_msg": 0.2845161290322581,
+      "visit_rate_no_msg": 0.26173708920187794,
+      "observed_uplift": 0.022779039830380154,
+      "mean_predicted_uplift": 0.07088523210700969
+    },
+    {
+      "decile": 2,
+      "n": 10305,
+      "visit_rate_msg": 0.14841849148418493,
+      "visit_rate_no_msg": 0.13822115384615385,
+      "observed_uplift": 0.010197337638031073,
+      "mean_predicted_uplift": 0.0250624903077001
+    },
+    {
+      "decile": 3,
+      "n": 10306,
+      "visit_rate_msg": 0.10176705791306591,
+      "visit_rate_no_msg": 0.09439874657265962,
+      "observed_uplift": 0.007368311340406289,
+      "mean_predicted_uplift": 0.013127420104332438
+    },
+    {
+      "decile": 4,
+      "n": 10305,
+      "visit_rate_msg": 0.0717895555267591,
+      "visit_rate_no_msg": 0.07148377125193199,
+      "observed_uplift": 0.0003057842748271089,
+      "mean_predicted_uplift": 0.006942493727876538
+    },
+    {
+      "decile": 5,
+      "n": 10306,
+      "visit_rate_msg": 0.05068762278978389,
+      "visit_rate_no_msg": 0.04567577686259828,
+      "observed_uplift": 0.005011845927185614,
+      "mean_predicted_uplift": 0.0034813816331011626
+    },
+    {
+      "decile": 6,
+      "n": 10305,
+      "visit_rate_msg": 0.037190618115848124,
+      "visit_rate_no_msg": 0.027820710973724884,
+      "observed_uplift": 0.00936990714212324,
+      "mean_predicted_uplift": 0.0010928432126228714
+    },
+    {
+      "decile": 7,
+      "n": 10306,
+      "visit_rate_msg": 0.034447034447034446,
+      "visit_rate_no_msg": 0.03715170278637771,
+      "observed_uplift": -0.002704668339343262,
+      "mean_predicted_uplift": -0.000405962833978248
+    },
+    {
+      "decile": 8,
+      "n": 10305,
+      "visit_rate_msg": 0.06385434030003846,
+      "visit_rate_no_msg": 0.05985634477254589,
+      "observed_uplift": 0.003997995527492575,
+      "mean_predicted_uplift": -0.0034869481008934712
+    },
+    {
+      "decile": 9,
+      "n": 10306,
+      "visit_rate_msg": 0.09243048403707518,
+      "visit_rate_no_msg": 0.09456264775413711,
+      "observed_uplift": -0.00213216371706193,
+      "mean_predicted_uplift": -0.01087305941094946
+    },
+    {
+      "decile": 10,
+      "n": 10305,
+      "visit_rate_msg": 0.21499676793794442,
+      "visit_rate_no_msg": 0.2,
+      "observed_uplift": 0.01499676793794441,
+      "mean_predicted_uplift": -0.04592158501647209
+    }
+  ],
+  "top30_capture_share_alt": 0.5285976433398111,
+  "top30_capture_ci90": [
+    0.3123052587027276,
+    0.8856139432286982
+  ],
+  "top30_capture_share_deciles": 0.5831161529883283
+}

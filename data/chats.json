@@ -1,0 +1,149 @@
+{
+  "C001": [
+    {"from": "customer", "text": "Hi, can tell me when oat milk is back? Been out for 2 weeks already", "date": "2026-09-28"},
+    {"from": "store", "text": "Sorry ah! Supplier delay. We'll let you know once it's in", "date": "2026-09-28"},
+    {"from": "customer", "text": "Ok thanks. Also planning my son's birthday party end Oct, you all got party snack packs?", "date": "2026-09-30"},
+    {"from": "store", "text": "Yes we have! $12 and $20 sizes", "date": "2026-09-30"}
+  ],
+  "C002": [
+    {"from": "customer", "text": "My order supposed to come 4pm, now 7pm still nothing", "date": "2026-10-02"},
+    {"from": "store", "text": "So sorry Marcus, driver got stuck. It's on the way now", "date": "2026-10-02"},
+    {"from": "customer", "text": "Reached already but the frozen dumplings all soft. Not happy leh", "date": "2026-10-02"},
+    {"from": "store", "text": "Really sorry about that. We'll do better", "date": "2026-10-03"}
+  ],
+  "C003": [
+    {"from": "customer", "text": "Hello, Deepavali coming, you all bring in ghee and the spice packs again this year?", "date": "2026-10-05"},
+    {"from": "store", "text": "Yes! Deepavali ghee and spice packs coming in mid Oct", "date": "2026-10-05"},
+    {"from": "customer", "text": "Great, I need a lot, cooking for the whole family", "date": "2026-10-05"}
+  ],
+  "C004": [
+    {"from": "customer", "text": "Got durian this season or not?", "date": "2026-09-20"},
+    {"from": "store", "text": "Seasonal durian in stock now, limited boxes", "date": "2026-09-20"},
+    {"from": "customer", "text": "Nice. Also your frozen dumplings which brand ah? My kids like", "date": "2026-09-21"},
+    {"from": "store", "text": "Our own Kampung Fresh brand, pork and chive", "date": "2026-09-21"}
+  ],
+  "C005": [
+    {"from": "customer", "text": "Assalamualaikum, free-range eggs finish already?", "date": "2026-09-25"},
+    {"from": "store", "text": "Waalaikumsalam, yes sold out, next batch next week", "date": "2026-09-25"},
+    {"from": "customer", "text": "Ok please tell me when come, I only buy those", "date": "2026-09-25"}
+  ],
+  "C006": [
+    {"from": "customer", "text": "Why your eggs more ex than NTUC ah", "date": "2026-09-18"},
+    {"from": "store", "text": "Ours are free-range from Malaysia farms, but we hear you", "date": "2026-09-18"},
+    {"from": "customer", "text": "Ok la quality is good. Just delivery fee also quite ex", "date": "2026-09-18"}
+  ],
+  "C007": [
+    {"from": "customer", "text": "Hi! Office potluck next Friday, you all got party snack packs?", "date": "2026-10-08"},
+    {"from": "store", "text": "Yes we do, $12 and $20 sizes, can deliver to office", "date": "2026-10-08"},
+    {"from": "customer", "text": "Ok let me check with colleagues how many people first", "date": "2026-10-08"}
+  ],
+  "C008": [
+    {"from": "customer", "text": "If I order Gardenia bread at 1pm can reach today?", "date": "2026-09-15"},
+    {"from": "store", "text": "Yes, same-day delivery for orders before 2pm", "date": "2026-09-15"},
+    {"from": "customer", "text": "Ok good to know", "date": "2026-09-15"}
+  ],
+  "C009": [
+    {"from": "customer", "text": "Delivery came 2 hours late and the ice cream melted", "date": "2026-09-27"},
+    {"from": "store", "text": "We're very sorry Nurul. We'll refund the ice cream", "date": "2026-09-27"},
+    {"from": "customer", "text": "Ok thanks for the refund. Hope next time ok", "date": "2026-09-28"}
+  ],
+  "C010": [
+    {"from": "customer", "text": "Pokka green tea carton got stock?", "date": "2026-10-01"},
+    {"from": "store", "text": "Out for now, restocking soon", "date": "2026-10-01"},
+    {"from": "customer", "text": "Ok I wait. Usually I buy 2 cartons a month", "date": "2026-10-01"}
+  ],
+  "C011": [
+    {"from": "customer", "text": "Do you deliver to Jurong West?", "date": "2026-08-10"},
+    {"from": "store", "text": "Sorry, we only deliver within Tampines and Pasir Ris for now", "date": "2026-08-10"}
+  ],
+  "C012": [
+    {"from": "customer", "text": "Your opening hours on Sunday?", "date": "2026-07-19"},
+    {"from": "store", "text": "8am to 9pm daily", "date": "2026-07-19"},
+    {"from": "customer", "text": "Ok thanks", "date": "2026-07-19"}
+  ],
+  "C013": [
+    {"from": "customer", "text": "Your rice quite ex compared to supermarket", "date": "2026-08-02"},
+    {"from": "store", "text": "Thanks for the feedback, ours is premium Thai jasmine", "date": "2026-08-02"},
+    {"from": "customer", "text": "I just buy the cheap one la", "date": "2026-08-02"}
+  ],
+  "C014": [
+    {"from": "customer", "text": "Hi I moved to Woodlands already, can remove me from list?", "date": "2026-06-30"},
+    {"from": "store", "text": "Noted, thanks for shopping with us all these years!", "date": "2026-06-30"}
+  ],
+  "C015": [
+    {"from": "customer", "text": "Got kai lan today?", "date": "2026-08-22"},
+    {"from": "store", "text": "Yes fresh kai lan in this morning", "date": "2026-08-22"}
+  ],
+  "C016": [
+    {"from": "customer", "text": "Morning! The usual please, 2 loaves Gardenia and kai lan", "date": "2026-10-10"},
+    {"from": "store", "text": "Morning Hui Min! Will pack for you, ready at 10", "date": "2026-10-10"},
+    {"from": "customer", "text": "Thank you, you all always so fast", "date": "2026-10-10"}
+  ],
+  "C017": [
+    {"from": "customer", "text": "Hi, you sell lottery tickets?", "date": "2026-05-04"},
+    {"from": "store", "text": "Sorry we don't", "date": "2026-05-04"}
+  ],
+  "C018": [
+    {"from": "customer", "text": "Is the shop near Tampines MRT?", "date": "2026-07-01"},
+    {"from": "store", "text": "Yes, 5 min walk from exit B", "date": "2026-07-01"}
+  ],
+  "C019": [
+    {"from": "customer", "text": "Bought chicken last time not fresh", "date": "2026-06-12"},
+    {"from": "store", "text": "Very sorry to hear, can we offer a refund?", "date": "2026-06-12"},
+    {"from": "customer", "text": "Never mind already", "date": "2026-06-13"}
+  ],
+  "C020": [
+    {"from": "customer", "text": "Got promotion this week?", "date": "2026-08-15"},
+    {"from": "store", "text": "Free delivery for orders above $30 this week", "date": "2026-08-15"},
+    {"from": "customer", "text": "Ok maybe next time", "date": "2026-08-15"}
+  ],
+  "C021": [
+    {"from": "customer", "text": "Weekly order: rice, eggs, kai lan as usual", "date": "2026-10-11"},
+    {"from": "store", "text": "Got it Hafiz! Delivering this afternoon", "date": "2026-10-11"},
+    {"from": "customer", "text": "Terima kasih, best neighbourhood shop", "date": "2026-10-11"}
+  ],
+  "C022": [
+    {"from": "customer", "text": "The durian last week was very good!", "date": "2026-09-29"},
+    {"from": "store", "text": "Glad you liked it Michelle!", "date": "2026-09-29"},
+    {"from": "customer", "text": "Will come back for more this weekend", "date": "2026-09-29"}
+  ],
+  "C023": [
+    {"from": "customer", "text": "Can add 2 packs of frozen dumplings to my Saturday order?", "date": "2026-10-09"},
+    {"from": "store", "text": "Added! See you Saturday", "date": "2026-10-09"}
+  ],
+  "C024": [
+    {"from": "customer", "text": "How much is delivery?", "date": "2026-09-01"},
+    {"from": "store", "text": "Free above $50, otherwise $5", "date": "2026-09-01"},
+    {"from": "customer", "text": "Ok", "date": "2026-09-01"}
+  ],
+  "C025": [
+    {"from": "customer", "text": "Your oat milk back yet? I always buy here", "date": "2026-10-12"},
+    {"from": "store", "text": "Yes just came in today!", "date": "2026-10-12"},
+    {"from": "customer", "text": "Shiok, I'll drop by after work", "date": "2026-10-12"}
+  ],
+  "C026": [
+    {"from": "customer", "text": "Thanks for packing my order so nicely yesterday", "date": "2026-10-06"},
+    {"from": "store", "text": "Our pleasure Pei Shan!", "date": "2026-10-06"}
+  ],
+  "C027": [
+    {"from": "customer", "text": "Please keep 1 box durian for me, coming Sunday", "date": "2026-09-24"},
+    {"from": "store", "text": "Reserved for you!", "date": "2026-09-24"},
+    {"from": "customer", "text": "Thank you so much", "date": "2026-09-24"}
+  ],
+  "C028": [
+    {"from": "customer", "text": "Can I pay by PayNow on delivery?", "date": "2026-10-03"},
+    {"from": "store", "text": "Yes PayNow is fine", "date": "2026-10-03"},
+    {"from": "customer", "text": "Great, same order as last week then", "date": "2026-10-03"}
+  ],
+  "C029": [
+    {"from": "customer", "text": "Morning! Same as usual, eggs, bread, green tea", "date": "2026-10-13"},
+    {"from": "store", "text": "Morning Amirah, ready in 15 min", "date": "2026-10-13"},
+    {"from": "customer", "text": "Love this shop, so convenient", "date": "2026-10-13"},
+    {"from": "store", "text": "Thank you, see you soon!", "date": "2026-10-13"}
+  ],
+  "C030": [
+    {"from": "customer", "text": "Your kai lan always very fresh, my wife very happy", "date": "2026-10-07"},
+    {"from": "store", "text": "Thank you Terence! Fresh every morning", "date": "2026-10-07"},
+    {"from": "customer", "text": "See you tomorrow", "date": "2026-10-07"}
+  ]
+}

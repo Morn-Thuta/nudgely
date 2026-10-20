@@ -53,7 +53,8 @@ def main():
             for c in clients:
                 print(f"{c.get('platform', ''):10} {c.get('clientId', ''):40} "
                       f"{str(c.get('clientName', '')):25} last: {c.get('lastInteractAt', '')}")
-            print(f"\n{len(clients)} member(s). Put each teammate's clientId in data/customers.csv (mantago_client_id).")
+            print(f"\n{len(clients)} member(s). Map teammates to demo customers in data/test_accounts.json, "
+                  "e.g. {\"C001\": \"<clientId>\"} (git-ignored).")
 
         elif a.cmd == "tags":
             for t in m.list_tags():

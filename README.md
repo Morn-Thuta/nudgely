@@ -40,6 +40,23 @@ python scripts/test_mantago.py send --platform whatsapp --to <your clientId> --y
 
 If the message lands on your phone, the riskiest part of the project works. Leave out `--yes` for a dry run.
 
+## Run the app
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+## Rebuild the data (already done, outputs are committed)
+
+```bash
+python notebooks/fetch_lenta.py       # downloads Lenta (145 MB) to data/raw/
+python notebooks/train_uplift.py      # model, scored test set, summary, 30 demo rows (~20 s)
+python notebooks/check_capture.py     # bootstrap interval for the top-30% number
+python scripts/build_customers.py     # data/customers.csv
+python scripts/extract_tags.py        # LLM key needed: data/tags.json
+python scripts/write_messages.py      # LLM key needed: data/messages.json
+```
+
 ## Repo layout
 
 | Folder | Owner | What |

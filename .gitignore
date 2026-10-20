@@ -2,6 +2,10 @@
 .env
 .streamlit/secrets.toml
 
+# team phone mapping (clientIds can be phone numbers) and runtime logs
+data/test_accounts.json
+data/send_log.csv
+
 # big raw data - keep only small CSV/JSON in data/
 data/raw/
 *.parquet
