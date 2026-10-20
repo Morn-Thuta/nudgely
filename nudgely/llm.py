@@ -1,7 +1,7 @@
 """One tiny LLM wrapper + the two Nudgely prompts (PRD "LLM spec").
 
-Provider is picked by LLM_PROVIDER = anthropic | openai | gemini, key in LLM_API_KEY, model in LLM_MODEL.
-Only the provider you use needs its SDK installed (anthropic / openai / google-genai).
+Provider is picked by LLM_PROVIDER = openrouter | anthropic | openai | gemini, key in LLM_API_KEY,
+model in LLM_MODEL. openrouter needs no SDK; the others need theirs (anthropic / openai / google-genai).
 """
 
 import json
@@ -95,7 +95,46 @@ def complete_json(system, user):
             config=types.GenerateContentConfig(system_instruction=system, response_mime_type="application/json"))
         return _parse_json(r.text)
 
+    if provider == "openrouter":
+        return _openrouter(system, user, key, model)
+
     raise RuntimeError(f"Unknown LLM_PROVIDER '{provider}'")
+
+
+# Free models change often: list them with GET https://openrouter.ai/api/v1/models (ids ending ":free")
+OPENROUTER_FALLBACKS = ["google/gemma-4-31b-it:free", "minimax/minimax-m3.1-flash:free",
+                        "nvidia/nemotron-3-super-120b-a12b:free"]
+
+
+def _openrouter(system, user, key, model):
+    import time
+
+    import requests
+
+    models = [model] if model else []
+    models += [m for m in OPENROUTER_FALLBACKS if m not in models]
+    last = None
+    for m in models:
+        for wait in (0, 5, 15):  # free tier rate-limits often
+            time.sleep(wait)
+            r = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {key}", "X-Title": "Nudgely"},
+                json={"model": m, "response_format": {"type": "json_object"}, "temperature": 0.4,
+                      "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]},
+                timeout=90)
+            if r.status_code == 429 or r.status_code >= 500:
+                last = f"{m}: HTTP {r.status_code}"
+                continue
+            if not r.ok:
+                last = f"{m}: HTTP {r.status_code} {r.text[:200]}"
+                break  # try the next model
+            try:
+                return _parse_json(r.json()["choices"][0]["message"]["content"])
+            except (KeyError, IndexError, ValueError, TypeError) as e:
+                last = f"{m}: bad output ({e})"
+                break
+    raise RuntimeError(f"OpenRouter failed on all models. Last error: {last}")
 
 
 # ---- privacy: strip names and phone numbers before text goes to the LLM -----
