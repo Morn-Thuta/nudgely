@@ -1,0 +1,7 @@
+{
+  "C001": [
+    {"from": "customer", "text": "Hi, can tell me when oat milk is back? Been out for 2 weeks already", "date": "2026-09-28"},
+    {"from": "store", "text": "Sorry ah! Supplier delay. We'll let you know once it's in", "date": "2026-09-28"},
+    {"from": "customer", "text": "Ok thanks, also planning my son's birthday party next month", "date": "2026-09-30"}
+  ]
+}

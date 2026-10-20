@@ -1,0 +1,13 @@
+{
+  "C001": {
+    "customer_id": "C001",
+    "tags": [
+      {"type": "restock_request", "value": "oat milk", "evidence": "can tell me when oat milk is back?", "date": "2026-09-28"},
+      {"type": "upcoming_event", "value": "son's birthday party", "evidence": "planning my son's birthday party next month", "date": "2026-09-30"}
+    ],
+    "sentiment": "neutral",
+    "open_promise": "Store promised to notify when oat milk is back",
+    "best_hook": "oat milk back in stock",
+    "avoid": ""
+  }
+}

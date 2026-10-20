@@ -1,0 +1,8 @@
+{
+  "C001": {
+    "customer_id": "C001",
+    "message": "Hi Aisha! Good news, oat milk is back on our shelves. We kept a few aside for you. Planning the birthday party? Here's 10% off your next order this week. Reply STOP to opt out",
+    "tags_used": ["restock_request", "upcoming_event"],
+    "reason": "Persuadable; we promised to tell her about oat milk; party coming up"
+  }
+}

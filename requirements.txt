@@ -1,0 +1,9 @@
+streamlit
+pandas
+numpy
+plotly
+requests
+python-dotenv
+# offline only (notebooks/), not needed by the deployed app but harmless:
+scikit-learn
+scikit-uplift
