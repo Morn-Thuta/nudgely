@@ -84,7 +84,7 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 ## Shareef: numbers + docs
 
 **Wed**
-- [ ] Update the numbers in `docs/PRD.md` and `docs/One_Page_Brief.md`: targeting is now **top 30% captures ~53% of extra visits (about 1.8x random)**, not 45% / 1.5x. Source: `data/uplift_summary.json`
+- [x] Update the numbers in `docs/PRD.md` and `docs/One_Page_Brief.md`: targeting is now **top 30% captures ~53% of extra visits (about 1.8x random)**, not 45% / 1.5x. Source: `data/uplift_summary.json` (done by Jack, 21 Oct - all 5 places)
 - [ ] Find out: problem statement number, exact team name, deadline time on Fri, Lenta licence
 
 **Thu**

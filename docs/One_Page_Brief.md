@@ -28,7 +28,7 @@ Real randomised tests show messaging brings customers back, and our uplift model
 | --- | --- | --- |
 | Email vs no email, 64k online shoppers | Visits 10.6% to 18.3% (+72%); purchases 0.57% to 1.25% (about 2.2x) | Hillstrom dataset |
 | SMS vs no SMS, 687k grocery customers | Visits 10.3% to 11.0% (+7%) | Lenta dataset |
-| Our model's top 30% vs a random 30% | Captures 45% of all extra visits vs 30% (about 1.5x) | Lenta test set, our analysis |
+| Our model's top 30% vs a random 30% | Captures 53% of all extra visits vs 30% (about 1.8x) | Lenta test set, our analysis |
 
 **Expected impact for a business:** more customers return per message sent, fewer discounts wasted on customers who would come back anyway, lower per-message cost on paid channels such as WhatsApp, and a monthly retention-lift number the owner can trust.
 
