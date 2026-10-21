@@ -1,0 +1,399 @@
+{
+  "C001": {
+    "customer_id": "C001",
+    "tags": [
+      {
+        "type": "restock_request",
+        "value": "Oat milk restock notification",
+        "evidence": "Hi, can tell me when oat milk is back? Been out for 2 weeks already",
+        "date": "2026-09-28"
+      },
+      {
+        "type": "upcoming_event",
+        "value": "Son's birthday party at the end of October",
+        "evidence": "Also planning my son's birthday party end Oct",
+        "date": "2026-09-30"
+      },
+      {
+        "type": "product_interest",
+        "value": "Party snack packs in $12 and $20 sizes",
+        "evidence": "you all got party snack packs?",
+        "date": "2026-09-30"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "The store will let the customer know once the oat milk is in.",
+    "best_hook": "Son's end-of-October birthday party and party snack packs.",
+    "avoid": ""
+  },
+  "C002": {
+    "customer_id": "C002",
+    "tags": [
+      {
+        "type": "complaint_delivery",
+        "value": "Order did not arrive by the expected 4pm time",
+        "evidence": "My order supposed to come 4pm, now 7pm still nothing",
+        "date": "2026-10-02"
+      },
+      {
+        "type": "complaint_delivery",
+        "value": "Frozen dumplings were soft when the order arrived",
+        "evidence": "Reached already but the frozen dumplings all soft. Not happy leh",
+        "date": "2026-10-02"
+      }
+    ],
+    "sentiment": "negative",
+    "open_promise": "We'll do better",
+    "best_hook": "Acknowledge the missed 4pm delivery and the soft frozen dumplings.",
+    "avoid": "Do not claim the order was on time or that the dumplings arrived properly frozen."
+  },
+  "C003": {
+    "customer_id": "C003",
+    "tags": [
+      {
+        "type": "restock_request",
+        "value": "Ghee and spice packs for Deepavali",
+        "evidence": "you all bring in ghee and the spice packs again this year?",
+        "date": "2026-10-05"
+      },
+      {
+        "type": "upcoming_event",
+        "value": "Deepavali",
+        "evidence": "Deepavali coming",
+        "date": "2026-10-05"
+      },
+      {
+        "type": "product_interest",
+        "value": "Ghee and spice packs",
+        "evidence": "ghee and the spice packs",
+        "date": "2026-10-05"
+      }
+    ],
+    "sentiment": "positive",
+    "open_promise": "Deepavali ghee and spice packs coming in mid Oct",
+    "best_hook": "Deepavali ghee and spice packs for family cooking",
+    "avoid": ""
+  },
+  "C004": {
+    "customer_id": "C004",
+    "tags": [
+      {
+        "type": "product_interest",
+        "value": "seasonal durian",
+        "evidence": "Got durian this season or not?",
+        "date": "2026-09-20"
+      }
+    ],
+    "sentiment": "positive",
+    "open_promise": "",
+    "best_hook": "Seasonal durian in stock now, limited boxes",
+    "avoid": ""
+  },
+  "C005": {
+    "customer_id": "C005",
+    "tags": [
+      {
+        "type": "restock_request",
+        "value": "Notify when free-range eggs arrive",
+        "evidence": "Ok please tell me when come, I only buy those",
+        "date": "2026-09-25"
+      },
+      {
+        "type": "product_interest",
+        "value": "Free-range eggs",
+        "evidence": "free-range eggs finish already?",
+        "date": "2026-09-25"
+      },
+      {
+        "type": "loyal_regular",
+        "value": "Usually buys free-range eggs",
+        "evidence": "I only buy those",
+        "date": "2026-09-25"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "Next batch next week",
+    "best_hook": "Free-range eggs—tell me when the next batch arrives.",
+    "avoid": ""
+  },
+  "C006": {
+    "customer_id": "C006",
+    "tags": [
+      {
+        "type": "complaint_price",
+        "value": "Eggs are more expensive than NTUC",
+        "evidence": "Why your eggs more ex than NTUC ah",
+        "date": "2026-09-18"
+      },
+      {
+        "type": "complaint_delivery",
+        "value": "Delivery fee is expensive",
+        "evidence": "Just delivery fee also quite ex",
+        "date": "2026-09-18"
+      }
+    ],
+    "sentiment": "negative",
+    "open_promise": "",
+    "best_hook": "quality is good",
+    "avoid": "Price-sensitive about eggs and delivery fees"
+  },
+  "C007": {
+    "customer_id": "C007",
+    "tags": [
+      {
+        "type": "upcoming_event",
+        "value": "Office potluck next Friday",
+        "evidence": "Office potluck next Friday",
+        "date": "2026-10-08"
+      },
+      {
+        "type": "product_interest",
+        "value": "Party snack packs",
+        "evidence": "you all got party snack packs?",
+        "date": "2026-10-08"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Office potluck next Friday",
+    "avoid": ""
+  },
+  "C008": {
+    "customer_id": "C008",
+    "tags": [
+      {
+        "type": "product_interest",
+        "value": "Gardenia bread",
+        "evidence": "If I order Gardenia bread at 1pm can reach today?",
+        "date": "2026-09-15"
+      }
+    ],
+    "sentiment": "positive",
+    "open_promise": "",
+    "best_hook": "Same-day delivery for orders before 2pm",
+    "avoid": ""
+  },
+  "C009": {
+    "customer_id": "C009",
+    "tags": [
+      {
+        "type": "complaint_delivery",
+        "value": "Delivery was 2 hours late and the ice cream melted",
+        "evidence": "Delivery came 2 hours late and the ice cream melted",
+        "date": "2026-09-27"
+      }
+    ],
+    "sentiment": "negative",
+    "open_promise": "",
+    "best_hook": "Acknowledge the 2-hour delivery delay and melted ice cream.",
+    "avoid": "Do not suggest the refund is still pending; the customer already acknowledged it."
+  },
+  "C010": {
+    "customer_id": "C010",
+    "tags": [
+      {
+        "type": "restock_request",
+        "value": "Pokka green tea carton restock",
+        "evidence": "Out for now, restocking soon",
+        "date": "2026-10-01"
+      },
+      {
+        "type": "product_interest",
+        "value": "Pokka green tea",
+        "evidence": "Pokka green tea carton got stock?",
+        "date": "2026-10-01"
+      },
+      {
+        "type": "loyal_regular",
+        "value": "Usually buys 2 cartons a month",
+        "evidence": "Usually I buy 2 cartons a month",
+        "date": "2026-10-01"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "Out for now, restocking soon",
+    "best_hook": "Usually I buy 2 cartons a month",
+    "avoid": ""
+  },
+  "C011": {
+    "customer_id": "C011",
+    "tags": [],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Jurong West delivery availability",
+    "avoid": "Do not imply delivery to Jurong West; delivery is currently limited to Tampines and Pasir Ris."
+  },
+  "C012": {
+    "customer_id": "C012",
+    "tags": [],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Sunday opening hours: 8am to 9pm daily",
+    "avoid": ""
+  },
+  "C013": {
+    "customer_id": "C013",
+    "tags": [
+      {
+        "type": "complaint_price",
+        "value": "Rice is more expensive than supermarket prices",
+        "evidence": "Your rice quite ex compared to supermarket",
+        "date": "2026-08-02"
+      },
+      {
+        "type": "product_interest",
+        "value": "Cheap rice",
+        "evidence": "I just buy the cheap one la",
+        "date": "2026-08-02"
+      }
+    ],
+    "sentiment": "negative",
+    "open_promise": "",
+    "best_hook": "Affordable rice options",
+    "avoid": "Premium pricing"
+  },
+  "C014": {
+    "customer_id": "C014",
+    "tags": [
+      {
+        "type": "loyal_regular",
+        "evidence": "thanks for shopping with us all these years!",
+        "date": "2026-06-30"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "remove me from list",
+    "best_hook": "A loyal customer who recently moved to Woodlands",
+    "avoid": "Do not include the customer in list communications."
+  },
+  "C015": {
+    "customer_id": "C015",
+    "tags": [
+      {
+        "type": "product_interest",
+        "value": "kai lan",
+        "evidence": "Got kai lan today?",
+        "date": "2026-08-22"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Fresh kai lan is available",
+    "avoid": ""
+  },
+  "C016": {
+    "customer_id": "C016",
+    "tags": [
+      {
+        "type": "restock_request",
+        "value": "2 loaves Gardenia and kai lan",
+        "evidence": "The usual please, 2 loaves Gardenia and kai lan",
+        "date": "2026-10-10"
+      },
+      {
+        "type": "product_interest",
+        "value": "Gardenia and kai lan",
+        "evidence": "2 loaves Gardenia and kai lan",
+        "date": "2026-10-10"
+      },
+      {
+        "type": "loyal_regular",
+        "value": "The usual",
+        "evidence": "The usual please, 2 loaves Gardenia and kai lan",
+        "date": "2026-10-10"
+      }
+    ],
+    "sentiment": "positive",
+    "open_promise": "Will pack for you, ready at 10",
+    "best_hook": "Your usual: 2 loaves Gardenia and kai lan",
+    "avoid": ""
+  },
+  "C017": {
+    "customer_id": "C017",
+    "tags": [
+      {
+        "type": "product_interest",
+        "value": "Lottery tickets",
+        "evidence": "Hi, you sell lottery tickets?",
+        "date": "2026-05-04"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Asked about lottery ticket availability",
+    "avoid": "Lottery tickets are not sold by the store"
+  },
+  "C018": {
+    "customer_id": "C018",
+    "tags": [],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Shop is a 5-minute walk from Tampines MRT exit B",
+    "avoid": ""
+  },
+  "C019": {
+    "customer_id": "C019",
+    "tags": [],
+    "sentiment": "negative",
+    "open_promise": "",
+    "best_hook": "Chicken freshness concern",
+    "avoid": "Do not push a refund; the customer said \"Never mind already\"."
+  },
+  "C020": {
+    "customer_id": "C020",
+    "tags": [
+      {
+        "type": "upcoming_event",
+        "value": "Free delivery promotion for orders above $30",
+        "evidence": "Free delivery for orders above $30 this week",
+        "date": "2026-08-15"
+      }
+    ],
+    "sentiment": "neutral",
+    "open_promise": "",
+    "best_hook": "Free delivery for orders above $30 this week",
+    "avoid": ""
+  },
+  "C021": {
+    "customer_id": "C021",
+    "tags": [
+      {
+        "type": "restock_request",
+        "value": "rice, eggs, kai lan",
+        "evidence": "Weekly order: rice, eggs, kai lan as usual",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "loyal_regular",
+        "value": "weekly regular order",
+        "evidence": "Weekly order: rice, eggs, kai lan as usual",
+        "date": "2026-10-11"
+      }
+    ],
+    "sentiment": "positive",
+    "open_promise": "Delivering this afternoon",
+    "best_hook": "best neighbourhood shop",
+    "avoid": ""
+  },
+  "C022": {
+    "customer_id": "C022",
+    "tags": [
+      {
+        "type": "product_interest",
+        "value": "Durian",
+        "evidence": "The durian last week was very good!",
+        "date": "2026-09-29"
+      },
+      {
+        "type": "loyal_regular",
+        "value": "Plans to return for more durian",
+        "evidence": "Will come back for more this weekend",
+        "date": "2026-09-29"
+      }
+    ],
+    "sentiment": "positive",
+    "open_promise": "Will come back for more this weekend",
+    "best_hook": "Loved last week's durian and plans to buy more this weekend.",
+    "avoid": ""
+  }
+}
