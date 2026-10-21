@@ -4,6 +4,8 @@ numpy
 plotly
 requests
 python-dotenv
+# only needed when LLM_PROVIDER=gemini:
+google-genai
 # offline only (notebooks/), not needed by the deployed app but harmless:
 scikit-learn
 scikit-uplift
