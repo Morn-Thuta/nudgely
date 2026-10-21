@@ -2,7 +2,7 @@ import streamlit as st
 
 from lib import LABEL_HELP, example_data_note, header, load_customers, top_tag
 
-header("Customers", "Kampung Fresh customers, scored by how much a message changes their chance to come back.")
+header("People, not just profiles.", "Explore the conversations and signals behind your next customer connection.")
 example_data_note("customers.csv", "tags.json")
 
 df = load_customers().copy()
@@ -12,9 +12,13 @@ cols = st.columns(3)
 for col, label in zip(cols, ["Persuadable", "Sure Thing", "Lost Cause"]):
     col.metric(label, int((df.label == label).sum()), help=LABEL_HELP[label])
 
-labels = st.multiselect("Filter by label", ["Persuadable", "Sure Thing", "Lost Cause"],
+search = st.text_input("Find a customer", placeholder="Search by name or chat topic…")
+labels = st.multiselect("Customer segments", ["Persuadable", "Sure Thing", "Lost Cause"],
                         default=["Persuadable", "Sure Thing", "Lost Cause"])
 view = df[df.label.isin(labels)].reset_index(drop=True)
+if search:
+    view = view[view['name'].str.contains(search, case=False, regex=False) | view.top_tag.str.contains(search, case=False, regex=False)].reset_index(drop=True)
+st.caption(f"{len(view)} customers · Select a row to explore their story")
 table = view.assign(uplift=view.uplift * 100, p_no_msg=view.p_no_msg * 100)
 
 event = st.dataframe(

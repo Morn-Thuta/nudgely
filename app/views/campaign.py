@@ -3,7 +3,8 @@ import streamlit as st
 from lib import badge, campaign_id, draft_problems, example_data_note, header, load_customers, mantago_client, messages, plan_campaign, send_campaign
 from nudgely import llm
 
-header("Campaign", "Choose an audience, including its no-message comparison group, then review the drafts.")
+header("A thoughtful nudge, ready to go.", "Build your audience, review each message and choose how to send.")
+st.markdown('<div class="section-label">01 / Choose your audience</div>', unsafe_allow_html=True)
 example_data_note("customers.csv", "messages.json")
 
 customers = load_customers()
@@ -26,6 +27,7 @@ m3.metric("Skipped", len(skipped), help="Messages saved vs “message everyone�
 m4.metric("Expected extra visits", f"{to_msg.uplift.sum():.1f}",
           help="Sum of each messaged customer's uplift: visits we expect *because* of the message")
 
+st.markdown('<div class="section-label">02 / Review your messages</div>', unsafe_allow_html=True)
 tab_msg, tab_hold, tab_skip = st.tabs([f"📤 Will message ({len(to_msg)})", f"⏸ Held out ({len(held)})",
                                        f"⏭ Skipped ({len(skipped)})"])
 
@@ -53,6 +55,7 @@ with tab_skip:
     st.dataframe(skipped[["name", "label", "reason"]], hide_index=True, width="stretch")
 
 st.divider()
+st.markdown('<div class="section-label">03 / Review & launch</div>', unsafe_allow_html=True)
 real = int((to_msg.mantago_client_id != "").sum())
 simulate = st.toggle("Rehearsal mode — simulate all messages", value=True)
 live = False if simulate else mantago_client() is not None

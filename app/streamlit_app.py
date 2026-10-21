@@ -1,8 +1,10 @@
 """Nudgely app entry point. Run: streamlit run app/streamlit_app.py"""
 
 import streamlit as st
+from design import apply_design
 
 st.set_page_config(page_title="Nudgely", page_icon="💬", layout="wide")
+apply_design()
 
 pages = [
     st.Page("views/overview.py", title="Overview", icon="🏠", default=True),
@@ -13,9 +15,9 @@ pages = [
 ]
 
 with st.sidebar:
-    st.markdown("### 💬 Nudgely")
-    st.caption("Message the right customers, say the right thing, prove it worked.")
-    st.caption("Demo store: **Kampung Fresh** (fictional Singapore grocer)")
+    st.markdown('<div class="brandmark">nudgely<span>↗</span></div>', unsafe_allow_html=True)
+    st.caption("A little nudge. A lasting connection.")
+    st.markdown('<div class="store-card"><small>YOUR WORKSPACE</small><br><strong>Kampung Fresh</strong><br><small>Singapore · Grocery · Demo</small></div>', unsafe_allow_html=True)
 
 st.navigation(pages).run()
 

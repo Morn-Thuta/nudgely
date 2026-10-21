@@ -4,7 +4,7 @@ import streamlit as st
 
 from lib import BRAND, header, summary
 
-header("Results", "Proof the method works, measured against customers who got no message.")
+header("Know what made the difference.", "Explore historical evidence, campaign delivery and the outcomes still to measure.")
 
 s = summary()
 if not s:

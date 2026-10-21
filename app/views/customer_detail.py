@@ -2,10 +2,11 @@ import html
 
 import streamlit as st
 
-from lib import REGEN_LIMIT, badge, chats, example_data_note, load_customers, messages, tags
+from lib import REGEN_LIMIT, badge, chats, example_data_note, header, load_customers, messages, tags
 from nudgely import llm
 
 customers = load_customers()
+header("Every conversation has context.", "Connect the customer’s story, the evidence and your next message.")
 ids = list(customers.customer_id)
 names = dict(zip(customers.customer_id, customers.name))
 

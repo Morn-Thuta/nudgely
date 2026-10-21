@@ -214,9 +214,8 @@ def badge(label):
 
 
 def header(title, subtitle=None):
-    st.markdown(f"## {title}")
-    if subtitle:
-        st.caption(subtitle)
+    from design import page_heading
+    page_heading(title, subtitle)
 
 
 def example_data_note(*names):
