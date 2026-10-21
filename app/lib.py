@@ -1,6 +1,7 @@
 """Shared helpers for the Streamlit app: data loading, campaign planning, sending."""
 
 import json
+import hashlib
 import os
 import sys
 from datetime import datetime
@@ -13,6 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
 from nudgely.mantago import MantaGO, MantaGOError  # noqa: E402
+from nudgely import llm
 
 DATA = os.path.join(ROOT, "data")
 EXAMPLES = os.path.join(DATA, "examples")
@@ -88,6 +90,20 @@ def messages():
     return msgs
 
 
+def campaign_id(plan, msgs, simulate=True):
+    """Review is bound to recipients, comparison group, drafts and delivery mode."""
+    payload = {"plan": plan[["customer_id", "group", "mantago_client_id"]].to_dict("records"),
+               "messages": {cid: msgs.get(cid, {}) for cid in plan.loc[plan.group == "Will message", "customer_id"]},
+               "simulate": simulate}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()[:16]
+
+
+def draft_problems(plan, msgs):
+    return {r.customer_id: llm.check_message(msgs.get(r.customer_id, {}), r.label)
+            for _, r in plan[plan.group == "Will message"].iterrows()
+            if llm.check_message(msgs.get(r.customer_id, {}), r.label)}
+
+
 def summary():
     return load_json("uplift_summary.json", default=None) or None
 
@@ -100,15 +116,18 @@ def load_scored_test():
 
 def top_tag(cid):
     t = tags().get(cid, {}).get("tags", [])
-    return f"{t[0]['type'].replace('_', ' ')}: {t[0]['value']}" if t else ""
+    return f"{t[0].get('type', 'tag').replace('_', ' ')}: {t[0].get('value') or t[0].get('evidence', '')}" if t else ""
 
 
 # ---- campaign --------------------------------------------------------------
 
 def plan_campaign(customers, budget, holdout_pct):
     """Top `budget` by uplift are chosen; a random holdout_pct of them is held out (fixed seed)."""
-    ranked = customers.sort_values("uplift", ascending=False).reset_index(drop=True)
-    chosen = ranked.head(budget)
+    ranked = customers.sort_values(["uplift", "customer_id"], ascending=[False, True]).reset_index(drop=True)
+    consent = load_json("consent.json")
+    excluded = {cid for cid, value in consent.items() if value.get("opted_in") is False}
+    chosen = ranked[~ranked.customer_id.isin(excluded)].head(budget)
+    chosen_ids = set(chosen.customer_id)
     n_hold = int(round(len(chosen) * holdout_pct / 100))
     if holdout_pct > 0 and len(chosen) >= 2:
         n_hold = max(n_hold, 1)
@@ -117,9 +136,11 @@ def plan_campaign(customers, budget, holdout_pct):
 
     rows = []
     for i, r in ranked.iterrows():
-        if i < budget and r.customer_id in hold_ids:
+        if r.customer_id in excluded:
+            group, reason = "Skipped", "Opted out: " + consent[r.customer_id].get("reason", "Do not contact")
+        elif r.customer_id in hold_ids:
             group, reason = "Held out", "Random comparison group: not messaged, so we can measure the real lift"
-        elif i < budget:
+        elif r.customer_id in chosen_ids:
             group, reason = "Will message", f"Rank #{i + 1} by uplift (+{r.uplift:.1%} chance to return if messaged)"
         elif r.label == "Sure Thing":
             group, reason = "Skipped", f"Sure Thing: {r.p_no_msg:.0%} likely to come back anyway"
@@ -148,14 +169,22 @@ def mantago_platform():
         return os.getenv("MANTAGO_PLATFORM", "whatsapp")
 
 
-def send_campaign(plan, msgs):
+def send_campaign(plan, msgs, simulate=True):
     """Real send for customers mapped to a MantaGO test account, simulated for the rest."""
-    client = mantago_client()
+    problems = draft_problems(plan, msgs)
+    if problems:
+        raise ValueError("Fix missing or invalid drafts before sending: " + ", ".join(problems))
+    consent = load_json("consent.json")
+    if any(consent.get(cid, {}).get("opted_in") is False for cid in plan.loc[plan.group == "Will message", "customer_id"]):
+        raise ValueError("Campaign contains an opted-out customer. Rebuild the plan.")
+    client = None if simulate else mantago_client()
     platform = mantago_platform()
     results = []
     for _, r in plan[plan.group == "Will message"].iterrows():
         text = msgs.get(r.customer_id, {}).get("message", "")
-        if not text:
+        if simulate:
+            status, resp = "simulated", "Rehearsal only: no external message sent"
+        elif not text:
             status, resp = "failed", "no message drafted"
         elif r.mantago_client_id and client:
             try:

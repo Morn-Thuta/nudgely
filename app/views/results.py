@@ -60,9 +60,14 @@ if plan is not None:
     msg = plan[plan.group == "Will message"]
     st.markdown("#### This campaign")
     a, b, c = st.columns(3)
-    a.metric("Messaged", len(msg))
+    log = st.session_state.get("send_log")
+    a.metric("Confirmed live sends", int((log.status == "sent").sum()) if log is not None else 0)
     b.metric("Expected extra visits", f"{msg.uplift.sum():.1f}")
     c.metric("Messages saved vs message-everyone", int((plan.group == "Skipped").sum()))
+    st.caption("Expected visits are model estimates for the planned recipients, not measured campaign outcomes. Public-dataset charts above are separate from this campaign.")
+    if log is not None:
+        st.dataframe(log[["name", "status"]], hide_index=True, width="stretch")
+        st.download_button("Download campaign log", log[["timestamp", "customer_id", "name", "status"]].to_csv(index=False), "nudgely-campaign.csv", "text/csv")
 
 st.markdown("#### Limitations")
 st.markdown(

@@ -57,6 +57,19 @@ python scripts/extract_tags.py        # LLM key needed: data/tags.json
 python scripts/write_messages.py      # LLM key needed: data/messages.json
 ```
 
+## Campaign integration
+
+The campaign workflow incorporates review and simulation safeguards from Dythan's Ai-Ignition prototype while preserving this repository's model data, app structure and integrations.
+
+- Rehearsal mode is on by default and never calls MantaGO.
+- Missing or invalid selected drafts block execution, both in the UI and sender.
+- `data/consent.json` records explicit exclusions without changing the agreed customer CSV schema. C014's removal request is enforced. Absence from this file does not establish real-world consent: live mode is only for opted-in team test accounts.
+- Review resets when recipients, holdout, draft content or delivery mode changes. Identical campaigns cannot be repeated within the same session; this is not cross-session delivery deduplication.
+- Campaign logs can be downloaded without raw provider responses or phone mappings. Results distinguish real delivery from simulation and historical dataset evidence.
+- The checked-in extraction cache is partial and there is only one example message draft. Jack's full LLM generation and review remain pending; no synthetic drafts were substituted for that work. Incomplete tag descriptions are shown with a review notice instead of crashing customer pages.
+
+Run the offline checks with `python -m unittest discover -s tests`. Tests mock delivery; no messages or paid LLM calls are made.
+
 ## Repo layout
 
 | Folder | Owner | What |

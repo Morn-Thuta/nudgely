@@ -47,7 +47,7 @@ with right:
         st.caption("No tags extracted yet.")
     else:
         for tag in t.get("tags", []):
-            st.markdown(f"**{tag['type'].replace('_', ' ')}**: {tag['value']}  \n> “{tag['evidence']}”")
+            st.markdown(f"**{tag.get('type', 'tag').replace('_', ' ')}**: {tag.get('value') or 'Description missing; review extraction'}  \n> “{tag.get('evidence', '')}”")
         st.caption(f"Sentiment: {t.get('sentiment', '-')} · Best hook: {t.get('best_hook', '-')}"
                    + (f" · Avoid: {t['avoid']}" if t.get("avoid") else ""))
         if t.get("open_promise"):

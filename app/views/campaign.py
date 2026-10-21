@@ -1,16 +1,16 @@
 import streamlit as st
 
-from lib import badge, example_data_note, header, load_customers, mantago_client, messages, plan_campaign, send_campaign
+from lib import badge, campaign_id, draft_problems, example_data_note, header, load_customers, mantago_client, messages, plan_campaign, send_campaign
 from nudgely import llm
 
-header("Campaign", "Choose how many messages to send. Nudgely picks who, writes what, and keeps a comparison group.")
+header("Campaign", "Choose an audience, including its no-message comparison group, then review the drafts.")
 example_data_note("customers.csv", "messages.json")
 
 customers = load_customers()
 n = len(customers)
 
 c1, c2 = st.columns(2)
-budget = c1.slider("Message budget (top customers by uplift)", 1, n, min(10, n))
+budget = c1.slider("Audience size (includes holdout)", 1, n, min(10, n))
 holdout = c2.slider("Holdout % (comparison group, not messaged)", 0, 50, 10, step=5)
 
 plan = plan_campaign(customers, budget, holdout)
@@ -54,23 +54,34 @@ with tab_skip:
 
 st.divider()
 real = int((to_msg.mantago_client_id != "").sum())
-live = mantago_client() is not None
-st.markdown(f"**Ready to send {len(to_msg)} messages.** {real} go to real MantaGO test phones"
+simulate = st.toggle("Rehearsal mode — simulate all messages", value=True)
+live = False if simulate else mantago_client() is not None
+st.markdown(f"**{len(to_msg)} selected recipients.** {real} are mapped to MantaGO test phones"
             + ("" if live else " (MantaGO keys not set, so they'll be marked ready)")
             + f", {len(to_msg) - real} are simulated demo customers.")
 
-confirm = st.checkbox("I've previewed every message and want to send them")
-if st.button("Send campaign", type="primary", disabled=not confirm or bool(st.session_state.get("sent"))):
+if simulate:
+    st.info("Rehearsal mode: no messages leave the app, including mapped test accounts.")
+problems = draft_problems(plan, msgs)
+if problems:
+    st.warning(f"{len(problems)} selected customers have missing or invalid drafts. Complete them or reduce the audience before continuing.")
+if not simulate and real:
+    st.caption("Only use mapped team test accounts that have opted in and are eligible for channel messaging.")
+key = campaign_id(plan, msgs, simulate)
+confirm = st.checkbox("I've previewed every message; any live test recipients have opted in", key=f"review_{key}")
+completed = key in st.session_state.get("completed_campaigns", [])
+if st.button("Simulate campaign" if simulate else "Send campaign", type="primary", disabled=not confirm or completed or bool(problems) or to_msg.empty):
     with st.spinner("Sending through MantaGO..."):
-        st.session_state["send_log"] = send_campaign(plan, msgs)
-        st.session_state["sent"] = True
+        st.session_state["send_log"] = send_campaign(plan, msgs, simulate=simulate)
+        st.session_state.setdefault("completed_campaigns", []).append(key)
         st.session_state["last_plan"] = plan
+        st.rerun()
 
 log = st.session_state.get("send_log")
 if log is not None:
-    st.success("Campaign sent. Status per customer:")
+    st.info("Last campaign finished processing. Check each status; simulated and failed rows are not live deliveries.")
     st.dataframe(log[["name", "status", "mantago_response"]], hide_index=True, width="stretch")
-    if st.button("Reset demo"):
-        for k in ("sent", "send_log", "last_plan"):
-            st.session_state.pop(k, None)
-        st.rerun()
+    st.download_button("Download campaign log", log[["timestamp", "customer_id", "name", "status"]].to_csv(index=False),
+                       "nudgely-campaign.csv", "text/csv")
+if completed:
+    st.caption("This exact campaign has already run in this session. Change the audience or drafts for a new campaign.")
