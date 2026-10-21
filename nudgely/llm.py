@@ -90,7 +90,8 @@ def complete_json(system, user):
         from google import genai
         from google.genai import types
 
-        r = genai.Client(api_key=key).models.generate_content(
+        client = genai.Client(api_key=key)
+        r = client.models.generate_content(
             model=model or "gemini-2.5-flash", contents=user,
             config=types.GenerateContentConfig(system_instruction=system, response_mime_type="application/json"))
         return _parse_json(r.text)
