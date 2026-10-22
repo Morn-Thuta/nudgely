@@ -1,135 +1,275 @@
 {
-  "C012": {
-    "customer_id": "C012",
-    "message": "Sunday opening hours: 8am to 9pm daily. Come by Kampung Fresh in Tampines for your daily groceries! Reply STOP to opt out",
+  "C001": {
+    "customer_id": "C001",
+    "message": "Hi Aisha! Planning your son's end-of-Oct birthday party? 🎉 We have party snack packs ($12/$20) for easy celebrations! Good news, your favourite oat milk is back in stock too! Enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
-      "Store Hours"
+      "upcoming_event",
+      "product_interest",
+      "restock_request"
     ],
-    "reason": "Sent a non-sales-focused reminder about store hours to a 'Lost Cause' customer."
+    "reason": "Addressed birthday party, snack packs, oat milk restock, and offered a discount as she is persuadable."
   },
-  "C013": {
-    "customer_id": "C013",
-    "message": "Affordable rice options, Farid! We're sorry you found our rice prices high previously. We always aim for good value. We do have Thai jasmine rice in stock if you need it. Reply STOP to opt out",
+  "C002": {
+    "customer_id": "C002",
+    "message": "So sorry about your order on Oct 2, Marcus! We really messed up with the late delivery & those soft frozen dumplings. Not good enough, lah. As our apology, please take 10% off your next order. We're working hard to do better! Reply STOP to opt out",
     "tags_used": [
-      "complaint_price",
-      "product_interest"
+      "complaint_delivery",
+      "Persuadable"
     ],
-    "reason": "Apologise for past price complaint on rice, mention current stock without pushing a sale due to 'Lost Cause' label and 'avoid' premium pricing."
-  },
-  "C017": {
-    "customer_id": "C017",
-    "message": "Hi Zainal! You asked about lottery ticket availability. Unfortunately, we don't sell lottery tickets at Kampung Fresh. We focus on fresh groceries like our Thai jasmine rice and Gardenia bread! Reply STOP to opt out",
-    "tags_used": [
-      "product_interest"
-    ],
-    "reason": "Acknowledged customer's query about lottery tickets and clarified store doesn't sell them, then gently highlighted actual products."
+    "reason": "Apologised for delivery issues and soft frozen items, offered discount as compensation for a 'Persuadable' customer."
   },
   "C003": {
     "customer_id": "C003",
-    "message": "Deepavali ghee and spice packs for family cooking! Good news, Priya! Your favourite Deepavali ghee & spice packs are here just in time. Get 10% off your next order with us. Perfect for your festive preparations! Reply STOP to opt out",
+    "message": "Deepavali ghee and spice packs for family cooking are here, Priya! Your Deepavali ghee and spice packs are now in stock. ✨ Plus, enjoy 10% off your next order! Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "upcoming_event",
       "product_interest",
-      "discount"
+      "discount_offer"
     ],
-    "reason": "Inform customer about restocked Deepavali items and offer a discount as they are persuadable."
+    "reason": "Announce arrival of requested Deepavali items and offer discount to a persuadable customer."
   },
   "C004": {
     "customer_id": "C004",
-    "message": "Seasonal durian in stock now, limited boxes! Wah, our durians are super shiok this season. Don't miss out! As a special treat for you, enjoy 10% off your next order. Grab yours before it's gone! Reply STOP to opt out",
+    "message": "Seasonal durian in stock now, limited boxes, Daniel! 🤤 Don't miss out on this shiok season. Get 10% off your next order & free delivery this week for orders above $30. Reply STOP to opt out",
     "tags_used": [
-      "product_interest"
+      "product_interest",
+      "discount",
+      "delivery_offer"
     ],
-    "reason": "To inform about seasonal durian stock and offer a discount to a persuadable customer interested in durian."
-  },
-  "C001": {
-    "customer_id": "C001",
-    "message": "Hi Aisha! Planning your son's birthday party? We've got party snack packs ready for you! 🎉 Enjoy 10% off your next order too. Reply STOP to opt out",
-    "tags_used": [
-      "upcoming_event",
-      "product_interest"
-    ],
-    "reason": "Persuadable customer interested in party items, offered a discount and relevant products."
-  },
-  "C002": {
-    "customer_id": "C002",
-    "message": "Hi Marcus, our sincere apologies for the late delivery and the soft frozen dumplings. 😔 We'll definitely do better. As a token of apology, please enjoy 10% off your next order! \nReply STOP to opt out",
-    "tags_used": [
-      "complaint_delivery"
-    ],
-    "reason": "Acknowledged complaints and offered a discount to a 'Persuadable' customer."
+    "reason": "Used hook for durian interest, offered 10% discount and free delivery for a persuadable customer."
   },
   "C005": {
     "customer_id": "C005",
-    "message": "Hi Siti! Good news, your favourite free-range eggs are back in stock at Kampung Fresh! 🎉 As a valued customer, enjoy 10% off your next purchase. Order by 2pm for same-day delivery! Reply STOP to opt out",
+    "message": "Hello Siti! Remember asking about free-range eggs? Good news, they're back in stock now! 🥳 Come grab your favourite eggs at Kampung Fresh. As a loyal customer, enjoy 10% off your next order! Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Customer requested restock of free-range eggs and is Persuadable, offering 10% discount is appropriate."
+    "reason": "Informed customer about restocked free-range eggs and offered a 10% discount to a persuadable loyal customer."
   },
   "C006": {
     "customer_id": "C006",
-    "message": "Hi Kelvin, we're sorry about the price and delivery concerns. We'll address this! Regarding your feedback, we'd like to offer you 5% off your next order. Hope to see you soon! 😊 #KampungFresh\nReply STOP to opt out",
+    "message": "Hi Kelvin 👋! We know our quality is good, and we're sorry to hear about your past concerns. As a valued customer, enjoy 10% off your next order with us! We also have free delivery this week for orders above $30. Hope to see you back soon! Reply STOP to opt out",
     "tags_used": [
       "complaint_price",
       "complaint_delivery",
       "Persuadable"
     ],
-    "reason": "Apologised for complaints and offered a 5% discount as customer is persuadable."
+    "reason": "Customer had past complaints about price and delivery; offered 10% discount and highlighted free delivery to re-engage."
+  },
+  "C021": {
+    "customer_id": "C021",
+    "message": "Hey Hafiz, from your best neighbourhood shop, Kampung Fresh! Just confirming your weekly order of Thai jasmine rice, free-range eggs, and fresh kai lan. All stocked and ready for delivery this afternoon! Thanks for your continued support! ✨ Reply STOP to opt out",
+    "tags_used": [
+      "restock_request",
+      "loyal_regular"
+    ],
+    "reason": "Confirmed weekly restock request for loyal customer, mentioning items are in stock and confirming delivery."
+  },
+  "C022": {
+    "customer_id": "C022",
+    "message": "Hi Michelle! Heard you loved last week's durian and plan to buy more this weekend! 😉 Good news, our durians are super fresh again this week. Come on down to Kampung Fresh Tampines and grab your favourites! We look forward to seeing you. Reply STOP to opt out",
+    "tags_used": [
+      "product_interest",
+      "loyal_regular"
+    ],
+    "reason": "Acknowledged positive feedback on durian and encouraged return visit based on customer's promise to come back."
+  },
+  "C023": {
+    "customer_id": "C023",
+    "message": "Suresh, love our frozen dumplings? Good news! Your favourite frozen dumplings are in stock! Perfect for your Saturday order. Plus, enjoy free delivery this week for orders above $30. 🥟 Reply STOP to opt out",
+    "tags_used": [
+      "product_interest",
+      "loyal_regular"
+    ],
+    "reason": "Engaging loyal customer with product interest and current delivery offer."
+  },
+  "C024": {
+    "customer_id": "C024",
+    "message": "Hey Emily 👋! Free delivery on orders over $50 for Kampung Fresh! Get your free-range eggs or Thai jasmine rice, plus yummy frozen dumplings. Order before 2pm for same-day delivery. Reply STOP to opt out",
+    "tags_used": [
+      "Delivery offer",
+      "Fresh produce",
+      "Staples",
+      "Frozen food"
+    ],
+    "reason": "Gentle re-engagement for a 'Lost Cause' customer, highlighting free delivery and popular items."
+  },
+  "C025": {
+    "customer_id": "C025",
+    "message": "Your favorite oat milk is back! 🎉 Hey Iskandar, good news! Confirm got your oat milk restocked at Kampung Fresh. Pop by after work as you planned! See you! Reply STOP to opt out",
+    "tags_used": [
+      "restock_request",
+      "loyal_regular",
+      "product_interest"
+    ],
+    "reason": "Notified customer about oat milk restock, acknowledging their loyalty and prior interest/promise to visit."
+  },
+  "C026": {
+    "customer_id": "C026",
+    "message": "Glad you liked your order! 🎉 Don't forget we have free delivery this week for orders above $30. Stock up on fresh kai lan and more! Reply STOP to opt out",
+    "tags_used": [
+      "Delivery Promotion",
+      "Fresh Produce"
+    ],
+    "reason": "Remind a loyal customer about a general delivery offer and fresh produce to encourage their next order."
   },
   "C007": {
     "customer_id": "C007",
-    "message": "Hi Meera! For your office potluck next Friday, we've got party snack packs ready for you! 😉 Get 10% off your next order with us. Reply STOP to opt out",
+    "message": "Hi Meera! Saw you're planning for an office potluck next Friday! 🎉 Grab our party snack packs ($12/$20) to make it a hit! Enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "upcoming_event",
-      "product_interest",
-      "discount_offer"
+      "product_interest"
     ],
-    "reason": "Persuadable customer interested in party snacks for an upcoming event, offered a discount."
+    "reason": "Persuadable customer with upcoming event and product interest"
   },
   "C008": {
     "customer_id": "C008",
-    "message": "Hi Jason! 🛒 Same-day delivery for orders before 2pm awaits! As you're a valued customer, enjoy 5% off your next order. Stock up on Gardenia bread or our seasonal durian! Reply STOP to opt out",
+    "message": "Hi Jason! 👋 Same-day delivery for orders before 2pm! As you're a valued customer, enjoy 10% off your next order with us. Shop now and get your groceries delivered fast! #KampungFresh \nReply STOP to opt out",
     "tags_used": [
-      "product_interest",
-      "Persuadable"
+      "Persuadable",
+      "product_interest"
     ],
-    "reason": "Sent a targeted promo to a persuadable customer interested in Gardenia bread."
+    "reason": "Offer discount to a persuadable customer interested in Gardenia bread and mention best hook"
   },
   "C009": {
     "customer_id": "C009",
-    "message": "Hi Nurul, we sincerely apologise for the 2-hour delivery delay and the melted ice cream. 😞 We're giving you 10% off your next order with us! Reply STOP to opt out",
+    "message": "Hi Nurul, we're so sorry about the 2-hour delivery delay and the melted ice cream! 😞 As an apology, please enjoy 10% off your next order with us. Reply STOP to opt out",
     "tags_used": [
-      "complaint_delivery"
+      "complaint_delivery",
+      "Persuadable"
     ],
-    "reason": "Apologized for late delivery and melted ice cream, offered 10% discount as customer is Persuadable."
+    "reason": "Apologized for late delivery and melted ice cream, applied 10% discount as per 'Persuadable' label."
   },
   "C010": {
     "customer_id": "C010",
-    "message": "Hi Cheryl! Heard you usually buy 2 cartons of Pokka green tea a month! We've got it back in stock now. As a loyal customer, enjoy 5% off your next purchase! 🍿 Reply STOP to opt out",
+    "message": "Hi Cheryl! Saw you like Pokka green tea. Good news, it's back in stock! As a loyal regular, enjoy 10% off your next purchase with us. 😉 Reply STOP to opt out",
+    "tags_used": [
+      "loyal_regular",
+      "product_interest",
+      "restock_request"
+    ],
+    "reason": "Sent a 10% discount to a persuadable customer who enquired about a restocked item."
+  },
+  "C011": {
+    "customer_id": "C011",
+    "message": "Hi Ravi! Looks like you're interested in our Jurong West delivery availability. We currently offer same-day delivery for orders above $50 in Tampines and Pasir Ris. Let us know if you're in the area! 😉 Reply STOP to opt out",
+    "tags_used": [
+      "best_hook",
+      "avoid"
+    ],
+    "reason": "Followed avoid instruction and provided relevant store info"
+  },
+  "C012": {
+    "customer_id": "C012",
+    "message": "Hi Grace! Just a reminder that Kampung Fresh is open daily from 8am to 9pm. Pop by for your groceries! #groceries #Tampines Reply STOP to opt out",
+    "tags_used": [
+      "opening_hours"
+    ],
+    "reason": "Customer is a lost cause, message is informative and neutral."
+  },
+  "C013": {
+    "customer_id": "C013",
+    "message": "Hi Farid, apologies that our rice prices were a concern. We do have affordable Thai jasmine rice in stock now. Let us know if you'd like to try! 😊 Reply STOP to opt out",
+    "tags_used": [
+      "complaint_price",
+      "product_interest"
+    ],
+    "reason": "Addressed complaint and pushed relevant product"
+  },
+  "C014": {
+    "customer_id": "C014",
+    "message": "Hi Wei, we noticed you haven't visited us in a while. Hope you're doing well! Let us know if you need anything. Reply STOP to opt out",
+    "tags_used": [
+      "lost_cause"
+    ],
+    "reason": "Customer is a lost cause and wants to be removed from communications."
+  },
+  "C015": {
+    "customer_id": "C015",
+    "message": "Hi Arjun! Fresh kai lan is available at Kampung Fresh! Get your greens today! 🥕 #SupportLocal #FreshProduce Reply STOP to opt out",
+    "tags_used": [
+      "product_interest"
+    ],
+    "reason": "Customer interested in kai lan"
+  },
+  "C016": {
+    "customer_id": "C016",
+    "message": "Hi Hui! Your usual: 2 loaves Gardenia and kai lan are ready! We also have other fresh produce. Enjoy same-day delivery for orders above $50! Reply STOP to opt out",
+    "tags_used": [
+      "restock_request",
+      "product_interest",
+      "loyal_regular"
+    ],
+    "reason": "Customer requested specific items, acknowledge and remind of delivery offer"
+  },
+  "C018": {
+    "customer_id": "C018",
+    "message": "Hi Rachel! Our Kampung Fresh grocer is a 5-minute walk from Tampines MRT exit B. Come stock up on your faves like fresh kai lan and Gardenia bread! 🍕 Reply STOP to opt out",
+    "tags_used": [
+      "best_hook"
+    ],
+    "reason": "Lost cause customer, sent hook about location and general product availability."
+  },
+  "C017": {
+    "customer_id": "C017",
+    "message": "Hi Zainal! Re your query about lottery tickets, unfortunately Kampung Fresh doesn't sell them. But we always have fresh kai lan & yummy frozen dumplings for your cooking! Hope to see you around Tampines! Reply STOP to opt out",
+    "tags_used": [
+      "product_interest"
+    ],
+    "reason": "Acknowledged customer's lottery ticket query, stated store does not sell them, and gently suggested other available products from stock."
+  },
+  "C019": {
+    "customer_id": "C019",
+    "message": "Hi Vikram, regarding your chicken freshness concern, we truly hope all is well now. We're always working hard to ensure top quality for all our produce at Kampung Fresh. Hope to see you around soon! Reply STOP to opt out",
+    "tags_used": [
+      "Customer Service"
+    ],
+    "reason": "Acknowledges past chicken freshness concern without pushing a refund, respecting customer's 'never mind already' status."
+  },
+  "C020": {
+    "customer_id": "C020",
+    "message": "Hi Joanne! Free delivery for orders above $30 this week at Kampung Fresh! No need to carry heavy groceries home. Grab your favs like fresh kai lan or frozen dumplings! 😉\n\nReply STOP to opt out",
+    "tags_used": [
+      "upcoming_event"
+    ],
+    "reason": "Inform a 'Lost Cause' customer about a free delivery promotion to encourage a return visit."
+  },
+  "C027": {
+    "customer_id": "C027",
+    "message": "Hi Lakshmi! Your durian box is reserved for this Sunday at Kampung Fresh. Get ready for some yummy durian! See you soon! Reply STOP to opt out",
+    "tags_used": [
+      "product_interest",
+      "upcoming_event"
+    ],
+    "reason": "Remind customer about durian reservation."
+  },
+  "C028": {
+    "customer_id": "C028",
+    "message": "Benjamin, it's time for your usual order from Kampung Fresh! Don't forget our free delivery this week for orders above $30. Stock up on fresh kai lan & eggs! 😉 Reply STOP to opt out",
+    "tags_used": [
+      "loyal_regular",
+      "delivery_offer"
+    ],
+    "reason": "Reminded loyal customer to place their usual order and highlighted the free delivery offer."
+  },
+  "C029": {
+    "customer_id": "C029",
+    "message": "Your usual order, ready for pickup! Hi Amirah, your usual free-range eggs, Gardenia bread & Pokka green tea are in stock. So convenient to grab them today! See you at Kampung Fresh! 👋 Reply STOP to opt out",
+    "tags_used": [
+      "loyal_regular"
+    ],
+    "reason": "Confirming usual order and convenience for a loyal customer based on their preferences."
+  },
+  "C030": {
+    "customer_id": "C030",
+    "message": "Hey Terence! Your favourite kai lan just arrived, super fresh and crunchy! 🥬 Perfect for dinner tonight. Plus, enjoy free delivery this week for orders above $30. Shop now at Kampung Fresh! Reply STOP to opt out",
     "tags_used": [
       "loyal_regular",
       "product_interest"
     ],
-    "reason": "Persuadable customer interested in Pokka green tea, offer a discount."
-  },
-  "C014": {
-    "customer_id": "C014",
-    "message": "Hi Wei, thanks for being our loyal regular before moving to Woodlands! We've noted your request to be removed from our broadcast list. We'll miss you in Tampines, but same-day delivery is always available if you ever need us. Take care! Reply STOP to opt out",
-    "tags_used": [
-      "loyal_regular"
-    ],
-    "reason": "Acknowledged list removal request while warmly thanking the customer for years of loyalty after moving."
-  },
-  "C015": {
-    "customer_id": "C015",
-    "message": "Hi Arjun! Fresh kai lan is available at Kampung Fresh today 🥬 Order before 2pm for same-day delivery, with free delivery this week for orders above $30. Reply STOP to opt out",
-    "tags_used": [
-      "product_interest"
-    ],
-    "reason": "Notified customer of restocked kai lan per past interest without offering discounts."
+    "reason": "Reminded loyal customer about their favourite product and mentioned a current delivery offer."
   }
 }
