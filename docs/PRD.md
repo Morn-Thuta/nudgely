@@ -169,7 +169,7 @@ Five Streamlit pages in a sidebar, one per journey step group.
 
 | Page | Shows | Main controls |
 | --- | --- | --- |
-| 1. Overview | One-line problem, 3 headline numbers (+57% visits, 1.9x purchases, 1.8x targeting), proof chart | None |
+| 1. Overview | One-line problem, 3 headline numbers (+57% visits, 1.9x purchases, 1.8x targeting), proof chart (spec; the current app shows the 53% chart and its interval) | None |
 | 2. Customers | Table of 30 customers: name, label badge, uplift, days since last visit, top tag | Filter by label; click row to open detail |
 | 3. Customer detail | Chat history (bubbles), extracted tags with evidence quotes, draft message + reason | Regenerate message (rate-limited) |
 | 4. Campaign | Budget slider, holdout % slider; three lists: Will message, Held out, Skipped (with reason); message previews | Send button; per-customer status after send |
@@ -235,7 +235,7 @@ The biggest risk is MantaGO API access; every risk has a fallback that keeps the
 - [x] Exact team name as registered: **Nudgely**
 - [x] Lenta dataset licence terms: no explicit licence is published. Source is the BigTarget Hackathon by Lenta and Microsoft (2020), distributed through scikit-uplift. Disclosed as non-commercial research and demo use (see `docs/Responsible_AI.md`)
 - [x] Submission deadline time on 23 Oct: **11:59 PM SGT**
-- [ ] Which LLM provider we use (whoever has the paid key)
+- [x] Which LLM provider we use: free tiers. OpenRouter free models and Google Gemini for tags, Gemini for the 15 drafts so far (confirm with Jack)
 
 ## Sources
 

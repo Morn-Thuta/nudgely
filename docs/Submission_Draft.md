@@ -24,9 +24,9 @@ These are ready-to-paste answers for the usual hackathon form fields. The real f
 
 Fill in full names exactly as registered.
 
-## 2. Project summary (150 words)
+## 2. Project summary (145 words, limit 150)
 
-> Small shops send the same "We miss you, 10% off" to every customer and never learn whether it worked. Nudgely fixes this in three steps on top of MantaGO. First, an uplift model picks the customers a message will bring back, skipping those who would return anyway. Second, an LLM reads each customer's past chats and writes a short personal message grounded in their own words, such as an oat milk restock or a son's birthday party, with capped discounts and an opt-out line. The owner previews every message before MantaGO sends it on WhatsApp. Third, a random 10% is held out, so every campaign measures its own lift. On 103,000 unseen grocery customers, our model's top 30% captured 53% of all extra visits, about 1.8x random: an early, noisy signal. Names and chats are fictional, gender and age are excluded, and live tests reach only our own opted-in phones.
+> Small shops send the same "We miss you, 10% off" to every customer and never learn whether it worked. Nudgely fixes this in three steps on top of MantaGO. First, an uplift model picks the customers a message will bring back, skipping those who would return anyway. Second, an LLM reads each customer's past chats and drafts a short personal message grounded in what they said, such as a birthday party or a late delivery, with capped discounts and an opt-out line. The owner approves every message before MantaGO sends it on WhatsApp. Third, a random 10% is held out, so each campaign can measure its own lift. On 103,000 unseen grocery customers, our top 30% captured 53% of extra visits (90% interval 31–89%), about 1.8x random. Names and chats are fictional, gender and age are excluded, and live tests reach only our opted-in phones.
 
 ## 3. Longer fields
 
@@ -41,14 +41,14 @@ Fill in full names exactly as registered.
 **Solution and how it works**
 
 > 1. **Smart Send:** an uplift model predicts how much more likely each customer is to return because of a message, and picks the top customers within budget.
-> 2. **Chat Memory:** an LLM extracts tags from past chats, such as restock requests, complaints and upcoming events. Each tag must quote the customer's own words.
+> 2. **Chat Memory:** an LLM extracts tags from past chats, such as restock requests, complaints and upcoming events. Each tag must quote the chat word for word.
 > 3. **Personal message:** one short draft per customer, with a 10% discount cap, an apology first for complaints, and an opt-out line. The owner previews each one.
-> 4. **Send:** the MantaGO Open API delivers each message on WhatsApp.
-> 5. **Prove:** a random 10% of chosen customers is held out, so lift is measured against a real no-message group.
+> 4. **Send:** approved messages go out through the MantaGO Open API on WhatsApp. In the demo, our own test phones get real messages and everyone else is simulated.
+> 5. **Prove:** a random 10% of chosen customers is held out, so lift can be measured against a real no-message group.
 
 **How we use MantaGO**
 
-> MantaGO is the delivery and customer layer. Nudgely's Open API client lists members and their clientIds, and sends a personalised broadcast to each chosen customer. The client also supports creating and assigning manual tags, so a business could see each customer's chat memory inside MantaGO. Nudgely decides who to message and what to say; MantaGO delivers it.
+> MantaGO is the delivery and customer layer. When the owner confirms a campaign, the app sends each approved message as a personalised MantaGO broadcast; in the demo, team test phones get real messages and other customers are simulated. Our Open API client also lists members (used to map clientIds) and supports creating and assigning manual tags, so a business could see each customer's chat memory inside MantaGO. Tag write-back is not yet wired into the app. Nudgely decides who to message and what to say; MantaGO delivers it.
 
 *Check with Thuta before submitting: if a live send or tag write-back hasn't worked by Friday, say "integration built and tested in simulation" instead.*
 
@@ -58,11 +58,11 @@ Fill in full names exactly as registered.
 > - **SMS vs no SMS (Lenta, 687k grocery customers):** visits 10.3% → 11.0% (+7%).
 > - **Our model on 103k unseen Lenta customers:** the top 30% captured 53% of all extra visits vs 30% for random (about 1.8x), with a 90% interval of 31–89%.
 >
-> For a business, this means more returns per message, fewer wasted discounts, fewer paid WhatsApp messages, and a retention-lift number measured against its own holdout group.
+> For a business, this means more returns per message, fewer wasted discounts, fewer paid WhatsApp messages, and a retention-lift number it can measure against its own holdout group.
 
 **Tech stack**
 
-> Python, pandas, scikit-learn (HistGradientBoosting), scikit-uplift (two-model uplift), Google Gemini API (provider-swappable LLM wrapper), Streamlit on Streamlit Community Cloud, and the MantaGO Open API via `requests`.
+> Python, pandas, scikit-learn (HistGradientBoosting), scikit-uplift (two-model uplift), free-tier Google Gemini and OpenRouter models (through a provider-swappable LLM wrapper), Streamlit (built for Streamlit Community Cloud), and the MantaGO Open API via `requests`.
 
 **Datasets and licences**
 
@@ -70,15 +70,15 @@ Fill in full names exactly as registered.
 > - **Hillstrom:** 64,000 customers, randomised email test, released publicly by Kevin Hillstrom (MineThatData, 2008), distributed through scikit-uplift.
 > - **Customer names and chats:** fictional, written by the team.
 
-**Responsible AI** (148 words, from [Responsible_AI.md](Responsible_AI.md))
+**Responsible AI** (143 words, from [Responsible_AI.md](Responsible_AI.md))
 
-> Nudgely is honest, consent-first and human-controlled. All customer names and chats are fictional, and model results come from public randomised datasets (Lenta, Hillstrom); we report the uncertainty (90% interval 31–89%) alongside the headline. Live messages go only to our team's own opted-in test phones; opt-outs, such as a demo customer who asked to be removed, are blocked automatically, and every message ends with "Reply STOP to opt out". Chats are scrubbed of names and phone numbers before the LLM reads them, and API keys are kept out of GitHub. The targeting model uses behaviour only: gender, age and children are removed. Every AI tag must quote the customer's own words, messages may not invent stock or prices, and discounts are capped at 10%. The owner previews every message and must confirm before anything is sent; rehearsal mode is the default. Production adds DNC Register checks under Singapore's PDPA.
+> All customer names and chats are fictional, and model results come from public randomised datasets (Lenta, Hillstrom); we report the uncertainty (90% interval 31–89%) alongside the headline. Live messages go only to our team's own opted-in test phones; opt-outs are blocked automatically, and every message ends with "Reply STOP to opt out". Chats are scrubbed of names and phone numbers before the LLM reads them (the message writer sees only a first name), and API keys stay out of GitHub. The targeting model uses behaviour only: gender, age and children are removed. Every AI tag must quote the chat word for word, the writer is instructed not to invent stock or prices, and discounts are hard-capped at 10%. The owner previews every message and must confirm before anything is sent; rehearsal mode is the default. Production adds DNC Register checks under Singapore's PDPA.
 
 **AI use disclosure**
 
-> - **In the product:** Google Gemini API (free tier) extracts tags from chats and drafts messages. Only fictional data is sent, because free-tier inputs may be used by Google to improve its products.
+> - **In the product:** free-tier LLMs extract tags from chats (OpenRouter free models and Google Gemini) and draft messages (Google Gemini). Only fictional data is sent, because free-tier inputs may be used by the provider to improve its products.
 > - **In development:** the team used Claude (Anthropic) as a coding assistant; this is recorded in the commit history.
-> - All AI output is checked automatically and reviewed by a person before use.
+> - Every message draft is auto-checked against hard rules, and the owner must confirm before any send.
 
 **Limitations and next steps**
 

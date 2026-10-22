@@ -2,7 +2,7 @@
 
 **Team Nudgely** · AI-GNITION 2026 · Problem Statement 1 · Built on the MantaGO Open API (Eslitec)
 
-Nudgely turns the purchase and chat data a business already holds into personal MantaGO messages. It sends them only to customers a message will actually bring back, and measures the lift against a no-message group.
+Nudgely turns the purchase and chat data a business already holds into personal MantaGO messages. It sends them only to customers a message will actually bring back, and holds out a no-message group so the lift can be measured.
 
 ## Problem and target users
 
@@ -18,9 +18,9 @@ Small retailers and F&B businesses send the same "We miss you, 10% off" to every
 Nudgely decides **who** to message and **what** to say, then proves the result.
 
 1. **Smart Send (who):** an uplift model predicts how much more likely each customer is to return *because of* a message. It picks the top customers within the budget and skips those who would return anyway or won't be moved.
-2. **Chat Memory (what):** an LLM reads each chosen customer's past chats and pulls out tags such as a restock request, a delivery complaint or an upcoming party. Every tag must quote the customer's own words.
+2. **Chat Memory (what):** an LLM reads each chosen customer's past chats and pulls out tags such as a restock request, a delivery complaint or an upcoming party. Every tag must quote the chat word for word.
 3. **Personal message:** one short message per customer, built from those tags. Discounts are capped at 10%, complaints get an apology first, and every message has an opt-out line. The owner previews every message.
-4. **Send via MantaGO:** the MantaGO Open API delivers each message and can store the tags on the customer's MantaGO profile.
+4. **Send via MantaGO:** approved messages go out through the MantaGO Open API on WhatsApp. In the demo, our own test phones get real messages and everyone else is simulated. Our API client also supports writing tags back to MantaGO.
 5. **Prove it:** a random 10% of chosen customers is held out. Retention lift = return rate of messaged customers minus return rate of the held-out group.
 
 ## Evidence and expected impact
@@ -41,15 +41,15 @@ Randomised tests show messages bring customers back. Our model points a limited 
 
 ## Tools and technology
 
-- **MantaGO Open API** (Eslitec): message delivery (WhatsApp) and customer tags
+- **MantaGO Open API** (Eslitec): message delivery on WhatsApp; tag write-back supported in our client
 - **Uplift model:** scikit-uplift two-model approach with scikit-learn HistGradientBoosting, trained offline on the Lenta dataset
-- **LLM:** Google Gemini API through a provider-swappable wrapper, used for tag extraction and message drafts. Output is JSON, auto-checked against hard rules and cached
-- **App:** Python and Streamlit, deployed on Streamlit Community Cloud
+- **LLM:** free-tier Google Gemini and OpenRouter models through a provider-swappable wrapper, for tag extraction and message drafts. Output is JSON, auto-checked against hard rules and cached. Only fictional data is sent
+- **App:** Python and Streamlit, built for Streamlit Community Cloud
 
 ## Responsible AI
 
 - **Consent:** live sends go only to our own opted-in test phones. Opt-outs are blocked automatically, and every message ends "Reply STOP to opt out".
-- **Privacy:** chats are scrubbed of names and phone numbers before the LLM reads them, and no API keys are in GitHub.
+- **Privacy:** chats are scrubbed of names and phone numbers before the LLM reads them, and the message writer sees only a first name. No API keys are in GitHub.
 - **Fairness:** targeting uses behaviour only; gender, age and children are removed.
 - **Human in control:** the owner previews every message and must confirm before anything is sent. Rehearsal mode is the default.
 - **Singapore:** a real rollout adds recorded consent and DNC Register checks under the PDPA, in line with the Model AI Governance Framework's human-in-the-loop approach.

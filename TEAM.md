@@ -90,7 +90,8 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 **Thu**
 - [x] Responsible AI section for deck + form: fake data disclosure, opt-in + opt-out, no gender/age/children in the model, names and phones stripped before the LLM, owner previews every message, keys not in GitHub → `docs/Responsible_AI.md`
 - [x] 150-word summary + finished one-page brief → `docs/Submission_Draft.md`, `docs/One_Page_Brief.md` + `.pdf`
-- [x] Fill in the submission form as a draft. Check every link opens without an access request → `docs/Submission_Draft.md` (repo is still private, app not deployed: see section 4)
+- [x] Fill in the submission form as a draft → `docs/Submission_Draft.md`
+- [ ] Check every link opens without an access request. **Failing now:** the repo is private (Thuta: make it public; history checked, no keys) and the app isn't deployed (Jayden). See `docs/Submission_Draft.md` section 4
 - [x] Numbers sheet for deck and video → `docs/Numbers.md`. **Hillstrom corrected: +72% / 2.2x is the men's email group only; all email is +57% / about 1.9x**
 
 **Fri**

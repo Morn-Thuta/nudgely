@@ -32,7 +32,7 @@
   .kpi .what { font-weight: 600; margin-top: 1.2mm; font-size: 8.2pt; }
   .kpi .src { color: var(--muted); font-size: 7pt; margin-top: 0.6mm; }
   main { display: grid; grid-template-columns: 1fr 1fr; gap: 0 7mm; padding: 1mm 12mm 0; flex: 1; }
-  h2 { font-size: 7.2pt; text-transform: uppercase; letter-spacing: 0.13em; color: var(--brand); margin: 3.9mm 0 1.5mm;
+  h2 { font-size: 7.2pt; text-transform: uppercase; letter-spacing: 0.13em; color: var(--brand); margin: 3.4mm 0 1.4mm;
        font-weight: 750; display: flex; align-items: center; gap: 2mm; }
   h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
   p { margin: 0 0 1.3mm; }
@@ -67,7 +67,7 @@
     <div class="brand">nudgely<span>↗</span></div>
     <div class="meta"><b>Team Nudgely</b> · AI-GNITION 2026<br>Problem Statement 1 · Built on MantaGO (Eslitec)</div>
     <h1>Message the right customers, say the right thing, <em>prove it worked.</em></h1>
-    <p class="lede">Nudgely turns the purchase and chat data a business already holds into personal MantaGO messages. It sends them only to customers a message will actually bring back, and measures the lift against a no-message group.</p>
+    <p class="lede">Nudgely turns the purchase and chat data a business already holds into personal MantaGO messages. It sends them only to customers a message will actually bring back, and holds out a no-message group so the lift can be measured.</p>
   </header>
 
   <section class="kpis" aria-label="Evidence">
@@ -85,10 +85,10 @@
       <h2>Solution and core workflow</h2>
       <ol class="steps">
         <li><b>Smart Send (who).</b> An uplift model predicts how much more likely each customer is to return <i>because of</i> a message, picks the top customers within budget, and skips those who'd return anyway or won't be moved.</li>
-        <li><b>Chat Memory (what).</b> An LLM reads past chats and extracts tags (restock request, delivery complaint, upcoming party). Every tag must quote the customer's own words.</li>
+        <li><b>Chat Memory (what).</b> An LLM reads past chats and extracts tags (restock request, delivery complaint, upcoming party). Every tag must quote the chat word for word.</li>
         <li><b>Personal message.</b> One short draft per customer: discount capped at 10%, apology first for complaints, opt-out line. The owner previews each one.
           <div class="bubble">Hi Aisha! Planning your son's birthday party? We've got party snack packs ready for you! 🎉 Enjoy 10% off your next order too. <small>Reply STOP to opt out</small></div></li>
-        <li><b>Send via MantaGO.</b> The Open API delivers each message (WhatsApp) and can store the tags on the customer's profile.</li>
+        <li><b>Send via MantaGO.</b> Approved messages go out through the Open API on WhatsApp. In the demo, our test phones get real messages; the rest are simulated.</li>
         <li><b>Prove it.</b> A random 10% of chosen customers is held out. Retention lift = return rate of messaged minus held-out customers.</li>
       </ol>
     </div>
@@ -101,16 +101,16 @@
         <tr><td>SMS vs no SMS<br><span class="note">Lenta · 687k grocery customers</span></td><td>Visits 10.3% → 11.0% (+7%)</td></tr>
         <tr><td>Our top 30% vs random 30%<br><span class="note">Lenta test set · 103k unseen customers</span></td><td>Captures 53% of all extra visits vs 30% (about 1.8x). 90% bootstrap interval 31–89%</td></tr>
       </table>
-      <p class="note"><b>Expected impact:</b> more returns per message, fewer wasted discounts on customers who'd come back anyway, fewer paid WhatsApp messages, and a monthly retention-lift number the owner can trust.</p>
+      <p class="note"><b>Expected impact:</b> more returns per message, fewer wasted discounts on customers who'd come back anyway, fewer paid WhatsApp messages, and a retention-lift number measured against the business's own no-message group.</p>
 
       <h2>Tools and technology</h2>
-      <span class="tag">MantaGO Open API</span><span class="tag">scikit-uplift</span><span class="tag">scikit-learn HistGradientBoosting</span><span class="tag">Google Gemini API</span><span class="tag">Python · Streamlit</span><span class="tag">Streamlit Community Cloud</span>
-      <p class="note" style="margin-top:0.4mm">Model trained offline on Lenta. LLM output is JSON, auto-checked against hard rules and cached. The app never calls the LLM on page load.</p>
+      <span class="tag">MantaGO Open API</span><span class="tag">scikit-uplift</span><span class="tag">scikit-learn HistGradientBoosting</span><span class="tag">Gemini · OpenRouter (free tiers)</span><span class="tag">Python · Streamlit</span>
+      <p class="note" style="margin-top:0.4mm">Model trained offline on Lenta. LLM output is JSON, auto-checked against hard rules and cached; only fictional data is sent. App built for Streamlit Community Cloud.</p>
 
       <h2>Responsible AI</h2>
       <ul class="rai">
         <li><b>Consent.</b> Live sends go only to our own opted-in test phones. Opt-outs are blocked automatically. Every message ends "Reply STOP to opt out".</li>
-        <li><b>Privacy.</b> Chats are scrubbed of names and phone numbers before the LLM reads them. No API keys in GitHub.</li>
+        <li><b>Privacy.</b> Chats are scrubbed of names and phone numbers before the LLM reads them; the message writer sees only a first name. No API keys in GitHub.</li>
         <li><b>Fairness.</b> Targeting uses behaviour only: gender, age and children are removed from the model.</li>
         <li><b>Human in control.</b> The owner previews every message and must confirm before sending. Rehearsal mode is the default.</li>
         <li><b>Singapore.</b> A real rollout adds recorded consent and DNC Register checks under the PDPA, following the Model AI Governance Framework's human-in-the-loop approach.</li>

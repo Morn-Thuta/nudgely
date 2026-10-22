@@ -65,12 +65,23 @@ The deck and video should never claim "30 personalised messages" unless `message
 | "Kampung Fresh saw X% more visits" | No live test has run. Kampung Fresh is fictional | "On public grocery data…" |
 | "Proven in Singapore" | Lenta is Russian grocery SMS (2020); Hillstrom is US online retail email (2008) | "Proven on public randomised tests overseas; a Singapore pilot is the next step" |
 | "Names never reach the AI" | The chat scrubber removes names and phone numbers, but the message writer receives a first name to greet the customer | "Chats are scrubbed of names and phone numbers; the writer sees only a first name" |
-| "Uses a paid LLM API" | The drafts were made on the Gemini free tier | "Google Gemini API (free tier, fictional data only)" |
+| "Uses a paid LLM API" | Tags and drafts were made on free tiers (OpenRouter free models, Google Gemini) | "free-tier LLMs (Gemini, OpenRouter), fictional data only" |
+| "Every tag quotes the customer" | The filter accepts any word-for-word quote from the chat, including store lines (3 of 46 tags) | "every tag quotes the chat word for word" |
+| "Complaints get no sales pitch" | Not hard-checked; C002, C006 and C009 drafts offer a discount after the apology | "complaints get an apology first" (until Jack fixes those drafts) |
+| "Each campaign measures its lift" | The app creates the holdout but doesn't record returns yet | "each campaign *can* measure its own lift" |
+| "Sends through MantaGO and writes tags back" | Only the broadcast is wired into the app, and only to test phones. Tag write-back is in the client, not the app. No live send confirmed yet | "sends to our test phones; others simulated; tag write-back supported in the client" |
+| "Deployed on Streamlit Cloud" (before it is) | Not deployed as of Thu night | "built for Streamlit Community Cloud", then add the link once live |
 | "Only messages opted-in customers" (as a fact about the demo) | `consent.json` records opt-outs only. Live sends go only to the team's own opted-in phones | "Live sends go only to our own opted-in test phones; opt-outs like C014 are blocked automatically" |
+
+## Stale copies to fix (not Shareef's files)
+
+- `app/lib.py` lines 33–35: `HILLSTROM` still holds the men's-only figures (18.3%, 1.25%, +72%, 2.2x), labelled as plain "email". Nothing in the app uses it today, but whoever owns `app/` should update it to the combined figures or delete it, so it never reaches a slide. (Jayden / Thuta)
+- `README.md`: still says there is "only one example message draft" and a partial extraction cache. There are now 15 drafts and 30 of 30 tags. (Jayden)
+- `docs/PRD.md` LLM spec: says "via a paid API key"; the demo used free tiers. (Thuta)
 
 ## Spoken version for the video (about 20 seconds)
 
-> "We tested the targeting on 103,000 real grocery customers the model had never seen. Messaging our top 30% would have captured about half of all the extra visits, roughly 1.8 times better than picking at random. The range is wide, so we treat it as an early signal, and the product itself keeps a no-message group so every campaign proves its own result."
+> "We tested the targeting on 103,000 real grocery customers the model had never seen. Messaging our top 30% would have captured about half of all the extra visits, roughly 1.8 times better than picking at random. The range is wide, so we treat it as an early signal, and the product itself keeps a no-message group so every campaign can prove its own result."
 
 ## Friday final check
 
