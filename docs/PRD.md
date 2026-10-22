@@ -16,9 +16,11 @@ Ship a deployed web app that judges can try in a signed-out browser, showing one
 
 | Dataset | No message | Got message | Effect |
 | --- | --- | --- | --- |
-| Hillstrom, 64k shoppers, email | 10.6% visited, 0.57% bought | 18.3% visited, 1.25% bought | +72% visits, about 2.2x purchases |
+| Hillstrom, 64k shoppers, email (both email groups) | 10.6% visited, 0.57% bought | 16.7% visited, 1.07% bought | +57% visits, about 1.9x purchases (best email, men's: +72% visits, 2.2x purchases) |
 | Lenta, 687k grocery customers, SMS | 10.3% visited | 11.0% visited | +7% visits |
-| Lenta, our uplift model (test set) | Random 30% of customers | Model's top 30% | 53% of extra visits vs 30%, about 1.8x |
+| Lenta, our uplift model (test set) | Random 30% of customers | Model's top 30% | 53% of extra visits vs 30%, about 1.8x (noisy: 90% interval 31–89%) |
+
+All figures: [docs/Numbers.md](Numbers.md).
 
 **In scope (MVP):**
 
@@ -167,7 +169,7 @@ Five Streamlit pages in a sidebar, one per journey step group.
 
 | Page | Shows | Main controls |
 | --- | --- | --- |
-| 1. Overview | One-line problem, 3 headline numbers (+72% visits, 2.2x purchases, 1.8x targeting), proof chart | None |
+| 1. Overview | One-line problem, 3 headline numbers (+57% visits, 1.9x purchases, 1.8x targeting), proof chart | None |
 | 2. Customers | Table of 30 customers: name, label badge, uplift, days since last visit, top tag | Filter by label; click row to open detail |
 | 3. Customer detail | Chat history (bubbles), extracted tags with evidence quotes, draft message + reason | Regenerate message (rate-limited) |
 | 4. Campaign | Budget slider, holdout % slider; three lists: Will message, Held out, Skipped (with reason); message previews | Send button; per-customer status after send |
@@ -229,10 +231,10 @@ The biggest risk is MantaGO API access; every risk has a fallback that keeps the
 
 **Open questions:**
 
-- [ ] Which problem statement number is ours (1 or 2)?
-- [ ] Exact team name as registered
-- [ ] Lenta dataset licence terms (needed for the disclosure field)
-- [ ] Submission deadline time on 23 Oct
+- [x] Which problem statement number is ours (1 or 2)? **Problem Statement 1**
+- [x] Exact team name as registered: **Nudgely**
+- [x] Lenta dataset licence terms: no explicit licence is published. Source is the BigTarget Hackathon by Lenta and Microsoft (2020), distributed through scikit-uplift. Disclosed as non-commercial research and demo use (see `docs/Responsible_AI.md`)
+- [x] Submission deadline time on 23 Oct: **11:59 PM SGT**
 - [ ] Which LLM provider we use (whoever has the paid key)
 
 ## Sources

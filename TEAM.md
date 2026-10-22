@@ -85,12 +85,13 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 
 **Wed**
 - [x] Update the numbers in `docs/PRD.md` and `docs/One_Page_Brief.md`: targeting is now **top 30% captures ~53% of extra visits (about 1.8x random)**, not 45% / 1.5x. Source: `data/uplift_summary.json` (done by Jack, 21 Oct - all 5 places)
-- [ ] Find out: problem statement number, exact team name, deadline time on Fri, Lenta licence
+- [x] Find out: problem statement number, exact team name, deadline time on Fri, Lenta licence (PS1 · Nudgely · 11:59 PM SGT · see PRD open questions)
 
 **Thu**
-- [ ] Responsible AI section for deck + form: fake data disclosure, opt-in + opt-out, no gender/age/children in the model, names and phones stripped before the LLM, owner previews every message, keys not in GitHub
-- [ ] 150-word summary + finished one-page brief
-- [ ] Fill in the submission form as a draft. Check every link opens without an access request
+- [x] Responsible AI section for deck + form: fake data disclosure, opt-in + opt-out, no gender/age/children in the model, names and phones stripped before the LLM, owner previews every message, keys not in GitHub → `docs/Responsible_AI.md`
+- [x] 150-word summary + finished one-page brief → `docs/Submission_Draft.md`, `docs/One_Page_Brief.md` + `.pdf`
+- [x] Fill in the submission form as a draft. Check every link opens without an access request → `docs/Submission_Draft.md` (repo is still private, app not deployed: see section 4)
+- [x] Numbers sheet for deck and video → `docs/Numbers.md`. **Hillstrom corrected: +72% / 2.2x is the men's email group only; all email is +57% / about 1.9x**
 
 **Fri**
 - [ ] Final number check across deck, brief, video and app (they must all match)
