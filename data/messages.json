@@ -41,23 +41,23 @@
   },
   "C005": {
     "customer_id": "C005",
-    "message": "Hello Siti! Remember asking about free-range eggs? Good news, they're back in stock now! 🥳 Come grab your favourite eggs at Kampung Fresh. As a loyal customer, enjoy 10% off your next order! Reply STOP to opt out",
+    "message": "Hello Siti! Remember asking about free-range eggs? Good news, they are back in stock. Come grab them at Kampung Fresh, and enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Informed customer about restocked free-range eggs and offered a 10% discount to a persuadable loyal customer."
+    "reason": "Dropped the 'as a loyal customer' filler. (hand-checked by Jack)"
   },
   "C006": {
     "customer_id": "C006",
-    "message": "Hi Kelvin 👋! We know our quality is good, and we're sorry to hear about your past concerns. As a valued customer, enjoy 10% off your next order with us! We also have free delivery this week for orders above $30. Hope to see you back soon! Reply STOP to opt out",
+    "message": "Hi Kelvin! You said the quality is good but the prices sting - we hear you. Free delivery this week on orders above $30, and 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "complaint_price",
       "complaint_delivery",
       "Persuadable"
     ],
-    "reason": "Customer had past complaints about price and delivery; offered 10% discount and highlighted free delivery to re-engage."
+    "reason": "Uses his own words instead of the shop praising itself; filler removed. (hand-checked by Jack)"
   },
   "C021": {
     "customer_id": "C021",
@@ -99,13 +99,13 @@
   },
   "C025": {
     "customer_id": "C025",
-    "message": "Your favorite oat milk is back! 🎉 Hey Iskandar, good news! Confirm got your oat milk restocked at Kampung Fresh. Pop by after work as you planned! See you! Reply STOP to opt out",
+    "message": "Hey Iskandar! Your favourite oat milk is back in stock. Pop by after work like you said - see you then! Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "loyal_regular",
       "product_interest"
     ],
-    "reason": "Notified customer about oat milk restock, acknowledging their loyalty and prior interest/promise to visit."
+    "reason": "Fixed US spelling and the three repeats of 'oat milk'. (hand-checked by Jack)"
   },
   "C026": {
     "customer_id": "C026",
@@ -127,12 +127,12 @@
   },
   "C008": {
     "customer_id": "C008",
-    "message": "Hi Jason! 👋 Same-day delivery for orders before 2pm! As you're a valued customer, enjoy 10% off your next order with us. Shop now and get your groceries delivered fast! #KampungFresh \nReply STOP to opt out",
+    "message": "Hi Jason! Gardenia bread is in today. Order before 2pm and it reaches you the same day, just like we said. Enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "Persuadable",
       "product_interest"
     ],
-    "reason": "Offer discount to a persuadable customer interested in Gardenia bread and mention best hook"
+    "reason": "Leads with the bread he asked about instead of a generic advert; hashtag and 'valued customer' filler removed. (hand-checked by Jack)"
   },
   "C009": {
     "customer_id": "C009",
@@ -164,11 +164,11 @@
   },
   "C012": {
     "customer_id": "C012",
-    "message": "Hi Grace! Just a reminder that Kampung Fresh is open daily from 8am to 9pm. Pop by for your groceries! #groceries #Tampines Reply STOP to opt out",
+    "message": "Hi Grace! You asked about our Sunday hours - we are open 8am to 9pm daily. Pop by whenever suits you. Reply STOP to opt out",
     "tags_used": [
       "opening_hours"
     ],
-    "reason": "Customer is a lost cause, message is informative and neutral."
+    "reason": "Hashtags removed; now references the question she actually asked. (hand-checked by Jack)"
   },
   "C013": {
     "customer_id": "C013",
@@ -189,11 +189,11 @@
   },
   "C015": {
     "customer_id": "C015",
-    "message": "Hi Arjun! Fresh kai lan is available at Kampung Fresh! Get your greens today! 🥕 #SupportLocal #FreshProduce Reply STOP to opt out",
+    "message": "Hi Arjun! Fresh kai lan came in this morning, same as when you asked. Pop by for your greens. Reply STOP to opt out",
     "tags_used": [
       "product_interest"
     ],
-    "reason": "Customer interested in kai lan"
+    "reason": "Hashtags and the carrot emoji removed; kai lan is a leafy green. (hand-checked by Jack)"
   },
   "C016": {
     "customer_id": "C016",
@@ -207,11 +207,11 @@
   },
   "C018": {
     "customer_id": "C018",
-    "message": "Hi Rachel! Our Kampung Fresh grocer is a 5-minute walk from Tampines MRT exit B. Come stock up on your faves like fresh kai lan and Gardenia bread! 🍕 Reply STOP to opt out",
+    "message": "Hi Rachel! We are a 5-minute walk from Tampines MRT exit B, like we mentioned. Fresh kai lan and Gardenia bread in daily. Reply STOP to opt out",
     "tags_used": [
       "best_hook"
     ],
-    "reason": "Lost cause customer, sent hook about location and general product availability."
+    "reason": "Removed the pizza emoji from a grocery message. (hand-checked by Jack)"
   },
   "C017": {
     "customer_id": "C017",
