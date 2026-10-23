@@ -18,7 +18,7 @@ These are ready-to-paste answers for the usual hackathon form fields. The real f
 |---|---|
 | Min Thuta | Lead, MantaGO integration |
 | Dythan Yong Jun An | Pitch and demo lead |
-| Jack [full name] | Message quality (LLM) |
+| Chen Zexin (Jack) | Message quality (LLM) |
 | Jayden [full name] | App and deployment |
 | Shareef [full name] | Numbers, documentation, responsible AI |
 
