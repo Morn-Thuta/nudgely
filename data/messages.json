@@ -61,12 +61,12 @@
   },
   "C021": {
     "customer_id": "C021",
-    "message": "Hey Hafiz, from your best neighbourhood shop, Kampung Fresh! Just confirming your weekly order of Thai jasmine rice, free-range eggs, and fresh kai lan. All stocked and ready for delivery this afternoon! Thanks for your continued support! ✨ Reply STOP to opt out",
+    "message": "Hey Hafiz, your best neighbourhood shop here! Ready when you are for your weekly rice, eggs and kai lan - all in stock. Just say the word and we will pack it. Thanks for the kind words! Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "loyal_regular"
     ],
-    "reason": "Confirmed weekly restock request for loyal customer, mentioning items are in stock and confirming delivery."
+    "reason": "Invites the weekly order rather than confirming one that was already delivered. (hand-checked by Jack)"
   },
   "C022": {
     "customer_id": "C022",
@@ -155,12 +155,12 @@
   },
   "C011": {
     "customer_id": "C011",
-    "message": "Hi Ravi! Looks like you're interested in our Jurong West delivery availability. We currently offer same-day delivery for orders above $50 in Tampines and Pasir Ris. Let us know if you're in the area! 😉 Reply STOP to opt out",
+    "message": "Hi Ravi! Sorry, we only deliver within Tampines and Pasir Ris for now, so Jurong West is out of range. If you are ever in the area, same-day delivery applies to orders before 2pm, free above $50. Reply STOP to opt out",
     "tags_used": [
       "best_hook",
       "avoid"
     ],
-    "reason": "Followed avoid instruction and provided relevant store info"
+    "reason": "States the real delivery area and the real terms; no longer merges 'same-day' with 'above $50'. (hand-checked by Jack)"
   },
   "C012": {
     "customer_id": "C012",
@@ -172,12 +172,12 @@
   },
   "C013": {
     "customer_id": "C013",
-    "message": "Hi Farid, apologies that our rice prices were a concern. We do have affordable Thai jasmine rice in stock now. Let us know if you'd like to try! 😊 Reply STOP to opt out",
+    "message": "Hi Farid, we hear you on the rice prices. Free delivery this week for orders above $30 if you are stocking up. No pressure - just letting you know. Reply STOP to opt out",
     "tags_used": [
       "complaint_price",
       "product_interest"
     ],
-    "reason": "Addressed complaint and pushed relevant product"
+    "reason": "Drops the claim that the premium rice is 'affordable'; acknowledges the price complaint without arguing. (hand-checked by Jack)"
   },
   "C014": {
     "customer_id": "C014",
@@ -197,13 +197,13 @@
   },
   "C016": {
     "customer_id": "C016",
-    "message": "Hi Hui! Your usual: 2 loaves Gardenia and kai lan are ready! We also have other fresh produce. Enjoy same-day delivery for orders above $50! Reply STOP to opt out",
+    "message": "Hi Hui Min! Time for your usual 2 loaves Gardenia and kai lan? Fresh kai lan came in this morning. Order before 2pm and we can get it to you same day. Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Customer requested specific items, acknowledge and remind of delivery offer"
+    "reason": "Offers the usual order instead of claiming it is already packed; same-day terms stated correctly (before 2pm). (hand-checked by Jack)"
   },
   "C018": {
     "customer_id": "C018",
@@ -257,11 +257,11 @@
   },
   "C029": {
     "customer_id": "C029",
-    "message": "Your usual order, ready for pickup! Hi Amirah, your usual free-range eggs, Gardenia bread & Pokka green tea are in stock. So convenient to grab them today! See you at Kampung Fresh! 👋 Reply STOP to opt out",
+    "message": "Hi Amirah! Time for your usual? Free-range eggs, Gardenia bread and Pokka green tea are all in stock today. Say the word and we will have it ready in 15 min. Reply STOP to opt out",
     "tags_used": [
       "loyal_regular"
     ],
-    "reason": "Confirming usual order and convenience for a loyal customer based on their preferences."
+    "reason": "Asks before promising pickup; 15 min matches what the shop told her in chat. (hand-checked by Jack)"
   },
   "C030": {
     "customer_id": "C030",
