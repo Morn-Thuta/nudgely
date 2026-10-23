@@ -20,101 +20,101 @@
   },
   "C003": {
     "customer_id": "C003",
-    "message": "Hi Priya! Your Deepavali ghee and spice packs are in stock, enough for the whole family's cooking. ✨ Enjoy 10% off your next order! Reply STOP to opt out",
+    "message": "Hello Priya, the Deepavali ghee and spice packs you asked about are in. You mentioned cooking for the whole family - how much would you need? We can set it aside, and there is 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "upcoming_event",
       "product_interest",
       "discount_offer"
     ],
-    "reason": "Announce arrival of requested Deepavali items and offer discount to a persuadable customer."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C004": {
     "customer_id": "C004",
-    "message": "Seasonal durian in stock now, limited boxes, Daniel! 🤤 Don't miss out on this shiok season. Get 10% off your next order & free delivery this week for orders above $30. Reply STOP to opt out",
+    "message": "Hello Daniel, the seasonal durian is in and boxes are limited. You also asked about our frozen dumplings, which are our own pork and chive. Would you like us to keep a durian box for you? 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "product_interest",
       "discount",
       "delivery_offer"
     ],
-    "reason": "Used hook for durian interest, offered 10% discount and free delivery for a persuadable customer."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C005": {
     "customer_id": "C005",
-    "message": "Hello Siti! Remember asking about free-range eggs? Good news, they are back in stock. Come grab them at Kampung Fresh, and enjoy 10% off your next order. Reply STOP to opt out",
+    "message": "Hello Siti, you asked us to let you know when the free-range eggs arrive - the new batch is in. Would you like us to set some aside for you? Please enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Dropped the 'as a loyal customer' filler. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C006": {
     "customer_id": "C006",
-    "message": "Hi Kelvin! You said the quality is good but the prices sting - we hear you. Free delivery this week on orders above $30, and 10% off your next order. Reply STOP to opt out",
+    "message": "Hello Kelvin, thank you for the honest feedback on our prices. Delivery is free this week on orders above $30, which may help. May we ask what would make the value feel right to you? 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "complaint_price",
       "complaint_delivery",
       "Persuadable"
     ],
-    "reason": "Uses his own words instead of the shop praising itself; filler removed. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C021": {
     "customer_id": "C021",
-    "message": "Hey Hafiz, your best neighbourhood shop here! Ready when you are for your weekly rice, eggs and kai lan - all in stock. Just say the word and we will pack it. Thanks for the kind words! Reply STOP to opt out",
+    "message": "Hello Hafiz, thank you for your kind words about the shop. Your weekly rice, eggs and kai lan are all available - would you like us to pack the usual this week? Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "loyal_regular"
     ],
-    "reason": "Invites the weekly order rather than confirming one that was already delivered. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C022": {
     "customer_id": "C022",
-    "message": "Hi Michelle! Heard you loved last week's durian and plan to buy more this weekend! 😉 Good news, our durians are super fresh again this week. Come on down to Kampung Fresh Tampines and grab your favourites! We look forward to seeing you. Reply STOP to opt out",
+    "message": "Hello Michelle, we are glad last week's durian was good. The new boxes are in and limited. Are you still coming by this weekend? We can keep one for you. Reply STOP to opt out",
     "tags_used": [
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Acknowledged positive feedback on durian and encouraged return visit based on customer's promise to come back."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C023": {
     "customer_id": "C023",
-    "message": "Suresh, love our frozen dumplings? Good news! Your favourite frozen dumplings are in stock! Perfect for your Saturday order. Plus, enjoy free delivery this week for orders above $30. 🥟 Reply STOP to opt out",
+    "message": "Hello Suresh, the frozen dumplings are in stock again. Would you like the usual two packs added to your Saturday order? Reply STOP to opt out",
     "tags_used": [
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Engaging loyal customer with product interest and current delivery offer."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C024": {
     "customer_id": "C024",
-    "message": "Hey Emily 👋! Free delivery on orders over $50 for Kampung Fresh! Get your free-range eggs or Thai jasmine rice, plus yummy frozen dumplings. Order before 2pm for same-day delivery. Reply STOP to opt out",
+    "message": "Hello Emily, to follow up on your question: delivery is $5, or free on orders above $50. Would a regular weekly delivery suit you better? Reply STOP to opt out",
     "tags_used": [
       "Delivery offer",
       "Fresh produce",
       "Staples",
       "Frozen food"
     ],
-    "reason": "Gentle re-engagement for a 'Lost Cause' customer, highlighting free delivery and popular items."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C025": {
     "customer_id": "C025",
-    "message": "Hey Iskandar! Your favourite oat milk is back in stock. Pop by after work like you said - see you then! Reply STOP to opt out",
+    "message": "Hello Iskandar, the oat milk you asked about is in. Are you still planning to drop by after work? We can put one by for you. Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "loyal_regular",
       "product_interest"
     ],
-    "reason": "Fixed US spelling and the three repeats of 'oat milk'. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C026": {
     "customer_id": "C026",
-    "message": "Glad you liked your order! 🎉 Don't forget we have free delivery this week for orders above $30. Stock up on fresh kai lan and more! Reply STOP to opt out",
+    "message": "Hello Pei Shan, thank you for the kind note about your last order. Delivery is free this week on orders above $30. Is there anything you would like us to prepare for you? Reply STOP to opt out",
     "tags_used": [
       "Delivery Promotion",
       "Fresh Produce"
     ],
-    "reason": "Remind a loyal customer about a general delivery offer and fresh produce to encourage their next order."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C007": {
     "customer_id": "C007",
@@ -127,141 +127,141 @@
   },
   "C008": {
     "customer_id": "C008",
-    "message": "Hi Jason! Gardenia bread is in today. Order before 2pm and it reaches you the same day, just like we said. Enjoy 10% off your next order. Reply STOP to opt out",
+    "message": "Hello Jason, Gardenia bread is in today. As we mentioned, orders placed before 2pm reach you the same day. Would a standing weekly delivery suit you? Please enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "Persuadable",
       "product_interest"
     ],
-    "reason": "Leads with the bread he asked about instead of a generic advert; hashtag and 'valued customer' filler removed. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C009": {
     "customer_id": "C009",
-    "message": "Hi Nurul, we're so sorry about the 2-hour delivery delay and the melted ice cream! 😞 As an apology, please enjoy 10% off your next order with us. Reply STOP to opt out",
+    "message": "Hello Nurul, we are sorry again about the late delivery and the melted ice cream, and thank you for your patience over the refund. Would you give us another chance? Please accept 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "complaint_delivery",
       "Persuadable"
     ],
-    "reason": "Apologized for late delivery and melted ice cream, applied 10% discount as per 'Persuadable' label."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C010": {
     "customer_id": "C010",
-    "message": "Hi Cheryl! Saw you like Pokka green tea. Good news, it's back in stock! As a loyal regular, enjoy 10% off your next purchase with us. 😉 Reply STOP to opt out",
+    "message": "Hello Cheryl, the Pokka green tea cartons are in stock again. You mentioned you usually take two a month - would you like us to put two by for you? Please enjoy 10% off your next order. Reply STOP to opt out",
     "tags_used": [
       "loyal_regular",
       "product_interest",
       "restock_request"
     ],
-    "reason": "Sent a 10% discount to a persuadable customer who enquired about a restocked item."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C011": {
     "customer_id": "C011",
-    "message": "Hi Ravi! Sorry, we only deliver within Tampines and Pasir Ris for now, so Jurong West is out of range. If you are ever in the area, same-day delivery applies to orders before 2pm, free above $50. Reply STOP to opt out",
+    "message": "Hello Ravi, thank you for asking. We deliver only within Tampines and Pasir Ris at the moment, so Jurong West is outside our range. Would you like us to tell you if that changes? Reply STOP to opt out",
     "tags_used": [
       "best_hook",
       "avoid"
     ],
-    "reason": "States the real delivery area and the real terms; no longer merges 'same-day' with 'above $50'. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C012": {
     "customer_id": "C012",
-    "message": "Hi Grace! You asked about our Sunday hours - we are open 8am to 9pm daily. Pop by whenever suits you. Reply STOP to opt out",
+    "message": "Hello Grace, following up on your question about our hours: we are open 8am to 9pm daily, Sundays included. Is there anything you were hoping to pick up? Reply STOP to opt out",
     "tags_used": [
       "opening_hours"
     ],
-    "reason": "Hashtags removed; now references the question she actually asked. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C013": {
     "customer_id": "C013",
-    "message": "Hi Farid, we hear you on the rice prices. Free delivery this week for orders above $30 if you are stocking up. No pressure - just letting you know. Reply STOP to opt out",
+    "message": "Hello Farid, thank you for telling us our rice felt expensive - we would rather know. Delivery is free this week on orders above $30 if you are stocking up. What would you like to see us carry? Reply STOP to opt out",
     "tags_used": [
       "complaint_price",
       "product_interest"
     ],
-    "reason": "Drops the claim that the premium rice is 'affordable'; acknowledges the price complaint without arguing. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C015": {
     "customer_id": "C015",
-    "message": "Hi Arjun! Fresh kai lan came in this morning, same as when you asked. Pop by for your greens. Reply STOP to opt out",
+    "message": "Hello Arjun, fresh kai lan came in this morning, the one you asked about. Would you like us to put some by for you today? Reply STOP to opt out",
     "tags_used": [
       "product_interest"
     ],
-    "reason": "Hashtags and the carrot emoji removed; kai lan is a leafy green. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C016": {
     "customer_id": "C016",
-    "message": "Hi Hui Min! Time for your usual 2 loaves Gardenia and kai lan? Fresh kai lan came in this morning. Order before 2pm and we can get it to you same day. Reply STOP to opt out",
+    "message": "Hello Hui Min, fresh kai lan came in this morning and we have Gardenia bread as well. Would you like your usual two loaves and kai lan packed for 10am? Reply STOP to opt out",
     "tags_used": [
       "restock_request",
       "product_interest",
       "loyal_regular"
     ],
-    "reason": "Offers the usual order instead of claiming it is already packed; same-day terms stated correctly (before 2pm). (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C018": {
     "customer_id": "C018",
-    "message": "Hi Rachel! We are a 5-minute walk from Tampines MRT exit B, like we mentioned. Fresh kai lan and Gardenia bread in daily. Reply STOP to opt out",
+    "message": "Hello Rachel, as mentioned we are a five-minute walk from Tampines MRT exit B. Fresh kai lan and Gardenia bread arrive daily. Would you like us to let you know when we run a promotion? Reply STOP to opt out",
     "tags_used": [
       "best_hook"
     ],
-    "reason": "Removed the pizza emoji from a grocery message. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C017": {
     "customer_id": "C017",
-    "message": "Hi Zainal! Re your query about lottery tickets, unfortunately Kampung Fresh doesn't sell them. But we always have fresh kai lan & yummy frozen dumplings for your cooking! Hope to see you around Tampines! Reply STOP to opt out",
+    "message": "Hello Zainal, to follow up on your question, we do not sell lottery tickets. We do carry fresh kai lan, Gardenia bread and frozen dumplings. Is there anything you would like us to bring in? Reply STOP to opt out",
     "tags_used": [
       "product_interest"
     ],
-    "reason": "Acknowledged customer's lottery ticket query, stated store does not sell them, and gently suggested other available products from stock."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C019": {
     "customer_id": "C019",
-    "message": "Hi Vikram, regarding your chicken freshness concern, we truly hope all is well now. We're always working hard to ensure top quality for all our produce at Kampung Fresh. Hope to see you around soon! Reply STOP to opt out",
+    "message": "Hello Vikram, we are sorry the chicken was not up to standard. You said never mind, but we would still like to put it right. What would you like us to do? Reply STOP to opt out",
     "tags_used": [
       "Customer Service"
     ],
-    "reason": "Acknowledges past chicken freshness concern without pushing a refund, respecting customer's 'never mind already' status."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C020": {
     "customer_id": "C020",
-    "message": "Hi Joanne! Free delivery for orders above $30 this week at Kampung Fresh! No need to carry heavy groceries home. Grab your favs like fresh kai lan or frozen dumplings! 😉\n\nReply STOP to opt out",
+    "message": "Hello Joanne, the free delivery on orders above $30 runs this week, in case it is useful. Was there something in particular you were waiting for? Reply STOP to opt out",
     "tags_used": [
       "upcoming_event"
     ],
-    "reason": "Inform a 'Lost Cause' customer about a free delivery promotion to encourage a return visit."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C027": {
     "customer_id": "C027",
-    "message": "Hi Lakshmi! Durian is in season and we still have boxes. Want us to keep one for you again this Sunday? Reply STOP to opt out",
+    "message": "Hello Lakshmi, durian season is still on and boxes are limited. Would you like us to keep one for you again this Sunday? Reply STOP to opt out",
     "tags_used": [
       "product_interest",
       "upcoming_event"
     ],
-    "reason": "Offers to reserve again instead of asserting a reservation that has already passed. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C028": {
     "customer_id": "C028",
-    "message": "Benjamin, it's time for your usual order from Kampung Fresh! Don't forget our free delivery this week for orders above $30. Stock up on fresh kai lan & eggs! 😉 Reply STOP to opt out",
+    "message": "Hello Benjamin, PayNow on delivery is no problem at all. Would you like the same order as last week again? Delivery is free this week on orders above $30. Reply STOP to opt out",
     "tags_used": [
       "loyal_regular",
       "delivery_offer"
     ],
-    "reason": "Reminded loyal customer to place their usual order and highlighted the free delivery offer."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C029": {
     "customer_id": "C029",
-    "message": "Hi Amirah! Time for your usual? Free-range eggs, Gardenia bread and Pokka green tea are all in stock today. Say the word and we will have it ready in 15 min. Reply STOP to opt out",
+    "message": "Hello Amirah, thank you for the kind words about the shop. Would you like your usual free-range eggs, Gardenia bread and Pokka green tea this week? We can have it packed in 15 minutes. Reply STOP to opt out",
     "tags_used": [
       "loyal_regular"
     ],
-    "reason": "Asks before promising pickup; 15 min matches what the shop told her in chat. (hand-checked by Jack)"
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   },
   "C030": {
     "customer_id": "C030",
-    "message": "Hey Terence! Your favourite kai lan just arrived, super fresh and crunchy! 🥬 Perfect for dinner tonight. Plus, enjoy free delivery this week for orders above $30. Shop now at Kampung Fresh! Reply STOP to opt out",
+    "message": "Hello Terence, thank you - we are glad your wife enjoys the kai lan. It arrives fresh every morning. Will we see you tomorrow, as you mentioned? Reply STOP to opt out",
     "tags_used": [
       "loyal_regular",
       "product_interest"
     ],
-    "reason": "Reminded loyal customer about their favourite product and mentioned a current delivery offer."
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
   }
 }
