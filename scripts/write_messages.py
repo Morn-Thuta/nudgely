@@ -32,10 +32,14 @@ a = p.parse_args()
 customers = pd.read_csv(os.path.join(DATA, "customers.csv"))
 tags = json.load(open(os.path.join(DATA, "tags.json"), encoding="utf-8"))
 out = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
+consent = json.load(open(os.path.join(DATA, "consent.json"), encoding="utf-8"))
+opted_out = {cid for cid, v in consent.items() if v.get("opted_in") is False}
 only = set(filter(None, a.only.split(",")))
 
 for _, c in customers.iterrows():
     cid = c.customer_id
+    if cid in opted_out:  # asked not to be contacted; do not even draft one
+        continue
     if (only and cid not in only) or (cid in out and not a.force) or cid not in tags:
         continue
     for attempt in range(3):

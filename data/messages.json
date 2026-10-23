@@ -179,14 +179,6 @@
     ],
     "reason": "Drops the claim that the premium rice is 'affordable'; acknowledges the price complaint without arguing. (hand-checked by Jack)"
   },
-  "C014": {
-    "customer_id": "C014",
-    "message": "Hi Wei, we noticed you haven't visited us in a while. Hope you're doing well! Let us know if you need anything. Reply STOP to opt out",
-    "tags_used": [
-      "lost_cause"
-    ],
-    "reason": "Customer is a lost cause and wants to be removed from communications."
-  },
   "C015": {
     "customer_id": "C015",
     "message": "Hi Arjun! Fresh kai lan came in this morning, same as when you asked. Pop by for your greens. Reply STOP to opt out",
@@ -239,12 +231,12 @@
   },
   "C027": {
     "customer_id": "C027",
-    "message": "Hi Lakshmi! Your durian box is reserved for this Sunday at Kampung Fresh. Get ready for some yummy durian! See you soon! Reply STOP to opt out",
+    "message": "Hi Lakshmi! Durian is in season and we still have boxes. Want us to keep one for you again this Sunday? Reply STOP to opt out",
     "tags_used": [
       "product_interest",
       "upcoming_event"
     ],
-    "reason": "Remind customer about durian reservation."
+    "reason": "Offers to reserve again instead of asserting a reservation that has already passed. (hand-checked by Jack)"
   },
   "C028": {
     "customer_id": "C028",
