@@ -6,6 +6,7 @@
 <title>Nudgely: One-Page Brief</title>
 <!-- Print-ready one-page brief. Open in a browser and Print > Save as PDF (A4, margins: none, background graphics on). Numbers: docs/Numbers.md -->
 <style>
+  footer a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
   @page { size: A4; margin: 0; }
   :root { --ink: #173E35; --muted: #5E7169; --line: #DCE6E0; --brand: #087F73; --deep: #123D35; --lime: #D2EF9B; --tint: #EEF5EF; }
   * { box-sizing: border-box; }
@@ -77,9 +78,9 @@
         <li><b>Remember what.</b> An LLM pulls tags from past chats, each quoting the chat word for word.</li>
         <li><b>Write it.</b> One short message each: apology first for complaints, max 10% off, opt-out line.</li>
       </ol>
-      <div class="bubble">Hi Aisha! Planning your son's birthday party? We've got party snack packs ready for you! 🎉 Enjoy 10% off your next order too.<small>Reply STOP to opt out</small></div>
+      <div class="bubble">Hi Aisha! Planning your son's end-of-Oct birthday party? 🎉 We have party snack packs ($12/$20) for easy celebrations! Good news, your favourite oat milk is back in stock too! Enjoy 10% off your next order.<small>Reply STOP to opt out · sent to a teammate's phone via MantaGO in our demo</small></div>
       <ol class="steps" start="4" style="counter-reset: s 3">
-        <li><b>Approve and send.</b> The owner confirms; MantaGO sends on WhatsApp. Demo sends reach only our test phones.</li>
+        <li><b>Approve and send.</b> The owner confirms; MantaGO delivers on WhatsApp (approved templates) and stores each customer's tags. Demo sends reach only our test phones.</li>
         <li><b>Prove it.</b> A random 10% gets no message, so the real lift can be measured.</li>
       </ol>
     </div>
@@ -121,7 +122,7 @@
     </div>
   </section>
 
-  <footer><span>Names and chats are fictional · Lenta (2020) and Hillstrom (2008) via scikit-uplift</span><span>Team Nudgely · AI-GNITION 2026</span></footer>
+  <footer><span><b>Try it:</b> <a href="https://nudgely.streamlit.app">nudgely.streamlit.app</a> · <b>Code:</b> <a href="https://github.com/Morn-Thuta/nudgely">github.com/Morn-Thuta/nudgely</a></span><span>Names and chats are fictional · Lenta and Hillstrom via scikit-uplift</span></footer>
 </div>
 </body>
 </html>

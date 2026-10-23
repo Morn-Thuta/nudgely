@@ -2,6 +2,8 @@
 
 **Team Nudgely** · AI-GNITION 2026 · Problem Statement 1 · Built on MantaGO (Eslitec)
 
+**Try it:** https://nudgely.streamlit.app · **Code:** https://github.com/Morn-Thuta/nudgely
+
 Nudgely picks who to message, writes what to say from each customer's own chats, and holds back a no-message group to prove it worked.
 
 | | Result | Source |
@@ -21,10 +23,10 @@ Small shops send the same "We miss you, 10% off" to everyone. Discounts go to pe
 1. **Pick who.** An uplift model finds customers a message will actually bring back.
 2. **Remember what.** An LLM pulls tags from past chats, each quoting the chat word for word.
 3. **Write it.** One short message each: apology first for complaints, max 10% off, opt-out line.
-4. **Approve and send.** The owner confirms; MantaGO sends on WhatsApp. Demo sends reach only our test phones.
+4. **Approve and send.** The owner confirms; MantaGO delivers on WhatsApp (approved templates) and stores each customer's tags. Demo sends reach only our test phones.
 5. **Prove it.** A random 10% gets no message, so the real lift can be measured.
 
-> Hi Aisha! Planning your son's birthday party? We've got party snack packs ready for you! 🎉 Enjoy 10% off your next order too. Reply STOP to opt out
+> Hi Aisha! Planning your son's end-of-Oct birthday party? 🎉 We have party snack packs ($12/$20) for easy celebrations! Good news, your favourite oat milk is back in stock too! Enjoy 10% off your next order. Reply STOP to opt out
 
 ## Why it matters
 
