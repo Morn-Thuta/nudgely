@@ -26,7 +26,7 @@ Fill in full names exactly as registered.
 
 ## 2. Project summary (145 words, limit 150)
 
-> Small shops send the same "We miss you, 10% off" to every customer and never learn whether it worked. Nudgely fixes this in three steps on top of MantaGO. First, an uplift model picks the customers a message will bring back, skipping those who would return anyway. Second, an LLM reads each customer's past chats and drafts a short personal message grounded in what they said, such as a birthday party or a late delivery, with capped discounts and an opt-out line. The owner approves every message before MantaGO sends it on WhatsApp. Third, a random 10% is held out, so each campaign can measure its own lift. On 103,000 unseen grocery customers, our top 30% captured 53% of extra visits (90% interval 31–89%), about 1.8x random. Names and chats are fictional, gender and age are excluded, and live tests reach only our opted-in phones.
+> Small shops send the same "We miss you, 10% off" to every customer and never learn whether it worked. Nudgely fixes this in three steps on top of MantaGO. First, an uplift model picks the customers a message will bring back, skipping those who would return anyway. Second, an LLM reads each customer's past chats and drafts a short personal message grounded in what they said, such as a birthday party or a late delivery, with capped discounts and an opt-out line. The owner approves every message, and MantaGO delivers it on WhatsApp. Third, a random 10% is held out, so each campaign can measure its own lift. On 103,000 unseen grocery customers, our top 30% captured 53% of extra visits (90% interval 31–89%), about 1.8x random. Names and chats are fictional, gender and age are excluded, and live tests reach only our opted-in phones.
 
 ## 3. Longer fields
 
@@ -43,14 +43,12 @@ Fill in full names exactly as registered.
 > 1. **Smart Send:** an uplift model predicts how much more likely each customer is to return because of a message, and picks the top customers within budget.
 > 2. **Chat Memory:** an LLM extracts tags from past chats, such as restock requests, complaints and upcoming events. Each tag must quote the chat word for word.
 > 3. **Personal message:** one short draft per customer, with a 10% discount cap, an apology first for complaints, and an opt-out line. The owner previews each one.
-> 4. **Send:** approved messages go out through the MantaGO Open API on WhatsApp. In the demo, our own test phones get real messages and everyone else is simulated.
+> 4. **Send:** approved messages go out through MantaGO on WhatsApp. WhatsApp requires Meta-approved templates for business-initiated messages, so production fills approved templates with each customer's details. In the demo, our own opted-in test phones get real messages and everyone else is simulated.
 > 5. **Prove:** a random 10% of chosen customers is held out, so lift can be measured against a real no-message group.
 
 **How we use MantaGO**
 
-> MantaGO is the delivery and customer layer. When the owner confirms a campaign, the app sends each approved message as a personalised MantaGO broadcast; in the demo, team test phones get real messages and other customers are simulated. Our Open API client also lists members (used to map clientIds) and supports creating and assigning manual tags, so a business could see each customer's chat memory inside MantaGO. Tag write-back is not yet wired into the app. Nudgely decides who to message and what to say; MantaGO delivers it.
-
-*Check with Thuta before submitting: if a live send or tag write-back hasn't worked by Friday, say "integration built and tested in simulation" instead.*
+> MantaGO is the delivery and customer layer. Through the Open API, Nudgely lists members (to map our opted-in test phones), creates broadcasts (visible in MantaGO's Broadcast log) and writes each customer's chat-memory tags onto their MantaGO profile, so the business sees Nudgely's memory inside MantaGO. WhatsApp only delivers business-initiated broadcasts from Meta-approved templates; ours was still in review on submission day, so in the demo the same message was delivered through MantaGO's live chat to a teammate's phone. With approved templates the send is fully automatic, and the app already supports sending through a template (message pack). Nudgely decides who to message and what to say; MantaGO delivers it.
 
 **Evidence and impact**
 
@@ -88,13 +86,13 @@ Fill in full names exactly as registered.
 
 ## 4. Links: every one must open in a signed-out (incognito) browser
 
-| Link | URL | Status on Thu 22 Oct, 11:50pm | Owner and fix |
+| Link | URL | Status on Fri 23 Oct | Owner and fix |
 |---|---|---|---|
-| Live app | _to add_ | ❌ Not deployed yet | **Jayden**: deploy, then set sharing to public |
-| GitHub repo | https://github.com/Morn-Thuta/nudgely | ❌ **Private**: judges will get a 404 | **Thuta**: Settings → General → Danger Zone → Change visibility → Public. Safe to do: the full commit history was checked and has no keys or tokens, and `.env`, secrets and test phone numbers are git-ignored |
+| Live app | https://nudgely.streamlit.app | ✅ Deployed, opens signed out | **Jayden**: final incognito + phone check |
+| GitHub repo | https://github.com/Morn-Thuta/nudgely | ✅ Public, opens signed out | Done (history checked: no keys; `.env`, secrets and phone mappings are git-ignored) |
 | Demo video | _to add_ | ❌ Not recorded yet | **Dythan**: YouTube unlisted, or Drive set to "Anyone with the link" |
 | Pitch deck | _to add_ | ❌ Not shared yet | **Dythan**: set sharing to "Anyone with the link: Viewer" |
-| One-page brief | `docs/One_Page_Brief.pdf` in the repo | ✅ Done; opens once the repo is public | **Shareef**: or upload the PDF to Drive with link sharing on |
+| One-page brief | https://github.com/Morn-Thuta/nudgely/blob/main/docs/One_Page_Brief.pdf | ✅ Done | **Shareef**: or upload the PDF to Drive with link sharing on |
 
 **How to check a link:** open a new incognito window, paste the link, and confirm it opens without a sign-in or "Request access" screen. Re-check after every change to sharing settings.
 
@@ -103,6 +101,6 @@ Fill in full names exactly as registered.
 - [ ] Everyone's full name filled in as registered
 - [ ] All 5 links pass the incognito test
 - [ ] Final number check done (deck, video, brief, app, form all match [Numbers.md](Numbers.md))
-- [ ] Message count claims match reality (`data/messages.json` has 15 of 30 as of Thursday night)
+- [x] Message count claims match reality (`data/messages.json` has 30 of 30, all pass the rule checks)
 - [ ] All 5 members have read the form
 - [ ] Submit well before 11:59 PM SGT, and screenshot the confirmation

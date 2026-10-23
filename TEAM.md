@@ -20,18 +20,18 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 ## Thuta: MantaGO + lead
 
 **Wed**
-- [ ] Get the API token + secret (Eslitec), put them in `.env`, run `python scripts/test_mantago.py members`
-- [ ] Connect WhatsApp (fallback: Instagram) and publish the bot
-- [ ] First real test message lands on your phone (`test_mantago.py send ... --yes`)
+- [x] Get the API token + secret (Eslitec), put them in `.env`, run `python scripts/test_mantago.py members`
+- [x] Connect WhatsApp (fallback: Instagram) and publish the bot
+- [x] First real test message lands on a phone (via MantaGO live chat; API broadcasts wait for a Meta-approved template) (`test_mantago.py send ... --yes`)
 
 **Thu**
-- [ ] All 5 teammates message the bot. Map them to Persuadable customers in `data/test_accounts.json` (C001-C010)
-- [ ] Add the MantaGO token, secret and test accounts to Streamlit secrets (with Jayden)
-- [ ] Try tag write-back (F6): `test_mantago.py tag --to <clientId> --yes`. Skip it if the API fights back
+- [x] (3 of 5: Dythan, Jayden, Jack) Teammates message the bot. Map them to Persuadable customers in `data/test_accounts.json` (C001-C010)
+- [x] Add the MantaGO token, secret and test accounts to Streamlit secrets (with Jayden)
+- [x] Tag write-back (F6) works: 3 tags on Dythan's MantaGO profile. Try tag write-back (F6): `test_mantago.py tag --to <clientId> --yes`. Skip it if the API fights back
 - [ ] 6pm: full flow works locally, from customers through to a real send
 
 **Fri**
-- [ ] Live send rehearsal for the video. Test phones message the bot within 24h of recording
+- [x] Live send rehearsal for the video. Test phones message the bot within 24h of recording
 - [ ] Final review of everything before submit
 
 ## Dythan: pitch + demo lead
