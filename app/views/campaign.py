@@ -1,6 +1,6 @@
 import streamlit as st
 
-from lib import badge, campaign_id, draft_problems, example_data_note, header, load_customers, mantago_client, messages, plan_campaign, send_campaign
+from lib import badge, md, campaign_id, draft_problems, example_data_note, header, load_customers, mantago_client, messages, plan_campaign, send_campaign
 from nudgely import llm
 
 header("A thoughtful nudge, ready to go.", "Build your audience, review each message and choose how to send.")
@@ -39,8 +39,8 @@ with tab_msg:
             st.markdown(f"**{r['name']}** &nbsp; {badge(r.label)} &nbsp; "
                         f"<span style='color:#6B7280;font-size:0.85em'>{r.reason}</span>", unsafe_allow_html=True)
             if m:
-                st.write(m["message"])
-                st.caption(f"Why: {m.get('reason', '')}")
+                st.markdown(md(m["message"]))
+                st.caption(f"Why: {md(m.get('reason', ''))}")
             if problems:
                 st.error("Rule check: " + "; ".join(problems))
             if r.mantago_client_id:

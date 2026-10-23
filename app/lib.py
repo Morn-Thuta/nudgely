@@ -229,6 +229,11 @@ def send_campaign(plan, msgs, simulate=True):
 
 # ---- ui bits ---------------------------------------------------------------
 
+def md(text):
+    """Escape $ so Streamlit markdown shows prices like $12/$20 instead of rendering LaTeX."""
+    return str(text).replace("$", "\\$")
+
+
 def badge(label):
     c = LABEL_COLORS.get(label, "#6B7280")
     return (f"<span style='background:{c}1A;color:{c};border:1px solid {c}55;"

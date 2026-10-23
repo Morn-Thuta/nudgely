@@ -2,7 +2,7 @@ import html
 
 import streamlit as st
 
-from lib import REGEN_LIMIT, badge, chats, example_data_note, header, load_customers, messages, tags
+from lib import REGEN_LIMIT, badge, md, chats, example_data_note, header, load_customers, messages, tags
 from nudgely import llm
 
 customers = load_customers()
@@ -50,17 +50,17 @@ with right:
         st.caption("No tags extracted yet.")
     else:
         for tag in t.get("tags", []):
-            st.markdown(f"**{tag.get('type', 'tag').replace('_', ' ')}**: {tag.get('value') or 'Description missing; review extraction'}  \n> “{tag.get('evidence', '')}”")
-        st.caption(f"Sentiment: {t.get('sentiment', '-')} · Best hook: {t.get('best_hook', '-')}"
-                   + (f" · Avoid: {t['avoid']}" if t.get("avoid") else ""))
+            st.markdown(f"**{tag.get('type', 'tag').replace('_', ' ')}**: {md(tag.get('value') or 'Description missing; review extraction')}  \n> “{md(tag.get('evidence', ''))}”")
+        st.caption(f"Sentiment: {t.get('sentiment', '-')} · Best hook: {md(t.get('best_hook', '-'))}"
+                   + (f" · Avoid: {md(t['avoid'])}" if t.get("avoid") else ""))
         if t.get("open_promise"):
-            st.caption(f"Open promise: {t['open_promise']}")
+            st.caption(f"Open promise: {md(t['open_promise'])}")
 
     st.markdown("#### Draft message")
     msg = messages().get(cid)
     if msg:
-        st.success(msg["message"])
-        st.caption(f"Why: {msg.get('reason', '')} · Tags used: {', '.join(msg.get('tags_used', []))} · "
+        st.success(md(msg["message"]))
+        st.caption(f"Why: {md(msg.get('reason', ''))} · Tags used: {', '.join(msg.get('tags_used', []))} · "
                    f"{len(msg['message'])}/300 chars")
         problems = llm.check_message(msg, c.label)
         if problems:
