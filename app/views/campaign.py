@@ -58,9 +58,9 @@ st.divider()
 st.markdown('<div class="section-label">03 / Review & launch</div>', unsafe_allow_html=True)
 real = int((to_msg.mantago_client_id != "").sum())
 simulate = st.toggle("Rehearsal mode — simulate all messages", value=True)
-live = False if simulate else mantago_client() is not None
+missing_keys = not simulate and real and mantago_client() is None  # never touch MantaGO in rehearsal
 st.markdown(f"**{len(to_msg)} selected recipients.** {real} are mapped to MantaGO test phones"
-            + ("" if live else " (MantaGO keys not set, so they'll be marked ready)")
+            + (" (MantaGO keys not set, so they'll be marked ready)" if missing_keys else "")
             + f", {len(to_msg) - real} are simulated demo customers.")
 
 if simulate:
