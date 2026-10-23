@@ -12,22 +12,23 @@ cols = st.columns(3)
 for col, label in zip(cols, ["Persuadable", "Sure Thing", "Lost Cause"]):
     col.metric(label, int((df.label == label).sum()), help=LABEL_HELP[label])
 
-search = st.text_input("Find a customer", placeholder="Search by name or chat topic…")
+search = st.text_input("Find a customer", placeholder="Search by ID, name or chat topic…")
 labels = st.multiselect("Customer segments", ["Persuadable", "Sure Thing", "Lost Cause"],
                         default=["Persuadable", "Sure Thing", "Lost Cause"])
 view = df[df.label.isin(labels)].reset_index(drop=True)
 if search:
-    view = view[view['name'].str.contains(search, case=False, regex=False) | view.top_tag.str.contains(search, case=False, regex=False)].reset_index(drop=True)
+    view = view[view['name'].str.contains(search, case=False, regex=False) | view.customer_id.str.contains(search, case=False, regex=False) | view.top_tag.str.contains(search, case=False, regex=False)].reset_index(drop=True)
 st.caption(f"{len(view)} customers · Select a row to explore their story")
 table = view.assign(uplift=view.uplift * 100, p_no_msg=view.p_no_msg * 100)
 
 event = st.dataframe(
-    table[["name", "label", "uplift", "p_no_msg", "days_since_last_visit", "top_tag"]],
+    table[["customer_id", "name", "label", "uplift", "p_no_msg", "days_since_last_visit", "top_tag"]],
     hide_index=True,
     width="stretch",
     on_select="rerun",
     selection_mode="single-row",
     column_config={
+        "customer_id": "ID",
         "name": "Customer",
         "label": "Label",
         "uplift": st.column_config.ProgressColumn("Uplift", format="+%.1f%%", min_value=0,

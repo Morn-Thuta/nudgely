@@ -11,12 +11,14 @@ ids = list(customers.customer_id)
 names = dict(zip(customers.customer_id, customers.name))
 
 cid = st.session_state.get("customer_id", ids[0])
-cid = st.selectbox("Customer", ids, index=ids.index(cid) if cid in ids else 0, format_func=lambda i: names[i])
+cid = st.selectbox("Customer", ids, index=ids.index(cid) if cid in ids else 0,
+                   format_func=lambda i: f"{i} · {names[i]}")
 st.session_state["customer_id"] = cid
 c = customers[customers.customer_id == cid].iloc[0]
 
 example_data_note("customers.csv", "chats.json", "tags.json", "messages.json")
-st.markdown(f"## {c['name']} &nbsp; {badge(c.label)}", unsafe_allow_html=True)
+st.markdown(f"## {c['name']} &nbsp; <span style='font-size:0.6em;opacity:0.55'>{cid}</span> &nbsp; {badge(c.label)}",
+            unsafe_allow_html=True)
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Uplift if messaged", f"+{c.uplift:.1%}")
