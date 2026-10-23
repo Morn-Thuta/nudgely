@@ -20,7 +20,7 @@ These are ready-to-paste answers for the usual hackathon form fields. The real f
 | Dythan Yong Jun An | Pitch and demo lead |
 | Chen Zexin (Jack) | Message quality (LLM) |
 | Jayden [full name] | App and deployment |
-| Shareef [full name] | Numbers, documentation, responsible AI |
+| Shareef | Numbers, documentation, responsible AI |
 
 Fill in full names exactly as registered.
 
