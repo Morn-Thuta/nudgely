@@ -37,6 +37,21 @@ class CampaignTests(unittest.TestCase):
             self.assertEqual(log.status.tolist(), ['simulated'])
             client.assert_not_called()
 
+    def test_live_whatsapp_uses_template_when_available(self):
+        plan = lib.plan_campaign(self.customers, 2, 0)
+        ids = plan.loc[plan.group == 'Will message', 'customer_id'].tolist()
+        plan['mantago_client_id'] = 'test-account'
+        msgs = lib.load_json('messages.json')
+        with tempfile.TemporaryDirectory() as temp, patch.object(lib, 'SEND_LOG', str(Path(temp) / 'log.csv')), \
+                patch.object(lib, 'mantago_client') as client, patch.object(lib, 'mantago_platform', return_value='whatsapp'), \
+                patch.object(lib, 'whatsapp_templates', return_value={ids[0]: 'pack-1'}):
+            client.return_value.send.return_value = {'success': True}
+            log = lib.send_campaign(plan, msgs, simulate=False)
+        self.assertEqual(log.status.tolist(), ['sent', 'queued (needs WhatsApp template)'])
+        first, second = client.return_value.send.call_args_list
+        self.assertEqual(first.kwargs['intent_id'], 'pack-1')
+        self.assertIsNone(second.kwargs['intent_id'])
+
     def test_review_changes_with_draft_or_delivery_mode(self):
         plan = lib.plan_campaign(self.customers, 1, 0)
         msgs = lib.load_json('messages.json')

@@ -37,6 +37,7 @@ def main():
     p.add_argument("--message", default=DEFAULT_MSG)
     p.add_argument("--tag", default="nudgely_test")
     p.add_argument("--fb-tag", default=None)
+    p.add_argument("--intent", default=None, help="message pack id (approved WhatsApp template) instead of text")
     p.add_argument("--yes", action="store_true", help="confirm a real send or write")
     a = p.parse_args()
 
@@ -65,7 +66,8 @@ def main():
                 sys.exit("send needs --to <clientId> and --platform")
             if not a.yes:
                 sys.exit(f"Dry run. Would send to {a.to} on {a.platform}:\n  {a.message}\nAdd --yes to really send.")
-            print(m.send(a.platform, [a.to], a.message, name="Nudgely smoke test", fb_tag=a.fb_tag))
+            print(m.send(a.platform, [a.to], a.message, name="Nudgely smoke test", fb_tag=a.fb_tag,
+                         intent_id=a.intent))
             print("Sent. Check the phone.")
 
         elif a.cmd == "tag":

@@ -92,11 +92,22 @@ class MantaGO:
         data = self._post("clients", params=params)
         return (data.get("clientList") or {}).get("list", [])
 
-    def send(self, platform, client_ids, message, name="Nudgely campaign", fb_tag=None):
-        """Broadcast one text message to a list of clientIds on one platform."""
+    def send(self, platform, client_ids, message=None, name="Nudgely campaign", fb_tag=None, intent_id=None):
+        """Broadcast to a list of clientIds on one platform.
+
+        WhatsApp only delivers business-initiated broadcasts from a Meta-approved template, which in
+        MantaGO is a message pack: pass its id as intent_id. Free text (message) is accepted by the API
+        but stays "Unsent" on WhatsApp.
+        """
         if platform not in PLATFORMS:
             raise ValueError(f"platform must be one of {PLATFORMS}")
-        body = {"platform": platform, "name": name, "message": message, "clientIds": list(client_ids)}
+        if not (message or intent_id):
+            raise ValueError("message or intent_id is required")
+        body = {"platform": platform, "name": name, "clientIds": list(client_ids)}
+        if intent_id:
+            body["intentId"] = intent_id
+        else:
+            body["message"] = message
         if platform == "facebook":
             if not fb_tag:
                 raise ValueError("fb_tag is required for facebook")

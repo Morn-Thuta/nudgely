@@ -169,6 +169,21 @@ def mantago_platform():
         return os.getenv("MANTAGO_PLATFORM", "whatsapp")
 
 
+def whatsapp_templates():
+    """Approved WhatsApp templates (MantaGO message pack ids) per customer: {"C001": "<intentId>"}.
+    Cloud: [whatsapp_templates] in Streamlit secrets. Local: data/whatsapp_templates.json."""
+    try:
+        if "whatsapp_templates" in st.secrets:
+            return dict(st.secrets["whatsapp_templates"])
+    except Exception:
+        pass
+    p = os.path.join(DATA, "whatsapp_templates.json")
+    if os.path.exists(p):
+        with open(p, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
 def send_campaign(plan, msgs, simulate=True):
     """Real send for customers mapped to a MantaGO test account, simulated for the rest."""
     problems = draft_problems(plan, msgs)
@@ -179,6 +194,7 @@ def send_campaign(plan, msgs, simulate=True):
         raise ValueError("Campaign contains an opted-out customer. Rebuild the plan.")
     client = None if simulate else mantago_client()
     platform = mantago_platform()
+    templates = whatsapp_templates() if platform == "whatsapp" else {}
     results = []
     for _, r in plan[plan.group == "Will message"].iterrows():
         text = msgs.get(r.customer_id, {}).get("message", "")
@@ -188,7 +204,13 @@ def send_campaign(plan, msgs, simulate=True):
             status, resp = "failed", "no message drafted"
         elif r.mantago_client_id and client:
             try:
-                status, resp = "sent", json.dumps(client.send(platform, [r.mantago_client_id], text, name="Nudgely campaign"))
+                intent = templates.get(r.customer_id)
+                out = json.dumps(client.send(platform, [r.mantago_client_id], text, name="Nudgely campaign",
+                                             intent_id=intent))
+                if intent or platform != "whatsapp":
+                    status, resp = "sent", out
+                else:  # accepted by MantaGO, but WhatsApp holds free text without an approved template
+                    status, resp = "queued (needs WhatsApp template)", out
             except (MantaGOError, Exception) as e:  # keep going on one failure
                 status, resp = "failed", str(e)[:300]
         elif r.mantago_client_id:
