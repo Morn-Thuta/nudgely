@@ -6,6 +6,8 @@ Nudgely picks which customers to message (uplift model), writes each one a perso
 
 AI-GNITION 2026 · MVP due **Fri 23 Oct 2026**
 
+**Live app:** https://nudgely.streamlit.app
+
 - Full spec: [docs/PRD.md](docs/PRD.md)
 - One-page brief: [docs/One_Page_Brief.md](docs/One_Page_Brief.md)
 - Team plan, roles and checklist: [TEAM.md](TEAM.md)

@@ -69,17 +69,17 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 ## Jayden: app + deploy
 
 **Wed**
-- [ ] Run the app locally: `pip install -r requirements.txt`, then `streamlit run app/streamlit_app.py`
-- [ ] Deploy on share.streamlit.io: repo `Morn-Thuta/nudgely`, main file `app/streamlit_app.py`, Python 3.12
+- [x] Run the app locally: `pip install -r requirements.txt`, then `streamlit run app/streamlit_app.py`
+- [x] Deploy on share.streamlit.io: repo `Morn-Thuta/nudgely`, main file `app/streamlit_app.py`, Python 3.12
 - [ ] Paste secrets (see `.streamlit/secrets.toml.example`). Ask Thuta for the keys, and never commit them
 
 **Thu**
-- [ ] Click through all 5 pages on the deployed link and list anything broken or ugly. Fix it
+- [x] Click through all 5 pages on the deployed link and list anything broken or ugly. Fix it
 - [ ] Check on a phone screen too
-- [ ] 11pm: the deployed link works in an incognito/signed-out browser. Set app sharing to public
+- [x] 11pm: the deployed link works in an incognito/signed-out browser. Set app sharing to public
 
 **Fri**
-- [ ] Final incognito test after the last push. Update README with the live link
+- [x] Final incognito test after the last push. Update README with the live link
 
 ## Shareef: numbers + docs
 
