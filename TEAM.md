@@ -52,19 +52,19 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 ## Jack: message quality
 
 **Wed / Thu morning** (needs the OpenRouter key in `.env`)
-- [ ] `python scripts/extract_tags.py` (rerun if it stops at the free daily limit)
-- [ ] `python scripts/write_messages.py`
-- [ ] Hand-check all 30 in the app's Customer detail page. Every message must:
+- [x] `python scripts/extract_tags.py` (rerun if it stops at the free daily limit)
+- [x] `python scripts/write_messages.py`
+- [x] Hand-check all 30 in the app's Customer detail page. Every message must:
   - be under 300 characters, friendly, Singapore tone
   - use a real tag from the chat, with nothing invented (stock, prices, offers)
   - apologise first for complaints (C002, C009), with no sales push
   - offer a discount only to Persuadables, max 10%
   - end with "Reply STOP to opt out"
-- [ ] Fix bad ones: rerun with `--only C00X --force`, or edit `data/messages.json` by hand
-- [ ] Give Dythan the 3 best messages for the slides
+- [x] Fix bad ones: rerun with `--only C00X --force`, or edit `data/messages.json` by hand
+- [x] Give Dythan the 3 best messages for the slides
 
 **Fri**
-- [ ] Final read of all 30. Commit and push
+- [x] Final read of all 30. Commit and push
 
 ## Jayden: app + deploy
 
