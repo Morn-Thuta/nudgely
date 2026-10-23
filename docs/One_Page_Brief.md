@@ -1,6 +1,6 @@
 # Nudgely: message the right customers, say the right thing, prove it worked
 
-**Team Nudgely** · AI-GNITION 2026 · Problem Statement 1 · Built on MantaGO (Eslitec)
+**Team Bongo Gang** · AI-GNITION 2026 · Problem Statement 1 · Built on MantaGO (Eslitec)
 
 **Try it:** https://nudgely.streamlit.app · **Code:** https://github.com/Morn-Thuta/nudgely
 

@@ -8,7 +8,7 @@ These are ready-to-paste answers for the usual hackathon form fields. The real f
 
 | Field | Answer |
 |---|---|
-| Team name | Nudgely |
+| Team name | Bongo Gang |
 | Problem statement | Problem Statement 1 |
 | Project name | Nudgely |
 | Tagline (≤ 12 words) | Message the right customers, say the right thing, prove it worked. |
