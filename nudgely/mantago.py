@@ -131,6 +131,13 @@ class MantaGO:
             self.create_tag(name)
         raise MantaGOError(404, None, f"tag '{name}' not found after create")
 
-    def assign_tag(self, tag_id, client_id):
-        """Put a manual tag on a member (F6 write-back)."""
-        return self._post("clientTagMapping", {"tagId": tag_id, "clientId": client_id})
+    def assign_tag(self, tag_id, client_id, platform):
+        """Put a manual tag on a member (F6 write-back).
+
+        client_id is the clientId from list_clients(), which is the platform's own id (e.g. the
+        WhatsApp number). Send it as platformClientId + platform: passed as "clientId" MantaGO treats
+        it as an internal id and tagged a different member while still returning success.
+        """
+        if platform not in PLATFORMS:
+            raise ValueError(f"platform must be one of {PLATFORMS}")
+        return self._post("clientTagMapping", {"tagId": tag_id, "platform": platform, "platformClientId": client_id})

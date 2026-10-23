@@ -3,7 +3,7 @@
   python scripts/test_mantago.py members                 # who has messaged the bot (read only)
   python scripts/test_mantago.py tags                    # list manual tags (read only)
   python scripts/test_mantago.py send --to <clientId> --platform whatsapp --yes
-  python scripts/test_mantago.py tag --to <clientId> --tag nudgely_test --yes
+  python scripts/test_mantago.py tag --to <clientId> --platform whatsapp --tag nudgely_test --yes
 
 Needs MANTAGO_BOT_ID, MANTAGO_TOKEN, MANTAGO_SECRET in .env (copy .env.example).
 """
@@ -71,13 +71,13 @@ def main():
             print("Sent. Check the phone.")
 
         elif a.cmd == "tag":
-            if not a.to:
-                sys.exit("tag needs --to <clientId>")
+            if not (a.to and a.platform):
+                sys.exit("tag needs --to <clientId> and --platform")
             if not a.yes:
-                sys.exit(f"Dry run. Would tag {a.to} with '{a.tag}'. Add --yes to really write.")
+                sys.exit(f"Dry run. Would tag {a.to} on {a.platform} with '{a.tag}'. Add --yes to really write.")
             tag_id = m.get_or_create_tag_id(a.tag)
-            print(m.assign_tag(tag_id, a.to))
-            print(f"Tagged {a.to} with '{a.tag}' ({tag_id}).")
+            print(m.assign_tag(tag_id, a.to, a.platform))
+            print(f"Tagged {a.to} with '{a.tag}' ({tag_id}). Check the member in MantaGO's User list.")
 
     except MantaGOError as e:
         print(f"MantaGO error: {e}")

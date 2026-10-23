@@ -15,7 +15,7 @@ Header `Authorization: Bearer <token>`. JSON body always includes `"secret"`.
 | Send message | `broadcast` | `platform`, `name`, `message`, `clientIds[]` (+ `fbTag` on facebook) | `platform` is `line` / `facebook` / `instagram` / `whatsapp`. Returns `{success, message}` |
 | Create manual tag | `clientTag` | `name` | Doesn't return the id, so call list next |
 | List manual tags | `clientTags/list` | — | Query: `search`, `perpage`. Returns `clientTagList[]` with `id`, `name` |
-| Tag a member | `clientTagMapping` | `tagId`, `clientId` | Or `platform` + `platformClientId` instead of `clientId` |
+| Tag a member | `clientTagMapping` | `tagId`, `platform`, `platformClientId` | **Use `platform` + `platformClientId`** with the `clientId` from the member list. Passing it as `clientId` tagged the wrong member while still returning success |
 
 **Errors** look like `{"success": false, "errResponse": {"code": ..., "message": ...}}`
 
