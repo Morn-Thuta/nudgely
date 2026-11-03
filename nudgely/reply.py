@@ -25,9 +25,14 @@ from nudgely.verify import verify_message
 MAX_CHARS = 300
 OPT_OUT = "Reply STOP to opt out"
 
-# Asked for a person, in the ways people actually ask.
-HUMAN_REQUESTED = ["speak to", "talk to", "real person", "a human", "someone real", "your manager",
-                   "the owner", "call me", "customer service", "是真人", "找人"]
+# The advertised way to reach a person. A keyword is checked exactly, so it cannot
+# be missed the way a phrase can; the phrases stay as a safety net for customers
+# who never saw the instruction.
+HUMAN_KEYWORD = "HUMAN"
+HUMAN_HINT = f"Reply {HUMAN_KEYWORD} anytime to talk to someone"
+HUMAN_PHRASES = ["speak to a", "speak with a", "talk to a", "talk to someone", "real person",
+                 "a human", "someone real", "your manager", "the owner", "call me",
+                 "customer service", "是真人", "找人"]
 
 REPLY_SYSTEM = f"""You are the assistant for {STORE_INFO['name']}, a {STORE_INFO['type']}.
 A customer has replied to a message from the shop. Write ONE short reply, or hand over to a person.
@@ -91,8 +96,12 @@ def answer(customer, chat, incoming, tags=None, first_reply=True):
 
 
 def asked_for_a_person(text):
-    low = str(text).lower()
-    return any(phrase in low for phrase in HUMAN_REQUESTED)
+    """The keyword on its own line or as the whole message, or a phrase asking for one."""
+    raw = str(text).strip()
+    words = re.findall(r"[a-z]+", raw.lower())
+    if HUMAN_KEYWORD.lower() in words and len(words) <= 4:
+        return True
+    return any(phrase in raw.lower() for phrase in HUMAN_PHRASES)
 
 
 def review_reply(out, customer, chat, incoming, tags=None, first_reply=True):
@@ -134,9 +143,12 @@ def review_reply(out, customer, chat, incoming, tags=None, first_reply=True):
         return hand_over("Reply does not pick up anything the customer actually said.")
 
     out["handover"] = False
-    if first_reply and OPT_OUT.lower() not in reply.lower():
-        if len(reply) + len(OPT_OUT) + 1 <= MAX_CHARS:
-            out["reply"] = f"{reply} {OPT_OUT}"
+    if first_reply:
+        tail = [t for t in (HUMAN_HINT, OPT_OUT) if t.lower() not in reply.lower()]
+        while tail and len(reply) + sum(len(t) + 2 for t in tail) > MAX_CHARS:
+            tail.pop(0)  # the opt-out line is the one that must survive
+        if tail:
+            out["reply"] = reply + " " + ". ".join(tail)
     return out
 
 
