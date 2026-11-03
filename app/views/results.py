@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from lib import BRAND, header, summary
+from lib import BRAND, campaign_results, header, summary
 
 header("Know what made the difference.", "Explore historical evidence, campaign delivery and the outcomes still to measure.")
 
@@ -68,6 +68,65 @@ if plan is not None:
     if log is not None:
         st.dataframe(log[["name", "status"]], hide_index=True, width="stretch")
         st.download_button("Download campaign log", log[["timestamp", "customer_id", "name", "status"]].to_csv(index=False), "nudgely-campaign.csv", "text/csv")
+
+st.markdown("### Your campaigns")
+st.caption("Measured from your own sends: everyone messaged, against the holdout who were not. "
+           "Blank outcomes are customers whose window has not closed yet.")
+
+runs = campaign_results()
+if runs is None:
+    st.info("No campaign has been sent yet. Once you send one, every recipient and every held-out "
+            "customer is written to data/campaign_log.csv, and the real return rates appear here.")
+else:
+    done = runs[runs.returned.isin([0, 1])]
+    if done.empty:
+        st.info(f"{len(runs)} customers logged across {runs.campaign_id.nunique()} campaign(s), but no "
+                "outcomes recorded yet. Run `python scripts/record_returns.py --close` once the "
+                "30-day window has passed.")
+    else:
+        messaged = done[done.group == "messaged"]
+        holdout = done[done.group == "holdout"]
+        back_m, n_m = int(messaged.returned.sum()), len(messaged)
+        back_h, n_h = int(holdout.returned.sum()), len(holdout)
+        rate_m = back_m / n_m if n_m else 0.0
+        rate_h = back_h / n_h if n_h else 0.0
+
+        a, b, c = st.columns(3)
+        a.metric("Messaged who came back", f"{back_m} of {n_m}", f"{rate_m:.0%}")
+        b.metric("Holdout who came back", f"{back_h} of {n_h}", f"{rate_h:.0%}" if n_h else "no holdout yet")
+        if n_h:
+            c.metric("Measured lift", f"{rate_m - rate_h:+.1%}",
+                     help="Return rate of messaged customers minus the holdout. This is the number "
+                          "that says the campaign worked.")
+        else:
+            c.metric("Measured lift", "-", help="Needs a holdout to compare against.")
+
+        left, right = st.columns(2)
+        with left:
+            st.markdown("#### Came back: messaged vs holdout")
+            fig = go.Figure()
+            fig.add_bar(x=["Holdout", "Messaged"], y=[rate_h, rate_m],
+                        marker_color=["#9AA8A0", BRAND], text=[f"{back_h}/{n_h}", f"{back_m}/{n_m}"],
+                        textposition="outside")
+            fig.update_layout(yaxis_tickformat=".0%", yaxis_title="Came back", height=340,
+                              margin=dict(t=20, b=10), showlegend=False)
+            st.plotly_chart(fig, width="stretch")
+
+        with right:
+            st.markdown("#### By month")
+            by = done.copy()
+            by["month"] = pd.to_datetime(by.sent_at, errors="coerce").dt.to_period("M").astype(str)
+            grouped = by.groupby(["month", "group"]).returned.agg(["sum", "count"]).reset_index()
+            grouped["rate"] = grouped["sum"] / grouped["count"]
+            fig = go.Figure()
+            for name, colour in (("messaged", BRAND), ("holdout", "#9AA8A0")):
+                part = grouped[grouped.group == name]
+                fig.add_bar(x=part.month, y=part.rate, name=name.title(), marker_color=colour)
+            fig.update_layout(barmode="group", yaxis_tickformat=".0%", yaxis_title="Came back",
+                              xaxis_type="category", height=340, margin=dict(t=20, b=10))
+            st.plotly_chart(fig, width="stretch")
+
+        st.caption(f"{len(runs) - len(done)} of {len(runs)} logged customers are still inside their window.")
 
 st.markdown("#### Limitations")
 st.markdown(

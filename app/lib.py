@@ -19,6 +19,9 @@ from nudgely import llm
 DATA = os.path.join(ROOT, "data")
 EXAMPLES = os.path.join(DATA, "examples")
 SEND_LOG = os.path.join(DATA, "send_log.csv")
+CAMPAIGN_LOG = os.path.join(DATA, "campaign_log.csv")
+CAMPAIGN_COLS = ["campaign_id", "sent_at", "customer_id", "name", "group", "platform",
+                 "status", "returned", "returned_at"]
 SEED = 42
 REGEN_LIMIT = 3
 
@@ -224,7 +227,53 @@ def send_campaign(plan, msgs, simulate=True):
         log.to_csv(SEND_LOG, mode="a", header=not os.path.exists(SEND_LOG), index=False)
     except OSError:
         pass
+    if not simulate:
+        log_campaign(plan, log, platform)
     return log
+
+
+def log_campaign(plan, sent, platform):
+    """Append one row per customer in this campaign, holdout included.
+
+    The holdout rows are the point: comparing them against the messaged rows
+    later is what turns a campaign into a measured result rather than a guess.
+    `returned` stays empty until record_returns.py fills it in.
+    """
+    sent_at = datetime.now()
+    campaign_id = "camp_" + sent_at.strftime("%Y%m%d_%H%M%S")
+    status = dict(zip(sent.customer_id, sent.status)) if len(sent) else {}
+    rows = []
+    for _, r in plan[plan.group.isin(["Will message", "Held out"])].iterrows():
+        rows.append({
+            "campaign_id": campaign_id,
+            "sent_at": sent_at.isoformat(timespec="seconds"),
+            "customer_id": r.customer_id,
+            "name": r["name"],
+            "group": "messaged" if r.group == "Will message" else "holdout",
+            "platform": platform if r.group == "Will message" else "",
+            "status": status.get(r.customer_id, "not messaged"),
+            "returned": "",
+            "returned_at": "",
+        })
+    if not rows:
+        return None
+    frame = pd.DataFrame(rows, columns=CAMPAIGN_COLS)
+    try:
+        frame.to_csv(CAMPAIGN_LOG, mode="a", header=not os.path.exists(CAMPAIGN_LOG), index=False)
+    except OSError:
+        pass
+    return frame
+
+
+def campaign_results():
+    """Past campaigns with their outcomes, or None if nothing has been sent yet."""
+    if not os.path.exists(CAMPAIGN_LOG):
+        return None
+    try:
+        frame = pd.read_csv(CAMPAIGN_LOG)
+    except (OSError, pd.errors.EmptyDataError):
+        return None
+    return frame if len(frame) else None
 
 
 # ---- ui bits ---------------------------------------------------------------
