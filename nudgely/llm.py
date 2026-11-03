@@ -104,14 +104,24 @@ def _chain():
     return steps
 
 
-def complete_json(system, user, on_fallback=None):
+GEMINI_TIMEOUT_MS = 30_000
+CHAIN_DEADLINE = 75  # seconds for the whole chain; a reply bot must answer or give up
+
+
+def complete_json(system, user, on_fallback=None, deadline=CHAIN_DEADLINE):
     """Ask the LLM for JSON, moving down the chain when a provider is rate-limited.
 
     `on_fallback(provider, model, error)` is called each time a step fails, so the
     caller can log which provider actually answered.
     """
+    import time
+
+    started = time.monotonic()
     problems = []
     for provider, key, model in _chain():
+        if deadline and time.monotonic() - started > deadline:
+            problems.append(f"gave up after {deadline}s")
+            break
         try:
             return _call(provider, key, model, system, user)
         except Exception as e:  # noqa: BLE001 - any provider error should fall through
@@ -144,7 +154,9 @@ def _call(provider, key, model, system, user):
         from google import genai
         from google.genai import types
 
-        client = genai.Client(api_key=key)
+        client = genai.Client(api_key=key,
+                              http_options=types.HttpOptions(timeout=GEMINI_TIMEOUT_MS,
+                                                             retry_options=types.HttpRetryOptions(attempts=1)))
         r = client.models.generate_content(
             model=model or "gemini-2.5-flash", contents=user,
             config=types.GenerateContentConfig(system_instruction=system, response_mime_type="application/json"))
