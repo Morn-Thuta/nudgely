@@ -64,12 +64,66 @@ def _parse_json(text):
     return json.loads(m.group(0) if m else text)
 
 
-def complete_json(system, user):
+# Each provider's own key, if one is set, so a dead provider can hand over to another.
+PROVIDER_KEY_ENV = {"gemini": "GEMINI_API_KEY", "openai": "OPENAI_API_KEY",
+                    "anthropic": "ANTHROPIC_API_KEY", "openrouter": "OPENROUTER_API_KEY"}
+
+# Free tiers are counted per model per day, so a second model on the same key is
+# a real fallback, not a formality. This is what the 20/day Gemini cap needs.
+MODEL_FALLBACKS = {"gemini": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+                   "anthropic": ["claude-haiku-5-5"],
+                   "openai": ["gpt-4o-mini"],
+                   "openrouter": []}  # _openrouter already walks its own model list
+
+RETRYABLE = ("quota", "rate limit", "rate_limit", "resource_exhausted", "429", "500", "502",
+             "503", "overloaded", "unavailable", "timeout", "temporarily")
+
+
+def _retryable(exc):
+    """Worth trying the next model or provider, rather than a mistake in our request."""
+    text = str(exc).lower()
+    return any(sign in text for sign in RETRYABLE)
+
+
+def _chain():
+    """Where to try, in order: the configured provider and model, then its other
+    models, then any other provider that has a key of its own in the environment."""
     c = _config()
     provider, key, model = c["provider"].lower(), c["api_key"], c["model"]
     if not (provider and key):
         raise RuntimeError("LLM not configured: set LLM_PROVIDER and LLM_API_KEY")
 
+    steps = [(provider, key, model)]
+    for alt in MODEL_FALLBACKS.get(provider, []):
+        if alt != model:
+            steps.append((provider, key, alt))
+    for other, env in PROVIDER_KEY_ENV.items():
+        other_key = os.getenv(env, "")
+        if other != provider and other_key:
+            steps.append((other, other_key, ""))
+    return steps
+
+
+def complete_json(system, user, on_fallback=None):
+    """Ask the LLM for JSON, moving down the chain when a provider is rate-limited.
+
+    `on_fallback(provider, model, error)` is called each time a step fails, so the
+    caller can log which provider actually answered.
+    """
+    problems = []
+    for provider, key, model in _chain():
+        try:
+            return _call(provider, key, model, system, user)
+        except Exception as e:  # noqa: BLE001 - any provider error should fall through
+            problems.append(f"{provider}/{model or 'default'}: {str(e)[:120]}")
+            if on_fallback:
+                on_fallback(provider, model, e)
+            if not _retryable(e):
+                raise
+    raise RuntimeError("Every provider failed. " + " | ".join(problems))
+
+
+def _call(provider, key, model, system, user):
     if provider == "anthropic":
         import anthropic
 
