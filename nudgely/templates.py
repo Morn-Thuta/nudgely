@@ -48,6 +48,7 @@ TEMPLATES = {
             "2": "the item they asked about, named as the chat or STORE_INFO names it",
             "3": CLOSE_BLANK,
         },
+        "grounded": ["2"],
     },
     "delivery_complaint": {
         "tag": "complaint_delivery",
@@ -85,6 +86,7 @@ TEMPLATES = {
             "2": "an item from STORE_INFO in_stock_now that they have shown interest in",
             "3": CLOSE_BLANK,
         },
+        "grounded": ["2"],
     },
     "regular": {
         "tag": "loyal_regular",
@@ -94,6 +96,7 @@ TEMPLATES = {
             "2": "what they usually buy, from the chat or their tags",
             "3": CLOSE_BLANK,
         },
+        "grounded": ["2"],
     },
 }
 
@@ -117,10 +120,16 @@ RULES
 - Never promise a date, a reservation, a refund or a stock arrival.
 - A discount may only be mentioned if the label is "Persuadable", and never above 10%.
 - Each blank is plain text on one line: no newlines, no tabs, no "{{" or "}}", no emoji in blank 1.
+- Name an item the way a shopkeeper says it, not the way the catalogue lists it: "durian", not
+  "durian (seasonal)". No brackets, and do not add details like a flavour or filling that
+  STORE_INFO and the chat do not state.
 - Keep blanks short. The whole filled message must stay under 300 characters.
 - Do not repeat the shop name or the opt-out line; they are already in the fixed text.
 
 If the chat does not support this template, return {"skip": "one line saying why"} instead.
+
+Return a value for EVERY blank the template contains. A missing or empty blank makes the whole
+message unusable, so skip the template rather than return a partial answer.
 
 Return ONLY a JSON object:
 {"values": {"1": "...", "2": "..."}, "reason": "one short line for the shop owner"}"""
@@ -194,12 +203,28 @@ def fill(customer, extraction, template_id=None, available=None):
         "STORE_INFO": STORE_INFO,
     }, default=str)
 
-    try:
-        out = complete_json(FILL_SYSTEM, user)
-    except Exception as e:  # noqa: BLE001 - no message is better than a wrong one
-        return _failed(cid, template_id, f"Could not reach the LLM: {str(e)[:120]}")
+    # A free model often returns some blanks and drops the rest. That is a
+    # formatting failure rather than a judgement, so it is worth asking once more;
+    # anything the review rejects on its merits is not retried.
+    result = None
+    for attempt in (1, 2):
+        try:
+            out = complete_json(FILL_SYSTEM, user)
+        except Exception as e:  # noqa: BLE001 - no message is better than a wrong one
+            return _failed(cid, template_id, f"Could not reach the LLM: {str(e)[:120]}")
 
-    return review_fill(out, customer, extraction, template_id)
+        result = review_fill(out, customer, extraction, template_id)
+        if result["ok"] or not _incomplete(result):
+            return result
+        if attempt == 1:
+            user = user[:-1] + ', "reminder": "Return a value for every blank: ' \
+                   + ", ".join("{{%s}}" % n for n in blanks_in(template_id)) + '"}'
+    return result
+
+
+def _incomplete(result):
+    """True when the only thing wrong is a blank the model did not fill."""
+    return all("empty" in p or "needs blanks" in p for p in result["problems"])
 
 
 def review_fill(out, customer, extraction, template_id):
@@ -243,6 +268,25 @@ def review_fill(out, customer, extraction, template_id):
     return message
 
 
+# Words that carry no claim, so they are not worth grounding.
+FILLER = {"the", "a", "an", "and", "or", "of", "for", "your", "our", "some", "any",
+          "fresh", "new", "nice", "good", "usual", "pack", "packs", "box", "boxes"}
+
+
+def _ungrounded_words(value, customer):
+    """Content words in an item blank that neither the shop nor the customer used.
+
+    The verifier matches a stocked item on its distinctive word, so "frozen
+    dumplings" lets "pork and chive dumplings" through: the invented part rides
+    along on the real one. Checking word by word is what catches that.
+    """
+    stocked = " ".join(STORE_INFO["in_stock_now"]).lower()
+    said = " ".join(m["text"] for m in (customer.get("chat") or [])).lower()
+    known = set(re.findall(r"[a-z]{3,}", stocked + " " + said))
+    words = set(re.findall(r"[a-z]{3,}", value.lower())) - FILLER
+    return sorted(words - known)
+
+
 def _check_blanks(template_id, values, customer):
     """Rules about the blanks themselves, before anything is rendered."""
     problems = []
@@ -264,6 +308,15 @@ def _check_blanks(template_id, values, customer):
             problems.append(f"blank {number} is {len(value)} characters, too long for a variable")
         if OPT_OUT.lower() in value.lower():
             problems.append(f"blank {number} repeats the opt-out line")
+        if "(" in value or ")" in value:
+            # "durian (seasonal)" is how the catalogue lists it, not how a shop
+            # says it to a person.
+            problems.append(f"blank {number} carries a catalogue note in brackets")
+        if number in TEMPLATES[template_id].get("grounded", []):
+            unknown = _ungrounded_words(value, customer)
+            if unknown:
+                problems.append(f"blank {number} names {unknown}, which neither the shop "
+                                f"stocks nor the customer mentioned")
 
     name = str(customer.get("name", ""))
     first_name = name.split()[0] if name else ""

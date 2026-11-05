@@ -164,6 +164,14 @@ patched-up message.
 Replies are unaffected. Once a customer answers, WhatsApp allows 24 hours of free
 text, which is what the reply bot above handles.
 
+**A gap worth knowing about:** 6 of the 30 demo customers have no tags at all,
+so no template matches and they cannot be sent an opening message. A shop's
+quietest customers are exactly the ones with nothing in their chat history, and
+those are often the ones worth winning back. Two possible answers - a seventh
+template that needs no tag, or accept that customers with no history are reached
+some other way - and the team should pick one rather than discover it during the
+pilot.
+
 ---
 
 ## 6. Tagging one message at a time
