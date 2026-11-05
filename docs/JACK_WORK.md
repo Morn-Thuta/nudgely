@@ -1,0 +1,183 @@
+# Jack's work, in plain English
+
+What each piece does, and the one command that shows it working. Run everything
+from the repo root with the virtual environment's Python
+(`.venv/Scripts/python.exe` on Windows, `.venv/bin/python` elsewhere).
+
+Most of this has no screen in the Streamlit app, which is why the app looks
+unchanged. The commands below are how you see it.
+
+---
+
+## 1. Score a real shop's customers
+
+A shop gives you a spreadsheet of purchases: phone, date, amount. This turns
+that into a ranked list of who is worth messaging.
+
+```
+python scripts/score_shop.py --sales data/examples/sales_sample.csv --top 8
+```
+
+```
+1,254 purchases from 48 customers in data/examples/sales_sample.csv
+  Lost Cause: 18  Persuadable: 17  Sure Thing: 13
+
+Top 8 by uplift - message these first:
+  phone          uplift   if msg   if not  label
+  92353412       +7.8%      16%       8%  Persuadable
+  98818174       +7.4%      20%      13%  Persuadable
+  92452821       +7.3%      15%       8%  Persuadable
+  92499123       +6.5%      16%      10%  Persuadable
+```
+
+Read the first row as: this person has an 8% chance of coming back on their own,
+16% if we message them, so the message is worth +7.8 points. That difference is
+the whole point - not "will they return" but "does the message change anything".
+
+`Persuadable` means message them. `Sure Thing` means they are coming back
+anyway, so a discount is wasted. `Lost Cause` means the message will not move
+them.
+
+**Needs:** `data/model_transferable.pkl`. It is gitignored, so build it once with
+`python notebooks/train_transferable.py` (about an hour).
+
+**Don't have a real shop's file yet?** `python scripts/make_sample_sales.py`
+writes a realistic fake one.
+
+---
+
+## 2. The model behind that
+
+`notebooks/train_transferable.py` trains on ten numbers any shop can work out
+from phone, date and amount alone - how long they have been a customer, how
+irregular their visits are, how much their basket size jumps around, and whether
+they have replied to a message before.
+
+The old model needed all 190 columns of the Lenta dataset, including Russian
+store-format codes. No Singapore shop has those, so the old model could never
+score a real customer.
+
+| | top 30% captures |
+|---|---|
+| all 190 Lenta features | 44.8% ± 10.5% |
+| **10 shop-computable features** | **57.0% ± 14.2%** |
+| random targeting | 30% by definition |
+
+**Always quote the spread.** It swings between 38% and 85% depending on the
+split. "57% on average across seven splits, swinging between 38 and 85" is the
+honest sentence. The direction is solid; the exact number is noisy.
+
+**Known gap:** the model has no "days since last purchase" feature, because
+Lenta does not expose one. So every lapsed customer in the sample came out as
+`Lost Cause`. A win-back tool that refuses to message people who left is a
+design problem, and the team should know about it.
+
+---
+
+## 3. The reply bot
+
+`nudgely/reply.py` answers an incoming WhatsApp message, or hands it to a person.
+Nothing is hard-coded - the AI writes each reply - but it is checked before it
+can be sent.
+
+Two layers of protection:
+
+**The prompt** tells the model to escalate when it is unsure.
+
+**`review_reply`** catches it when it doesn't. Try it:
+
+```
+python -c "from nudgely.reply import review_reply; print(review_reply({'reply': 'Yes! Durian is \$3 a kilo today and we deliver free anywhere. Reply STOP to opt out'}, {'name':'Aisha','label':'Lost Cause'}, [], 'do you have durian?'))"
+```
+
+```
+handed to a person: True
+why: amount $3 appears in neither the chat nor STORE_INFO
+```
+
+The shop never said durian costs $3. The bot invented it, and the check caught
+it. It also catches invented dates and delivery terms, discounts offered to the
+wrong kind of customer, off-topic drift, and replies that are empty or too long.
+
+## 4. Reaching a real person
+
+A customer can type `HUMAN` at any time. That is matched **before** the AI is
+called, so no clever message can talk the bot out of handing over.
+
+```
+python -c "from nudgely.reply import asked_for_a_person as f; print(f('HUMAN'), f('can i speak to someone real'), f('thanks!'))"
+```
+
+```
+True True False
+```
+
+The first reply to any customer advertises it, so they know the option exists.
+
+---
+
+## 5. Run everything unattended
+
+Right now someone has to run the scripts by hand. This chains them: tag new
+chats, draft messages, verify them, close finished outcome windows.
+
+```
+python scripts/run_daily.py --dry-run
+```
+
+```
+=== daily run === (dry run)
+tags: nothing new to tag
+messages: every tagged customer already has a draft
+verify: checking every draft
+returns: nothing past its window
+=== done, all clear ===
+```
+
+Each step checks whether there is work before calling anything, so a quiet day
+costs no API credit. Drop `--dry-run` to run it for real. Point Windows Task
+Scheduler or cron at it and it runs itself.
+
+---
+
+## 6. The LLM never dies on one bad provider
+
+Three fixes that are invisible until they save you:
+
+- **Fallback chain** - try the configured model, then that provider's other
+  models, then any other provider you have a key for. Only transient failures
+  fall through; a bad prompt is not retried forever.
+- **Timeouts** - a provider returning 503 used to hang for over five minutes,
+  because Google's SDK retried it internally with backoff before our fallback
+  got a turn. Now 30 seconds per call, 75 for the whole chain. Five minutes
+  became eight.
+- **Fresh model list** - every free OpenRouter model hard-coded during the
+  hackathon now returns 404. Refreshed against the live list.
+
+---
+
+## 7. Measuring whether it actually worked
+
+A real send writes one row per customer to `data/campaign_log.csv`, including
+the ones deliberately held back. Rehearsals do not log, so the numbers stay
+clean.
+
+```
+python scripts/record_returns.py --from-visits --close
+```
+
+Then the Results page in the Streamlit app charts messaged against holdout with
+the measured lift. The holdout is the only honest comparison: without it you
+cannot tell a good message from a customer who was coming back regardless.
+
+---
+
+## Still blocked on other people
+
+- **The webhook** - MantaGO's documented API only sends. Until Eslitec confirms
+  whether the callback delivers incoming message text, nothing two-way works.
+  Blocked on Thuta, not on code.
+- **WhatsApp templates** - broadcasts sit "Unsent" until Meta approves template
+  sentences on a non-personal number.
+- **A paid LLM key** - free tiers are 20 requests a day per model. Fine for
+  testing, not for real customers.
