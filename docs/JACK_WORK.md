@@ -91,13 +91,28 @@ python -c "from nudgely.reply import review_reply; print(review_reply({'reply': 
 ```
 
 ```
-handed to a person: True
-why: amount $3 appears in neither the chat nor STORE_INFO
+handover: True
+reply   : Thanks for your message - someone from the shop will follow up shortly.
+draft   : Yes! Durian is $3 a kilo today and we deliver free anywhere.
+reason  : amount $3 appears in neither the chat nor STORE_INFO
 ```
 
 The shop never said durian costs $3. The bot invented it, and the check caught
 it. It also catches invented dates and delivery terms, discounts offered to the
 wrong kind of customer, off-topic drift, and replies that are empty or too long.
+
+### For whoever wires this into the backend
+
+**`reply` is always safe to send.** On handover it is replaced with the holding
+line above and the model's attempt is moved to `draft`, which is for the shop
+owner to read and never to send. So if your code sends `reply` and forgets to
+check `handover`, the customer gets a polite holding line rather than an invented
+price. Check `handover` anyway - that is what tells you to put a person on it.
+
+This applies even when the bot flags itself. A reply that says "let me check -
+durian is $3 a kilo by the way" is a handover *and* an invention, so it gets the
+same treatment; the model's own judgement is not trusted to make its text
+sendable.
 
 ## 4. Reaching a real person
 

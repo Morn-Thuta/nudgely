@@ -12,8 +12,12 @@ Two layers of safety, because the first one is not reliable on its own:
    invents something, breaks a rule, or does not engage with what was asked.
 
 An LLM producing nonsense is in no position to notice it is producing nonsense,
-so step 2 is what actually holds. Call `answer` and send only when it returns
-`handover: False`.
+so step 2 is what actually holds. Call `answer` and send `reply`; when it returns
+`handover: True`, route the conversation to a person as well.
+
+`reply` is always safe to send. On handover it is replaced with a neutral holding
+line and the model's untrusted attempt is moved to `draft` for the owner to read,
+so a caller that forgets to check `handover` cannot leak an invented price.
 """
 
 import json
@@ -24,6 +28,11 @@ from nudgely.verify import verify_message
 
 MAX_CHARS = 300
 OPT_OUT = "Reply STOP to opt out"
+
+# What a customer gets whenever we hand over. The untrusted draft is kept under
+# `draft` for the shop owner to read, never under `reply`, so a caller that sends
+# `reply` without checking `handover` still cannot send invented information.
+HOLDING = "Thanks for your message - someone from the shop will follow up shortly."
 
 # The advertised way to reach a person. A keyword is checked exactly, so it cannot
 # be missed the way a phrase can; the phrases stay as a safety net for customers
@@ -113,11 +122,18 @@ def review_reply(out, customer, chat, incoming, tags=None, first_reply=True):
     def hand_over(why):
         out["handover"] = True
         out["reason"] = why
-        out["reply"] = reply or "Thanks for your message - someone from the shop will follow up shortly."
+        if reply and reply != HOLDING:
+            out["draft"] = reply  # for the owner to read, not to send
+        out["reply"] = HOLDING
         return out
 
     if out.get("handover"):
+        # The model handed over of its own accord. Its line is usually a clean
+        # "someone will follow up", but it is unreviewed, so it gets the same
+        # checks as any other reply before a customer can see it.
         out["handover"] = True
+        if not reply or len(reply) > MAX_CHARS or _invents(reply, chat, tags):
+            return hand_over(out["reason"] or "Handed over with a reply that could not be sent.")
         return out
     if not reply:
         return hand_over("Model returned an empty reply.")
@@ -132,12 +148,9 @@ def review_reply(out, customer, chat, incoming, tags=None, first_reply=True):
     if any(p > 10 for p in percentages):
         return hand_over("Offered a discount above 10%.")
 
-    invented = verify_message(reply, chat, tags or {})
-    # The grounding check compares against extracted evidence, which is about the
-    # outbound message, not this reply. The invention checks are what matter here.
-    invented = [w for w in invented if "shares no wording" not in w]
+    invented = _invents(reply, chat, tags)
     if invented:
-        return hand_over("Reply claims something the chat and shop info do not support: " + invented[0])
+        return hand_over("Reply claims something the chat and shop info do not support: " + invented)
 
     if not _engages_with(reply, incoming):
         return hand_over("Reply does not pick up anything the customer actually said.")
@@ -150,6 +163,17 @@ def review_reply(out, customer, chat, incoming, tags=None, first_reply=True):
         if tail:
             out["reply"] = reply + " " + ". ".join(tail)
     return out
+
+
+def _invents(reply, chat, tags):
+    """The first thing the reply claims that the chat and shop info do not support.
+
+    The grounding check compares against extracted evidence, which is about the
+    outbound message rather than this reply, so only the invention checks apply.
+    """
+    warnings = [w for w in verify_message(reply, chat, tags or {})
+                if "shares no wording" not in w]
+    return warnings[0] if warnings else None
 
 
 def _engages_with(reply, incoming):
