@@ -27,3 +27,5 @@ venv/
 .DS_Store
 Thumbs.db
 .streamlit/test_accounts_for_secrets.toml
+data/tagging_results.json
+data/template_messages.json

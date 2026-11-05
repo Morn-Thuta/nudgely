@@ -1,0 +1,634 @@
+{
+  "about": "Hand-written chats with the tags they should produce. Used by scripts/test_tagging.py to measure the tagger. 'expect' is every tag type that should be found; 'expect_not' is types that must NOT be found, which is where a tagger usually fails. 'also_acceptable' lists tags that are defensible on the wording but not required, so a judgement call is not counted as an invention.",
+  "tag_types": [
+    "restock_request",
+    "complaint_delivery",
+    "complaint_price",
+    "upcoming_event",
+    "product_interest",
+    "loyal_regular"
+  ],
+  "cases": [
+    {
+      "id": "T01",
+      "note": "plain restock ask",
+      "expect": [
+        "restock_request"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Hi, when will the oat milk be back? Out for 2 weeks already",
+          "date": "2026-10-02"
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "note": "plain delivery complaint",
+      "expect": [
+        "complaint_delivery"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "My order was supposed to come before 2pm but only reached at 7pm. Vegetables all wilted",
+          "date": "2026-10-05"
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "note": "plain price complaint",
+      "expect": [
+        "complaint_price"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Your eggs are getting quite expensive ah, NTUC selling cheaper for the same thing",
+          "date": "2026-10-07"
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "note": "plain upcoming event",
+      "expect": [
+        "upcoming_event"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "I'm hosting my daughter's birthday party next month, around 20 kids",
+          "date": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "T05",
+      "note": "plain product interest",
+      "expect": [
+        "product_interest"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Do you all carry frozen dumplings? Looking for the pork ones",
+          "date": "2026-10-11"
+        }
+      ]
+    },
+    {
+      "id": "T06",
+      "note": "regular saying so themselves",
+      "expect": [
+        "loyal_regular"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Same as every week please - jasmine rice and a dozen free-range eggs",
+          "date": "2026-10-12"
+        }
+      ]
+    },
+    {
+      "id": "T07",
+      "note": "restock plus an event in one chat",
+      "expect": [
+        "restock_request",
+        "upcoming_event"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Can tell me when oat milk is back?",
+          "date": "2026-09-28"
+        },
+        {
+          "from": "store",
+          "text": "Sorry ah! Supplier delay. We'll let you know",
+          "date": "2026-09-28"
+        },
+        {
+          "from": "customer",
+          "text": "Ok. Also my son's birthday party is end Oct, you got party snack packs?",
+          "date": "2026-09-30"
+        }
+      ],
+      "also_acceptable": [
+        "product_interest"
+      ]
+    },
+    {
+      "id": "T08",
+      "note": "complaint and a restock ask together",
+      "expect": [
+        "complaint_delivery",
+        "restock_request"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Delivery came one day late again, second time this month",
+          "date": "2026-10-14"
+        },
+        {
+          "from": "store",
+          "text": "We're really sorry about that",
+          "date": "2026-10-14"
+        },
+        {
+          "from": "customer",
+          "text": "Nvm. Just tell me when the kai lan comes in, I need it for Sunday",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "id": "T09",
+      "note": "price complaint but still interested in a product",
+      "expect": [
+        "complaint_price",
+        "product_interest"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Wah the durian price quite steep leh",
+          "date": "2026-10-16"
+        },
+        {
+          "from": "store",
+          "text": "Seasonal ah, price moves with supply",
+          "date": "2026-10-16"
+        },
+        {
+          "from": "customer",
+          "text": "I see. Still want to try one when it comes cheaper, let me know",
+          "date": "2026-10-16"
+        }
+      ]
+    },
+    {
+      "id": "T10",
+      "note": "event plus product interest",
+      "expect": [
+        "upcoming_event",
+        "product_interest"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Deepavali coming, do you all stock ghee and spice packs?",
+          "date": "2026-10-18"
+        }
+      ]
+    },
+    {
+      "id": "T11",
+      "note": "regular who also wants a restock",
+      "expect": [
+        "loyal_regular",
+        "restock_request"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "My usual order please",
+          "date": "2026-10-19"
+        },
+        {
+          "from": "store",
+          "text": "Jasmine rice, eggs, Gardenia bread?",
+          "date": "2026-10-19"
+        },
+        {
+          "from": "customer",
+          "text": "Yes that one. Bread got stock? Last week sold out when I came",
+          "date": "2026-10-19"
+        }
+      ]
+    },
+    {
+      "id": "T12",
+      "note": "nothing worth remembering - thanks only",
+      "expect": [],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "store",
+          "text": "Your order is packed and ready",
+          "date": "2026-10-20"
+        },
+        {
+          "from": "customer",
+          "text": "Thanks!",
+          "date": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "id": "T13",
+      "note": "nothing - logistics question only",
+      "expect": [],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "What time do you close on Sunday?",
+          "date": "2026-10-21"
+        },
+        {
+          "from": "store",
+          "text": "We close at 8pm on Sundays",
+          "date": "2026-10-21"
+        },
+        {
+          "from": "customer",
+          "text": "Ok noted",
+          "date": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "id": "T14",
+      "note": "nothing - greeting",
+      "expect": [],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Hello?",
+          "date": "2026-10-22"
+        },
+        {
+          "from": "store",
+          "text": "Hi! How can we help?",
+          "date": "2026-10-22"
+        },
+        {
+          "from": "customer",
+          "text": "Oh sorry wrong chat",
+          "date": "2026-10-22"
+        }
+      ]
+    },
+    {
+      "id": "T15",
+      "note": "the STORE mentions a festival, the customer never does",
+      "expect": [],
+      "expect_not": [
+        "upcoming_event"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "store",
+          "text": "Deepavali promotion starting next week, ghee and spice packs in stock!",
+          "date": "2026-10-23"
+        },
+        {
+          "from": "customer",
+          "text": "Ok",
+          "date": "2026-10-23"
+        }
+      ]
+    },
+    {
+      "id": "T16",
+      "note": "the STORE asks about restock, the customer did not",
+      "expect": [],
+      "expect_not": [
+        "restock_request"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "store",
+          "text": "Want us to tell you when oat milk is back in stock?",
+          "date": "2026-10-24"
+        },
+        {
+          "from": "customer",
+          "text": "No need, I switched to fresh milk already",
+          "date": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "id": "T17",
+      "note": "price PRAISE, not a complaint",
+      "expect": [],
+      "expect_not": [
+        "complaint_price"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Your rice is cheaper than the supermarket, quite worth it",
+          "date": "2026-10-25"
+        }
+      ],
+      "also_acceptable": [
+        "product_interest"
+      ]
+    },
+    {
+      "id": "T18",
+      "note": "delivery PRAISE, not a complaint",
+      "expect": [],
+      "expect_not": [
+        "complaint_delivery"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Delivery came super fast today, before lunch. Thanks!",
+          "date": "2026-10-26"
+        }
+      ]
+    },
+    {
+      "id": "T19",
+      "note": "heavy Singlish restock ask",
+      "expect": [
+        "restock_request"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Eh boss, the Pokka green tea got come in anot? Every time I come also finish liao",
+          "date": "2026-10-27"
+        }
+      ],
+      "also_acceptable": [
+        "product_interest",
+        "loyal_regular"
+      ]
+    },
+    {
+      "id": "T20",
+      "note": "Chinese message, product interest",
+      "expect": [
+        "product_interest"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "请问有新鲜芥兰吗？想买一些",
+          "date": "2026-10-28"
+        }
+      ]
+    },
+    {
+      "id": "T21",
+      "note": "opt-out request - nothing to remember, must not be read as interest",
+      "expect": [],
+      "expect_not": [
+        "product_interest",
+        "loyal_regular"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Please stop sending me these messages",
+          "date": "2026-10-29"
+        }
+      ]
+    },
+    {
+      "id": "T22",
+      "note": "customer moving away - a reason not to message, not a tag",
+      "expect": [],
+      "expect_not": [
+        "loyal_regular",
+        "upcoming_event"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "I'm moving to Jurong next month so probably won't order from you all anymore",
+          "date": "2026-10-30"
+        }
+      ]
+    },
+    {
+      "id": "T23",
+      "note": "sarcasm that is really a delivery complaint",
+      "expect": [
+        "complaint_delivery"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Three days for a carton of eggs, very efficient service",
+          "date": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "id": "T24",
+      "note": "the same restock asked twice - should be one tag, not two",
+      "expect": [
+        "restock_request"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Oat milk back already?",
+          "date": "2026-10-01"
+        },
+        {
+          "from": "store",
+          "text": "Not yet, supplier delay",
+          "date": "2026-10-01"
+        },
+        {
+          "from": "customer",
+          "text": "Oat milk got stock already or not?",
+          "date": "2026-10-08"
+        }
+      ]
+    },
+    {
+      "id": "T25",
+      "note": "wedding, a bigger event",
+      "expect": [
+        "upcoming_event"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "My sister's wedding lunch is in December, need to cater for about 60 people",
+          "date": "2026-11-01"
+        }
+      ]
+    },
+    {
+      "id": "T26",
+      "note": "Chinese New Year plus a product",
+      "expect": [
+        "upcoming_event",
+        "product_interest"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "CNY coming soon, you all will have the party snack packs again?",
+          "date": "2026-11-02"
+        }
+      ]
+    },
+    {
+      "id": "T27",
+      "note": "price complaint with a competitor named",
+      "expect": [
+        "complaint_price"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Sheng Siong selling the same jasmine rice $3 cheaper. Hard to justify buying from you",
+          "date": "2026-11-03"
+        }
+      ]
+    },
+    {
+      "id": "T28",
+      "note": "long-standing regular, said over several turns",
+      "expect": [
+        "loyal_regular"
+      ],
+      "sentiment": "positive",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Been buying from you all since you opened",
+          "date": "2026-11-03"
+        },
+        {
+          "from": "store",
+          "text": "Thank you for the support!",
+          "date": "2026-11-03"
+        },
+        {
+          "from": "customer",
+          "text": "Every Saturday morning also come, your kai lan is the freshest around",
+          "date": "2026-11-03"
+        }
+      ],
+      "also_acceptable": [
+        "product_interest"
+      ]
+    },
+    {
+      "id": "T29",
+      "note": "seasonal product question",
+      "expect": [
+        "product_interest"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Durian season started? Want to buy for my father",
+          "date": "2026-11-04"
+        }
+      ]
+    },
+    {
+      "id": "T30",
+      "note": "wrong item delivered - still a delivery complaint",
+      "expect": [
+        "complaint_delivery"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "I ordered Gardenia bread but got a different brand. Not what I paid for",
+          "date": "2026-11-04"
+        }
+      ]
+    },
+    {
+      "id": "T31",
+      "note": "long chat, three separate things",
+      "expect": [
+        "complaint_delivery",
+        "restock_request",
+        "upcoming_event"
+      ],
+      "sentiment": "neutral",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "Morning, last delivery reached quite late, after 6pm",
+          "date": "2026-10-10"
+        },
+        {
+          "from": "store",
+          "text": "Sorry about that, traffic was bad",
+          "date": "2026-10-10"
+        },
+        {
+          "from": "customer",
+          "text": "Ok lah. Anyway when is the frozen dumplings coming back?",
+          "date": "2026-10-12"
+        },
+        {
+          "from": "store",
+          "text": "This Friday should have",
+          "date": "2026-10-12"
+        },
+        {
+          "from": "customer",
+          "text": "Good, I need for my housewarming on the 25th",
+          "date": "2026-10-12"
+        }
+      ]
+    },
+    {
+      "id": "T32",
+      "note": "refund request - a complaint, and must not read as product interest",
+      "expect": [
+        "complaint_delivery"
+      ],
+      "expect_not": [
+        "product_interest"
+      ],
+      "sentiment": "negative",
+      "chat": [
+        {
+          "from": "customer",
+          "text": "The eggs arrived cracked, half the carton. I want a refund",
+          "date": "2026-11-05"
+        }
+      ]
+    }
+  ]
+}

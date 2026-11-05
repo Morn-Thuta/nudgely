@@ -27,7 +27,8 @@ Return ONLY a JSON object with keys:
 customer_id, tags (list of {{type, value, evidence, date}}), sentiment (positive|neutral|negative),
 open_promise (string, "" if none), best_hook (short string), avoid (string, "" if none).
 Allowed tag types: {", ".join(TAG_TYPES)}.
-Every tag MUST quote evidence copied word-for-word from a customer or store message. Drop any tag without evidence.
+Every tag MUST quote evidence copied word-for-word from a message the CUSTOMER sent. Drop any tag
+without evidence. The store's own messages are context: never tag something only the store said.
 Do not invent anything not in the chat."""
 
 WRITE_SYSTEM = """You write ONE short WhatsApp message from a Singapore grocery store to a customer.
@@ -223,10 +224,83 @@ def extract_tags(customer_id, chat, names=()):
     user = f"customer_id: {customer_id}\nChat history:\n" + "\n".join(lines)
     out = complete_json(EXTRACT_SYSTEM, user)
     out["customer_id"] = customer_id
-    # Keep only tags whose evidence is really quoted from the chat (no invented evidence)
-    chat_text = " ".join(lines).lower()
+    # Evidence must be quoted from something the CUSTOMER said. The store's own
+    # messages are context: a shop announcing a Deepavali promotion is not evidence
+    # that this customer has Deepavali coming up, and a tag sourced that way puts a
+    # fact on their record they never gave us.
+    chat_text = " ".join(f"{m['from']}: {scrub(m['text'], names)}"
+                         for m in chat if m.get("from") == "customer").lower()
     out["tags"] = [t for t in out.get("tags", []) if t.get("type") in TAG_TYPES and t.get("evidence")
                    and t["evidence"].strip(" .\"'“”").lower() in chat_text]
+    return out
+
+
+TAG_ONE_SYSTEM = f"""You read ONE new message a customer just sent a grocery store, and extract memory tags from it.
+Return ONLY a JSON object with keys:
+tags (list of {{type, value, evidence, date}}), sentiment (positive|neutral|negative),
+open_promise (string, "" if none), best_hook (short string), avoid (string, "" if none).
+Allowed tag types: {", ".join(TAG_TYPES)}.
+Every tag MUST quote evidence copied word-for-word from the new message. Drop any tag without evidence.
+Earlier tags are given for context only: do NOT repeat them, and do not tag anything the new message
+does not itself say. Return an empty tags list when the message carries nothing worth remembering.
+Do not invent anything."""
+
+
+def tag_message(customer_id, text, date="", prior=None, names=()):
+    """Tag ONE incoming message, for the API to call as each message arrives.
+
+    `extract_tags` re-reads a whole chat, which suits the nightly batch and is
+    wasteful per message: it costs more every time the conversation grows and it
+    re-decides tags that were already settled. This looks at the new message
+    only, with `prior` passed as context so the model does not repeat itself.
+
+    Returns the same shape as `extract_tags`. Merge it into what you already hold
+    with `merge_tags`.
+    """
+    user = json.dumps({
+        "customer_id": customer_id,
+        "new_message": {"date": date, "from": "customer", "text": scrub(text, names)},
+        "tags_we_already_have": [
+            {k: t.get(k) for k in ("type", "value")} for t in (prior or {}).get("tags", [])],
+    }, default=str)
+    out = complete_json(TAG_ONE_SYSTEM, user)
+    out["customer_id"] = customer_id
+
+    # Evidence must be quoted from this message, not from the conversation at large.
+    low = scrub(text, names).lower()
+    out["tags"] = [t for t in out.get("tags", [])
+                   if t.get("type") in TAG_TYPES and t.get("evidence")
+                   and t["evidence"].strip(" .\"'“”").lower() in low]
+    for tag in out["tags"]:
+        tag.setdefault("date", date)
+    return out
+
+
+def merge_tags(prior, new):
+    """Fold a single message's tags into what we already remember.
+
+    Same type and same value is the same fact mentioned twice, so the newer one
+    wins and carries the newer evidence. Everything else accumulates, because a
+    customer who asked about oat milk in September and durian in October wants
+    both remembered.
+
+    `sentiment`, `best_hook` and `avoid` come from the newest message that has
+    them: they describe where the customer stands now, not where they stood.
+    """
+    prior = prior or {}
+    merged = {t.get("type", "") + "|" + str(t.get("value", "")).strip().lower(): t
+              for t in prior.get("tags", [])}
+    for tag in new.get("tags", []):
+        merged[tag.get("type", "") + "|" + str(tag.get("value", "")).strip().lower()] = tag
+
+    out = dict(prior)
+    out["customer_id"] = new.get("customer_id") or prior.get("customer_id", "")
+    out["tags"] = list(merged.values())
+    for key in ("sentiment", "best_hook", "avoid", "open_promise"):
+        if str(new.get(key, "")).strip():
+            out[key] = new[key]
+        else:
+            out.setdefault(key, prior.get(key, ""))
     return out
 
 

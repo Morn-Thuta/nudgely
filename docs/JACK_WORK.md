@@ -131,7 +131,88 @@ The first reply to any customer advertises it, so they know the option exists.
 
 ---
 
-## 5. Run everything unattended
+## 5. Filling WhatsApp templates
+
+WhatsApp will not let a shop start a conversation with free text. Meta approves a
+fixed sentence with numbered blanks, and only the blanks may change. So the
+first message to a customer cannot be written the way `write_messages.py` writes
+it.
+
+The six sentences, and everything checked before one sends, are in
+[WHATSAPP_TEMPLATES.md](WHATSAPP_TEMPLATES.md) - that file is what Thuta submits
+to Meta.
+
+```
+python scripts/fill_templates.py --only C001
+```
+
+```
+C001 [restock] Hi Aisha, good news - the oat milk you asked about is back in
+stock at Kampung Fresh. Shall we set some aside for you? Reply STOP to opt out
+```
+
+The model's job shrinks to filling blanks, and `render` substitutes them
+mechanically - the approved words are copied from the template, never from
+anything the model returned. A model that tries to rewrite the sentence cannot.
+
+The blanks are still free text, so they get checked: no invented price, product,
+date or delivery term, no discount to a customer who is not Persuadable, no
+"free" anything that is not already a shop term, no shouting, and the message
+must ask a question. A customer whose blanks fail is **skipped**, not sent a
+patched-up message.
+
+Replies are unaffected. Once a customer answers, WhatsApp allows 24 hours of free
+text, which is what the reply bot above handles.
+
+---
+
+## 6. Tagging one message at a time
+
+`extract_tags` re-reads a customer's whole chat. That suits a nightly batch but
+is wrong for a live webhook: it costs more every time the conversation grows, and
+it re-decides tags that were settled weeks ago.
+
+`llm.tag_message` reads only the new message, with the existing tags passed in as
+context so it does not repeat them. `llm.merge_tags` folds the result into what
+the shop already remembers - same tag mentioned twice keeps the newer evidence,
+and sentiment follows the newest message, because it describes where the customer
+stands now.
+
+This is the function Thuta's `POST /webhooks/mantago` calls:
+
+```python
+from nudgely.llm import merge_tags, tag_message
+
+new = tag_message(customer_id, incoming_text, date=today, prior=stored_tags)
+stored_tags = merge_tags(stored_tags, new)
+```
+
+---
+
+## 7. How accurate is the tagging?
+
+A judge will ask. Previously there was no answer. `data/examples/tagging_test_set.json`
+is 32 hand-written chats with the tags they should produce, and ten of them are
+traps - the shop mentions a festival the customer never did, a customer praises
+the price, a customer asks to be left alone.
+
+```
+python scripts/test_tagging.py
+```
+
+See `docs/TAGGING_ACCURACY.md` for the current numbers and what they mean.
+
+Two numbers, and they fail differently. **Recall** is how much it finds; miss a
+complaint and the shop sends a promotion to an angry customer. **Precision** is
+how much of what it finds is real; invent a tag and the message references
+something the customer never said. Answers are cached, so a run cut short by a
+quota limit is not wasted - run it again and it carries on.
+
+Add `--per-message` to measure the live path instead of the batch one.
+
+---
+
+## 8. Run everything unattended
 
 Right now someone has to run the scripts by hand. This chains them: tag new
 chats, draft messages, verify them, close finished outcome windows.
