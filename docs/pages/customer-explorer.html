@@ -1,0 +1,630 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Nudgely Customer Space</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: instrument panel. A fixed-dark 3D viewport sits inside a themed page,
+   the way a shop's screen sits on a counter. One column, generous rhythm. */
+:root{
+  --bg:#EEF1EC; --surface:#F8FAF6; --fg:#121A15; --muted:#5C6B61; --line:#D2DACB;
+  --accent:#19704A; --accent-soft:#D9E8DE; --ochre:#9C6410; --ochre-soft:#F0E2CB;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Courier New",monospace;
+  /* The viewport keeps one look in both themes; it is a screen, not paper. */
+  --scene:#0B130F; --scene-2:#121D16; --scene-line:#24372B; --scene-fg:#E6EFE7;
+  --scene-muted:#7E9387; --p:#45C98A; --s:#6AA7D8; --l:#D59A3E;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C120E; --surface:#141D17; --fg:#E7EEE8; --muted:#94A69A; --line:#243029;
+  --accent:#55CE92; --accent-soft:#17301F; --ochre:#E0A341; --ochre-soft:#32250F;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0C120E; --surface:#141D17; --fg:#E7EEE8; --muted:#94A69A; --line:#243029;
+  --accent:#55CE92; --accent-soft:#17301F; --ochre:#E0A341; --ochre-soft:#32250F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--fg); font-family:var(--body);
+  font-size:16px; line-height:1.6; margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 72px;
+}
+.wrap{max-width:1040px; margin:0 auto}
+h1,h2,h3{font-family:var(--display); text-wrap:balance; margin:0; line-height:1.1}
+h1{font-size:clamp(2.4rem,7vw,4.2rem); font-weight:800; letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.4vw,2.1rem); font-weight:700; letter-spacing:-.01em}
+h3{font-size:1.05rem; font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{
+  font-family:var(--mono); font-size:.72rem; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--muted)
+}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ---- header ---- */
+header{display:flex; flex-direction:column; gap:18px; padding-block:56px 36px}
+.mark{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.dot{width:13px; height:13px; border-radius:50%; background:var(--accent); flex:none;
+  box-shadow:0 0 0 5px var(--accent-soft)}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem); max-width:62ch; color:var(--fg)}
+.lede b{font-weight:600}
+.chips{display:flex; gap:8px; flex-wrap:wrap}
+.chip{
+  font-family:var(--mono); font-size:.74rem; padding:5px 10px; border-radius:999px;
+  border:1px solid var(--line); color:var(--muted); background:var(--surface)
+}
+.chip.on{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}
+
+/* ---- scene ---- */
+.scene{
+  background:var(--scene); border:1px solid var(--scene-line); border-radius:14px;
+  overflow:hidden; display:grid; grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);
+}
+@media (max-width:760px){.scene{grid-template-columns:1fr}}
+.stage{position:relative; min-width:0; aspect-ratio:4/3; touch-action:none; cursor:grab}
+.stage:active{cursor:grabbing}
+.stage canvas{display:block; width:100%; height:100%}
+.stage:focus-visible{outline:2px solid var(--p); outline-offset:-3px}
+.hint{
+  position:absolute; left:14px; bottom:12px; font-family:var(--mono); font-size:.7rem;
+  color:var(--scene-muted); pointer-events:none; transition:opacity .4s
+}
+.side{
+  border-left:1px solid var(--scene-line); padding:18px; min-width:0;
+  display:flex; flex-direction:column; gap:14px; color:var(--scene-fg);
+  background:var(--scene-2)
+}
+@media (max-width:760px){.side{border-left:0; border-top:1px solid var(--scene-line)}}
+.side h3{color:var(--scene-fg)}
+.legend{display:flex; flex-direction:column; gap:7px}
+.key{display:flex; align-items:center; gap:9px; font-size:.84rem; color:var(--scene-muted)}
+.key i{width:10px; height:10px; border-radius:50%; flex:none}
+.key b{color:var(--scene-fg); font-weight:600}
+.readout{
+  border:1px solid var(--scene-line); border-radius:10px; padding:13px;
+  background:var(--scene); display:flex; flex-direction:column; gap:9px; min-height:184px
+}
+.readout .who{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.readout .who b{font-family:var(--mono); font-size:1rem}
+.tag{font-family:var(--mono); font-size:.68rem; padding:3px 8px; border-radius:999px; flex:none}
+.rows{display:flex; flex-direction:column; gap:5px; font-size:.8rem}
+.row{display:flex; justify-content:space-between; gap:10px; color:var(--scene-muted)}
+.row span:last-child{font-family:var(--mono); color:var(--scene-fg); font-variant-numeric:tabular-nums}
+.verdict{font-size:.82rem; line-height:1.45; color:var(--scene-fg); margin-top:2px}
+.empty{color:var(--scene-muted); font-size:.84rem; line-height:1.5}
+.controls{display:flex; gap:8px; flex-wrap:wrap}
+button{
+  font-family:var(--body); font-size:.82rem; font-weight:600; padding:9px 14px;
+  border-radius:9px; border:1px solid var(--scene-line); background:var(--scene);
+  color:var(--scene-fg); cursor:pointer
+}
+button:hover{border-color:var(--p)}
+button:focus-visible{outline:2px solid var(--p); outline-offset:2px}
+button.primary{background:var(--p); border-color:var(--p); color:#07130D}
+.axes{font-family:var(--mono); font-size:.7rem; color:var(--scene-muted); line-height:1.7}
+.axes b{color:var(--scene-fg)}
+
+/* ---- campaign result ---- */
+.result{
+  margin-top:14px; border:1px solid var(--line); border-radius:12px; background:var(--surface);
+  padding:16px; display:flex; flex-direction:column; gap:12px
+}
+.bars{display:flex; flex-direction:column; gap:9px}
+.bar{display:grid; grid-template-columns:92px minmax(0,1fr) 62px; gap:10px; align-items:center; font-size:.82rem}
+.bar .track{height:22px; border-radius:5px; background:var(--accent-soft); overflow:hidden}
+.bar .fill{height:100%; width:0; transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.bar .v{font-family:var(--mono); text-align:right; font-variant-numeric:tabular-nums}
+.caution{
+  font-size:.82rem; color:var(--ochre); background:var(--ochre-soft);
+  border-radius:9px; padding:10px 12px; line-height:1.45
+}
+
+/* ---- sections ---- */
+section{padding-block:52px 0}
+.head{display:flex; flex-direction:column; gap:10px; margin-bottom:24px; max-width:66ch}
+.steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.step{background:var(--surface); padding:20px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.step .n{font-family:var(--mono); font-size:.72rem; color:var(--accent)}
+.step p{font-size:.88rem; color:var(--muted)}
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px}
+.fact{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--surface);
+  display:flex; flex-direction:column; gap:7px; min-width:0}
+.fact .big{font-family:var(--display); font-size:2.2rem; font-weight:800; line-height:1;
+  letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.fact .sub{font-size:.84rem; color:var(--muted)}
+.fact .spread{font-family:var(--mono); font-size:.72rem; color:var(--ochre)}
+table{width:100%; border-collapse:collapse; font-size:.86rem}
+.scroll{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface)}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); white-space:nowrap}
+th{font-family:var(--mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.state{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px}
+.panel{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--surface); min-width:0}
+.panel h3{margin-bottom:12px; display:flex; align-items:center; gap:9px}
+.panel h3 i{width:8px; height:8px; border-radius:50%; flex:none}
+.panel ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:7px;
+  font-size:.88rem; color:var(--muted)}
+.panel li b{color:var(--fg); font-weight:600}
+footer{padding-top:52px; border-top:1px solid var(--line); margin-top:52px;
+  display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap;
+  font-size:.84rem; color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mark">
+      <span class="dot" aria-hidden="true"></span>
+      <h1>Nudgely</h1>
+    </div>
+    <p class="lede">Most shops message every customer the same thing. Nudgely works out
+      <b>who a message would actually change</b>, writes each one from their own chat history,
+      and proves the effect against a group deliberately left alone.</p>
+    <div class="chips">
+      <span class="chip">AI-GNITION 2026 · top ten</span>
+      <span class="chip">Finals Fri 14 Nov 2026</span>
+      <span class="chip">Bongo Gang</span>
+    </div>
+  </header>
+
+  <div class="scene">
+    <div class="stage" id="stage" tabindex="0" role="application"
+         aria-label="Rotatable 3D scatter of 48 customers. Use arrow keys to rotate, Tab then Enter to inspect.">
+      <canvas id="cv"></canvas>
+      <div class="hint" id="hint">drag to rotate · click a customer</div>
+    </div>
+    <div class="side">
+      <div>
+        <h3>48 real scored customers</h3>
+        <p class="empty" style="margin-top:6px">From a 1,254-purchase sales export, scored by
+          the uplift model. Each sphere is one shopper.</p>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="readout" id="readout"></div>
+      <div class="controls">
+        <button class="primary" id="run">Run campaign</button>
+        <button id="reset">Reset view</button>
+      </div>
+      <div class="axes">
+        <b>x</b> days since last visit<br>
+        <b>y</b> uplift — what the message changes<br>
+        <b>z</b> months as a customer
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="result" hidden>
+    <div>
+      <h3 id="resultTitle">Predicted outcome</h3>
+      <p class="sub" style="font-size:.86rem; color:var(--muted); margin-top:6px" id="resultSub"></p>
+    </div>
+    <div class="bars">
+      <div class="bar">
+        <span>Messaged</span>
+        <div class="track"><div class="fill" id="fillM" style="background:var(--accent)"></div></div>
+        <span class="v" id="valM">—</span>
+      </div>
+      <div class="bar">
+        <span>Held back</span>
+        <div class="track"><div class="fill" id="fillH" style="background:var(--muted)"></div></div>
+        <span class="v" id="valH">—</span>
+      </div>
+    </div>
+    <p class="caution">These are the model's own predictions on sample data, not a measured
+      result. A real campaign writes every send to a log, holdout included, and the difference
+      is read weeks later. Nothing has been sent to a real customer yet.</p>
+  </div>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">How it works</span>
+      <h2>Four steps, and the fourth is the one shops never do</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="n">01 · Listen</span>
+        <h3>Read the chats</h3>
+        <p>Every WhatsApp message a customer sends is tagged as it arrives: a restock they asked
+          for, a delivery that went wrong, a party coming up. Evidence has to be quoted from
+          something the customer said.</p>
+      </div>
+      <div class="step">
+        <span class="n">02 · Score</span>
+        <h3>Find who is movable</h3>
+        <p>An uplift model predicts the difference a message makes, not whether someone returns.
+          Someone coming back anyway is a wasted discount. Someone gone for good is a wasted
+          message.</p>
+      </div>
+      <div class="step">
+        <span class="n">03 · Write</span>
+        <h3>Fill an approved template</h3>
+        <p>WhatsApp forbids free text to open a conversation, so one of six approved sentences is
+          chosen by the customer's strongest tag and its blanks filled. Invent a price and the
+          message is thrown away, not patched.</p>
+      </div>
+      <div class="step">
+        <span class="n">04 · Prove</span>
+        <h3>Keep a holdout</h3>
+        <p>Some customers are deliberately not messaged. Without them you cannot tell a good
+          message from a customer who was returning regardless, which is why most campaign
+          dashboards measure nothing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">Where it stands</span>
+      <h2>Measured, with the spread</h2>
+      <p style="color:var(--muted); font-size:.92rem">Every figure below moves run to run. The
+        spread is as much the finding as the number, so it travels with it.</p>
+    </div>
+    <div class="facts">
+      <div class="fact">
+        <span class="big">57%</span>
+        <span class="sub">of the extra visits captured by messaging the top 30%, against 30% for
+          picking at random</span>
+        <span class="spread">± 14 · swings 38–85 across seven splits</span>
+      </div>
+      <div class="fact">
+        <span class="big">97%</span>
+        <span class="sub">of tags found across 32 hand-written chats — recall, the number that
+          matters when a missed complaint becomes a promotion</span>
+        <span class="spread">86% precision · exactly right on 72%</span>
+      </div>
+      <div class="fact">
+        <span class="big">10</span>
+        <span class="sub">features, all computable from a shop's own export of phone, date and
+          amount — down from 190 columns no local grocer records</span>
+        <span class="spread">fewer, steadier features beat the wide set</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">The model</span>
+      <h2>What a shop has to hand over</h2>
+      <p style="color:var(--muted); font-size:.92rem">Three columns. Everything else is derived,
+        which is the only reason this runs on a real shop instead of a research dataset.</p>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Feature</th><th>Derived from</th><th>What it catches</th></tr></thead>
+        <tbody>
+          <tr><td>months as customer</td><td class="n">first purchase date</td><td>how established they are</td></tr>
+          <tr><td>visit-gap variation</td><td class="n">15d · 1m · 3m windows</td><td>clockwork shopper vs erratic one</td></tr>
+          <tr><td>gap trend</td><td class="n">15d against 30d</td><td>speeding up or drifting away</td></tr>
+          <tr><td>basket variation</td><td class="n">15d · 3m windows</td><td>steady spend vs occasional big shop</td></tr>
+          <tr><td>past message response</td><td class="n">campaign log</td><td>whether they have ever replied</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">Honest state</span>
+      <h2>Working, and not working</h2>
+    </div>
+    <div class="state">
+      <div class="panel">
+        <h3><i style="background:var(--accent)"></i>Working</h3>
+        <ul>
+          <li><b>Scoring a real shop</b> from a purchase export, with a ranked list of who to message first</li>
+          <li><b>Tagging</b> one message at a time, fast enough for a live webhook</li>
+          <li><b>Six approved templates</b>, filled and checked, rejected rather than repaired</li>
+          <li><b>A reply bot</b> that answers or hands to a person, and cannot be talked out of handing over</li>
+          <li><b>Campaign measurement</b> with a holdout and a measured lift</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><i style="background:var(--ochre)"></i>Not working yet</h3>
+        <ul>
+          <li><b>No inbound webhook.</b> MantaGO's documented API only sends. Until that is
+            answered, nothing two-way runs for real</li>
+          <li><b>No recency feature.</b> The training data exposes none, so every lapsed customer
+            scores Lost Cause — visible on the x axis above, and a problem for a win-back tool</li>
+          <li><b>Sarcasm reads as satisfied.</b> "Three days for a carton of eggs, very efficient
+            service" is the one tag the test set still misses</li>
+          <li><b>Nothing sent to a real customer.</b> No approved templates on a business number
+            means broadcasts sit unsent</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Bongo Gang · Jack, Thuta, Jayden, Dythan, Shareef</span>
+    <span class="num">Kampung Fresh · Tampines · sample data</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ROWS = [["3412",7.8,15.8,8.0,"P",57,32.81,1,14.0,0.14,0.208],["8174",7.4,20.1,12.7,"P",57,31.33,0,14.0,0.126,0.209],["2821",7.3,15.5,8.2,"P",4,28.91,1,1.0,0.049,0.18],["9123",6.5,16.5,9.9,"P",4,25.88,2,1.0,0.331,0.308],["6805",5.9,22.2,16.3,"P",17,45.03,14,10.0,0.754,0.5],["9220",5.6,14.1,8.5,"P",60,31.0,6,14.0,0.115,0.149],["0141",5.0,16.0,10.9,"P",58,30.62,5,14.0,0.153,0.278],["0098",4.6,13.3,8.7,"P",4,26.9,5,1.0,0.299,0.271],["9619",4.5,11.0,6.5,"P",56,29.79,3,14.0,0.126,0.234],["6462",4.4,14.3,9.9,"P",25,54.46,10,12.0,0.146,0.113],["6793",4.2,15.2,11.1,"P",58,30.44,3,14.0,0.14,0.264],["9774",4.0,14.0,10.0,"P",16,40.59,23,10.0,0.723,0.115],["0077",3.8,15.3,11.5,"P",3,24.78,11,1.0,0.053,0.421],["4300",3.3,12.8,9.5,"P",3,27.56,11,1.0,0.158,0.296],["3712",2.7,8.9,6.2,"P",1,13.07,168,5.5,-1,-1],["2640",2.7,8.9,6.2,"P",1,21.28,133,4.4,-1,-1],["7185",2.7,8.9,6.2,"P",1,14.75,152,5.0,-1,-1],["0181",2.5,7.9,5.5,"L",56,30.04,1,14.0,0.107,0.29],["9048",2.4,15.1,12.7,"S",57,30.87,5,14.0,0.143,0.253],["5995",2.4,15.1,12.7,"S",58,32.7,0,14.0,0.15,0.234],["9910",2.3,8.9,6.6,"L",1,17.57,104,3.4,-1,-1],["6572",2.3,8.9,6.6,"L",1,22.44,96,3.2,-1,-1],["0125",2.3,12.6,10.3,"L",26,48.74,7,12.0,0.117,0.136],["3204",2.3,11.8,9.5,"L",25,44.91,13,12.0,0.054,0.251],["7993",2.3,11.8,9.5,"L",26,50.68,8,12.0,0.054,0.248],["1413",1.9,9.7,7.7,"L",24,33.72,103,11.0,-1,-1],["6750",1.9,9.7,7.7,"L",25,34.91,98,11.0,-1,-1],["9501",1.9,9.7,7.7,"L",24,34.43,104,11.0,-1,-1],["8287",1.9,9.7,7.7,"L",25,35.17,101,11.0,-1,-1],["9333",1.9,9.7,7.7,"L",26,31.4,97,11.0,-1,-1],["4302",1.9,9.7,7.7,"L",26,34.4,100,11.0,-1,-1],["0480",1.9,9.7,7.7,"L",25,32.6,100,11.0,-1,-1],["1557",1.6,11.9,10.3,"L",25,48.58,9,12.0,0.126,0.301],["7495",1.6,11.9,10.3,"L",23,48.31,11,12.0,0.119,0.279],["6334",1.5,11.8,10.3,"L",25,47.09,8,12.0,0.114,0.207],["8505",1.3,14.1,12.8,"S",5,26.82,1,1.0,0.246,0.314],["8263",1.2,13.9,12.7,"S",58,32.52,6,14.0,0.14,0.259],["3817",1.0,12.9,11.9,"S",24,45.1,11,12.0,0.121,0.335],["0721",1.0,12.9,11.9,"S",24,45.19,10,12.0,0.087,0.331],["5076",0.7,8.7,8.0,"L",14,51.12,8,10.0,0.0,0.298],["5990",0.3,14.9,14.6,"S",17,49.0,38,10.0,0.468,0.584],["1270",-0.0,10.2,10.2,"L",23,43.11,16,12.0,0.025,0.339],["9481",-0.6,13.0,13.6,"S",12,44.29,17,10.0,0.202,0.446],["3478",-0.8,13.6,14.5,"S",57,30.81,0,14.0,0.149,0.247],["2391",-1.4,12.0,13.3,"S",13,43.23,31,10.0,0.255,0.648],["3715",-1.5,15.4,16.9,"S",17,55.5,3,10.0,0.587,0.528],["4419",-1.8,18.4,20.2,"S",56,31.25,6,14.0,0.173,0.197],["0984",-1.9,13.0,14.9,"S",11,41.17,14,10.0,0.188,0.426]];
+
+  var LABELS = {
+    P:{name:"Persuadable", css:"--p", say:"Message them. The model says the nudge moves them."},
+    S:{name:"Sure Thing",  css:"--s", say:"Coming back anyway. A discount here is money given away."},
+    L:{name:"Lost Cause",  css:"--l", say:"The message does not move them. Spend the attention elsewhere."}
+  };
+  var css = getComputedStyle(document.documentElement);
+  function tone(k){ return css.getPropertyValue(LABELS[k].css).trim() || "#888"; }
+
+  // ---- normalise into a cube -------------------------------------------------
+  function extent(i){
+    var lo=Infinity, hi=-Infinity;
+    for(var n=0;n<ROWS.length;n++){ var v=ROWS[n][i]; if(v<lo)lo=v; if(v>hi)hi=v; }
+    return [lo,hi];
+  }
+  var eGap=extent(7), eUp=extent(1), eTen=extent(8);
+  function span(v,e){ return e[1]===e[0] ? 0 : (v-e[0])/(e[1]-e[0])*2-1; }
+
+  var pts = ROWS.map(function(r){
+    return {
+      id:r[0], up:r[1], pm:r[2], pn:r[3], lab:r[4], vis:r[5], spend:r[6], gap:r[7], ten:r[8],
+      x:span(r[7],eGap)*1.05, y:span(r[1],eUp)*1.05, z:span(r[8],eTen)*1.05,
+      sx:0, sy:0, sr:0, depth:0, lit:0
+    };
+  });
+
+  // top 30% by uplift are the campaign audience
+  var order = pts.slice().sort(function(a,b){ return b.up-a.up; });
+  var pick = Math.round(pts.length*0.3);
+  order.forEach(function(p,i){ p.chosen = i<pick; });
+
+  // ---- canvas ----------------------------------------------------------------
+  var stage=document.getElementById("stage"), cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+  var W=0,H=0,dpr=1;
+  var yaw=-0.72, pitch=0.42, dist=4.0, scale=1;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var spin = !reduce, selected=null, hover=null, campaign=false, pulse=0;
+
+  function size(){
+    var r=stage.getBoundingClientRect();
+    if(!r.width) return;
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    W=r.width; H=r.height;
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    scale=Math.min(W,H)*0.33;
+  }
+
+  function project(x,y,z){
+    var cy=Math.cos(yaw), sy=Math.sin(yaw), cp=Math.cos(pitch), sp=Math.sin(pitch);
+    var x1 = x*cy - z*sy, z1 = x*sy + z*cy;
+    var y1 = y*cp - z1*sp, z2 = y*sp + z1*cp;
+    var w = dist/(dist+z2);
+    return {sx:W/2 + x1*w*scale, sy:H/2 - y1*w*scale, w:w, d:z2};
+  }
+
+  function gridLine(a,b,alpha,width){
+    var p=project(a[0],a[1],a[2]), q=project(b[0],b[1],b[2]);
+    ctx.globalAlpha=alpha; ctx.lineWidth=width||1;
+    ctx.beginPath(); ctx.moveTo(p.sx,p.sy); ctx.lineTo(q.sx,q.sy); ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+
+  // Axis labels sit at the far end of each axis, which rotates past the canvas
+  // edge. Clamp them inside so a label is never half cut off.
+  function label(text,x,y,z){
+    var p=project(x,y,z), pad=9, w=ctx.measureText(text).width/2;
+    ctx.fillText(text,
+      Math.min(Math.max(p.sx, pad+w), W-pad-w),
+      Math.min(Math.max(p.sy, pad+6), H-pad-6));
+  }
+
+  function draw(){
+    if(!W){ size(); if(!W) return; }
+    ctx.clearRect(0,0,W,H);
+
+    var line = css.getPropertyValue("--scene-line").trim()||"#24372B";
+    var mute = css.getPropertyValue("--scene-muted").trim()||"#7E9387";
+
+    // floor grid at the zero-uplift plane, so height reads against something
+    var zeroY = span(0,eUp)*1.05;
+    ctx.strokeStyle=line;
+    for(var i=-1;i<=1;i+=0.5){
+      gridLine([-1.05,zeroY,i],[1.05,zeroY,i],0.5);
+      gridLine([i,zeroY,-1.05],[i,zeroY,1.05],0.5);
+    }
+    // the zero plane itself, brighter: above it a message helps, below it hurts
+    ctx.strokeStyle=mute;
+    gridLine([-1.05,zeroY,-1.05],[1.05,zeroY,-1.05],0.55,1.5);
+    gridLine([-1.05,zeroY,-1.05],[-1.05,zeroY,1.05],0.55,1.5);
+    gridLine([-1.05,zeroY,-1.05],[-1.05,1.1,-1.05],0.55,1.5);
+
+    // axis labels
+    ctx.font='500 10px "IBM Plex Mono", monospace';
+    ctx.fillStyle=mute; ctx.textAlign="center"; ctx.textBaseline="middle";
+    label(eGap[1]+"d since visit", 1.16, zeroY, -1.05);
+    label(eTen[1]+" months", -1.05, zeroY, 1.18);
+    label("+"+eUp[1]+"% uplift", -1.05, 1.2, -1.05);
+
+    // project, then paint far to near so nearer spheres overlap further ones
+    for(var n=0;n<pts.length;n++){
+      var p=pts[n], pr=project(p.x,p.y,p.z);
+      p.sx=pr.sx; p.sy=pr.sy; p.depth=pr.d; p.sr=Math.max(2.4, 7.2*pr.w);
+    }
+    var sorted = pts.slice().sort(function(a,b){ return b.depth-a.depth; });
+
+    for(var k=0;k<sorted.length;k++){
+      var q=sorted[k];
+      var dim = campaign && !q.chosen;
+      var near = 1 - Math.min(1, Math.max(0, (q.depth+1.4)/2.9));   // depth fog
+      var a = (0.3 + near*0.7) * (dim ? 0.22 : 1);
+      var r = q.sr * (q===selected ? 1.75 : q===hover ? 1.35 : 1);
+      if(campaign && q.chosen) r *= 1 + 0.18*Math.sin(pulse + k*0.4);
+
+      var col = tone(q.lab);
+      var g = ctx.createRadialGradient(q.sx - r*0.35, q.sy - r*0.4, r*0.1, q.sx, q.sy, r);
+      g.addColorStop(0, col); g.addColorStop(1, "rgba(0,0,0,0.55)");
+      ctx.globalAlpha=a; ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(q.sx,q.sy,r,0,Math.PI*2); ctx.fill();
+
+      if(q===selected || q===hover){
+        ctx.globalAlpha=1; ctx.strokeStyle=col; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.arc(q.sx,q.sy,r+3.5,0,Math.PI*2); ctx.stroke();
+      }
+      ctx.globalAlpha=1;
+    }
+  }
+
+  var raf=null;
+  function frame(){
+    if(spin) yaw += 0.0022;
+    if(campaign && !reduce) pulse += 0.055;
+    draw();
+    raf = (spin || (campaign && !reduce)) ? requestAnimationFrame(frame) : null;
+  }
+  function kick(){ if(!raf) raf=requestAnimationFrame(frame); }
+
+  // ---- picking ---------------------------------------------------------------
+  function at(mx,my){
+    var best=null, bd=22*22;
+    for(var n=0;n<pts.length;n++){
+      var p=pts[n], dx=p.sx-mx, dy=p.sy-my, d=dx*dx+dy*dy;
+      var reach=Math.max(13, p.sr+9);
+      if(d < reach*reach && d < bd){ bd=d; best=p; }
+    }
+    return best;
+  }
+
+  // ---- readout ---------------------------------------------------------------
+  var readout=document.getElementById("readout");
+  function esc(s){ return String(s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
+
+  function show(p){
+    if(!p){
+      readout.innerHTML = '<p class="empty">Click any sphere to see what the model decided about '
+        + 'that shopper, and why.<br><br>Height is uplift. The flat grid is zero — below it, '
+        + 'messaging makes things slightly worse.</p>';
+      return;
+    }
+    var L=LABELS[p.lab];
+    readout.innerHTML =
+      '<div class="who"><b>·' + esc(p.id) + '</b>'
+      + '<span class="tag" style="background:' + tone(p.lab) + '22; color:' + tone(p.lab) + '">'
+      + esc(L.name) + '</span></div>'
+      + '<div class="rows">'
+      + '<div class="row"><span>Returns if messaged</span><span>' + p.pm.toFixed(1) + '%</span></div>'
+      + '<div class="row"><span>Returns if left alone</span><span>' + p.pn.toFixed(1) + '%</span></div>'
+      + '<div class="row"><span>Uplift</span><span>' + (p.up>0?"+":"") + p.up.toFixed(1) + ' pts</span></div>'
+      + '<div class="row"><span>Visits on record</span><span>' + p.vis + '</span></div>'
+      + '<div class="row"><span>Average basket</span><span>$' + p.spend.toFixed(2) + '</span></div>'
+      + '<div class="row"><span>Days since last visit</span><span>' + p.gap + '</span></div>'
+      + '</div>'
+      + '<p class="verdict">' + esc(L.say) + '</p>';
+  }
+  show(null);
+
+  // legend
+  var counts={P:0,S:0,L:0};
+  pts.forEach(function(p){ counts[p.lab]++; });
+  document.getElementById("legend").innerHTML = ["P","S","L"].map(function(k){
+    return '<div class="key"><i style="background:' + tone(k) + '"></i>'
+      + '<b>' + counts[k] + '</b> ' + LABELS[k].name + '</div>';
+  }).join("");
+
+  // ---- interaction -----------------------------------------------------------
+  var drag=false, lx=0, ly=0, moved=0, hint=document.getElementById("hint");
+  function stopSpin(){ if(spin){ spin=false; hint.style.opacity=0; } kick(); }
+
+  stage.addEventListener("pointerdown", function(e){
+    drag=true; moved=0; lx=e.clientX; ly=e.clientY;
+    stage.setPointerCapture(e.pointerId); stopSpin();
+  });
+  stage.addEventListener("pointermove", function(e){
+    var r=cv.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+    if(drag){
+      var dx=e.clientX-lx, dy=e.clientY-ly;
+      moved += Math.abs(dx)+Math.abs(dy);
+      // Negated so the face nearest you follows the hand, instead of the camera
+      // swinging the opposite way around the cloud.
+      yaw -= dx*0.008;
+      pitch = Math.max(-1.25, Math.min(1.25, pitch + dy*0.006));
+      lx=e.clientX; ly=e.clientY; draw();
+    } else {
+      var h=at(mx,my);
+      if(h!==hover){ hover=h; stage.style.cursor = h ? "pointer" : "grab"; draw(); }
+    }
+  });
+  stage.addEventListener("pointerup", function(e){
+    drag=false;
+    if(moved < 7){
+      var r=cv.getBoundingClientRect();
+      var hit=at(e.clientX-r.left, e.clientY-r.top);
+      selected = (hit===selected) ? null : hit;
+      show(selected); draw();
+    }
+  });
+  stage.addEventListener("pointerleave", function(){ if(hover){ hover=null; draw(); } });
+
+  stage.addEventListener("keydown", function(e){
+    var step=0.12, used=true;
+    if(e.key==="ArrowLeft") yaw+=step;        // same direction as dragging
+    else if(e.key==="ArrowRight") yaw-=step;
+    else if(e.key==="ArrowUp") pitch=Math.min(1.25,pitch+step);
+    else if(e.key==="ArrowDown") pitch=Math.max(-1.25,pitch-step);
+    else if(e.key==="Enter"||e.key===" "){
+      var i = selected ? (order.indexOf(selected)+1)%order.length : 0;
+      selected=order[i]; show(selected);
+    } else used=false;
+    if(used){ e.preventDefault(); stopSpin(); draw(); }
+  });
+
+  // ---- campaign --------------------------------------------------------------
+  var result=document.getElementById("result");
+  document.getElementById("run").addEventListener("click", function(){
+    campaign=true;
+    var chosen=pts.filter(function(p){ return p.chosen; });
+    var withMsg=0, without=0;
+    chosen.forEach(function(p){ withMsg+=p.pm; without+=p.pn; });
+    withMsg/=chosen.length; without/=chosen.length;
+
+    document.getElementById("resultSub").textContent =
+      "Top " + chosen.length + " of " + pts.length + " customers by uplift. The other "
+      + (pts.length-chosen.length) + " are dimmed in the view above.";
+    var max=Math.max(withMsg,without)*1.25;
+    document.getElementById("valM").textContent = withMsg.toFixed(1)+"%";
+    document.getElementById("valH").textContent = without.toFixed(1)+"%";
+    result.hidden=false;
+    requestAnimationFrame(function(){
+      document.getElementById("fillM").style.width = (withMsg/max*100)+"%";
+      document.getElementById("fillH").style.width = (without/max*100)+"%";
+    });
+    document.getElementById("resultTitle").textContent =
+      "Predicted lift: +" + (withMsg-without).toFixed(1) + " points";
+    kick(); draw();
+    result.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"nearest"});
+  });
+
+  document.getElementById("reset").addEventListener("click", function(){
+    yaw=-0.72; pitch=0.42; selected=null; hover=null; campaign=false;
+    result.hidden=true;
+    document.getElementById("fillM").style.width="0%";
+    document.getElementById("fillH").style.width="0%";
+    show(null); draw();
+  });
+
+  // ---- boot ------------------------------------------------------------------
+  if(window.ResizeObserver){
+    new ResizeObserver(function(){ size(); draw(); }).observe(stage);
+  } else {
+    window.addEventListener("resize", function(){ size(); draw(); });
+  }
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(){ draw(); });
+  size(); draw(); kick();
+})();
+</script>
+
+</body></html>

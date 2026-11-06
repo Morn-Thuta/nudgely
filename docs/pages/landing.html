@@ -1,0 +1,634 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;box-sizing:border-box}
+body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}
+img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Nudgely</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a dark 3D hero you land inside, then a themed page beneath it.
+   The scene is the product's own idea — customers in space, height is uplift. */
+:root{
+  --bg:#EEF1EC; --surface:#F8FAF6; --fg:#121A15; --muted:#5C6B61; --line:#D2DACB;
+  --accent:#19704A; --accent-soft:#D9E8DE; --ochre:#9C6410; --ochre-soft:#F0E2CB;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Courier New",monospace;
+  /* The scene keeps one look in both themes; it is a screen, not paper. */
+  --scene:#0A120E; --scene-2:#111B15; --scene-line:#24372B; --scene-fg:#E6EFE7;
+  --scene-muted:#7E9387; --p:#45C98A; --s:#6AA7D8; --l:#D59A3E;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C120E; --surface:#141D17; --fg:#E7EEE8; --muted:#94A69A; --line:#243029;
+  --accent:#55CE92; --accent-soft:#17301F; --ochre:#E0A341; --ochre-soft:#32250F;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0C120E; --surface:#141D17; --fg:#E7EEE8; --muted:#94A69A; --line:#243029;
+  --accent:#55CE92; --accent-soft:#17301F; --ochre:#E0A341; --ochre-soft:#32250F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--fg); font-family:var(--body);
+  font-size:16px; line-height:1.6; margin:0; padding:0}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));
+     padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1060px; margin:0 auto}
+h1,h2,h3{font-family:var(--display); text-wrap:balance; margin:0; line-height:1.08}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem); font-weight:700; letter-spacing:-.015em}
+h3{font-size:1.05rem; font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--mono); font-size:.72rem; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--muted)}
+
+/* ---------- hero ---------- */
+.hero{position:relative; background:var(--scene); overflow:hidden; isolation:isolate;
+  border-bottom:1px solid var(--scene-line)}
+#heroCv{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0;
+  touch-action:none; cursor:grab}
+#heroCv:active{cursor:grabbing}
+.hero .veil{position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(130% 100% at 76% 42%, transparent 46%, rgba(10,18,14,.5) 88%),
+             linear-gradient(to right, rgba(10,18,14,.93) 0%, rgba(10,18,14,.5) 40%, transparent 64%)}
+.hero .inner{position:relative; z-index:2; pointer-events:none;
+  min-height:clamp(470px,64vh,620px); display:flex; flex-direction:column;
+  justify-content:center; gap:22px; padding-block:72px 64px; max-width:40rem}
+.hero .inner > *{pointer-events:auto}
+.brand{display:flex; align-items:center; gap:11px; color:var(--scene-fg)}
+.brand .dot{width:12px; height:12px; border-radius:50%; background:var(--p);
+  box-shadow:0 0 0 5px rgba(69,201,138,.16); flex:none}
+.brand b{font-family:var(--display); font-size:1.15rem; font-weight:800; letter-spacing:-.01em}
+.hero h1{font-size:clamp(2.3rem,6.2vw,4rem); font-weight:800; letter-spacing:-.025em;
+  color:var(--scene-fg); max-width:16ch}
+.hero h1 em{font-style:normal; color:var(--p)}
+.hero .sub{color:var(--scene-muted); font-size:clamp(1rem,1.9vw,1.15rem); max-width:46ch}
+.cta{display:flex; gap:11px; flex-wrap:wrap; align-items:center}
+.btn{font-family:var(--body); font-size:.9rem; font-weight:600; padding:12px 20px;
+  border-radius:10px; border:1px solid var(--scene-line); background:rgba(17,27,21,.85);
+  color:var(--scene-fg); cursor:pointer; text-decoration:none; display:inline-block}
+.btn:hover{border-color:var(--p)}
+.btn:focus-visible{outline:2px solid var(--p); outline-offset:2px}
+.btn.solid{background:var(--p); border-color:var(--p); color:#07130D}
+.meta{display:flex; gap:7px; flex-wrap:wrap}
+.pill{font-family:var(--mono); font-size:.7rem; padding:4px 9px; border-radius:999px;
+  border:1px solid var(--scene-line); color:var(--scene-muted); background:rgba(10,18,14,.6)}
+.grab{position:absolute; right:18px; bottom:15px; z-index:2; font-family:var(--mono);
+  font-size:.68rem; color:var(--scene-muted); pointer-events:none; transition:opacity .5s}
+
+/* ---------- sections ---------- */
+section{padding-block:60px}
+.head{display:flex; flex-direction:column; gap:10px; margin-bottom:26px; max-width:60ch}
+.head p{color:var(--muted); font-size:.95rem}
+.steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(214px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.step{background:var(--surface); padding:20px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.step .n{font-family:var(--mono); font-size:.72rem; color:var(--accent)}
+.step p{font-size:.88rem; color:var(--muted)}
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(228px,1fr)); gap:14px}
+.fact{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--surface);
+  display:flex; flex-direction:column; gap:7px; min-width:0}
+.fact .big{font-family:var(--display); font-size:2.2rem; font-weight:800; line-height:1;
+  letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.fact .sub{font-size:.84rem; color:var(--muted)}
+.fact .spread{font-family:var(--mono); font-size:.72rem; color:var(--ochre)}
+
+/* ---------- explorer ---------- */
+.explorer{background:var(--scene); border:1px solid var(--scene-line); border-radius:14px;
+  overflow:hidden; display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
+@media (max-width:760px){.explorer{grid-template-columns:1fr}}
+.stage{position:relative; min-width:0; aspect-ratio:4/3; touch-action:none; cursor:grab}
+.stage:active{cursor:grabbing}
+.stage canvas{display:block; width:100%; height:100%}
+.stage:focus-visible{outline:2px solid var(--p); outline-offset:-3px}
+.side{border-left:1px solid var(--scene-line); padding:18px; min-width:0; display:flex;
+  flex-direction:column; gap:14px; color:var(--scene-fg); background:var(--scene-2)}
+@media (max-width:760px){.side{border-left:0; border-top:1px solid var(--scene-line)}}
+.legend{display:flex; flex-direction:column; gap:7px}
+.key{display:flex; align-items:center; gap:9px; font-size:.84rem; color:var(--scene-muted)}
+.key i{width:10px; height:10px; border-radius:50%; flex:none}
+.key b{color:var(--scene-fg); font-weight:600}
+.readout{border:1px solid var(--scene-line); border-radius:10px; padding:13px;
+  background:var(--scene); display:flex; flex-direction:column; gap:9px; min-height:182px}
+.who{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.who b{font-family:var(--mono); font-size:1rem}
+.tag{font-family:var(--mono); font-size:.68rem; padding:3px 8px; border-radius:999px; flex:none}
+.rows{display:flex; flex-direction:column; gap:5px; font-size:.8rem}
+.row{display:flex; justify-content:space-between; gap:10px; color:var(--scene-muted)}
+.row span:last-child{font-family:var(--mono); color:var(--scene-fg); font-variant-numeric:tabular-nums}
+.verdict{font-size:.82rem; line-height:1.45; color:var(--scene-fg)}
+.empty{color:var(--scene-muted); font-size:.84rem; line-height:1.5}
+.axes{font-family:var(--mono); font-size:.7rem; color:var(--scene-muted); line-height:1.7}
+.axes b{color:var(--scene-fg)}
+.result{margin-top:14px; border:1px solid var(--line); border-radius:12px; background:var(--surface);
+  padding:16px; display:flex; flex-direction:column; gap:12px}
+.bars{display:flex; flex-direction:column; gap:9px}
+.bar{display:grid; grid-template-columns:88px minmax(0,1fr) 60px; gap:10px; align-items:center; font-size:.82rem}
+.bar .track{height:22px; border-radius:5px; background:var(--accent-soft); overflow:hidden}
+.bar .fill{height:100%; width:0; transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.bar .v{font-family:var(--mono); text-align:right; font-variant-numeric:tabular-nums}
+.caution{font-size:.82rem; color:var(--ochre); background:var(--ochre-soft);
+  border-radius:9px; padding:10px 12px; line-height:1.45}
+
+/* ---------- state + footer ---------- */
+.state{display:grid; grid-template-columns:repeat(auto-fit,minmax(282px,1fr)); gap:14px}
+.panel{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--surface); min-width:0}
+.panel h3{margin-bottom:12px; display:flex; align-items:center; gap:9px}
+.panel h3 i{width:8px; height:8px; border-radius:50%; flex:none}
+.panel ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:7px;
+  font-size:.88rem; color:var(--muted)}
+.panel li b{color:var(--fg); font-weight:600}
+.closer{border:1px solid var(--line); border-radius:14px; background:var(--surface);
+  padding:30px; display:flex; flex-direction:column; gap:16px; align-items:flex-start}
+.closer h2{max-width:20ch}
+.closer .btn{background:var(--accent); border-color:var(--accent); color:#F3FAF5}
+footer{border-top:1px solid var(--line); padding-block:26px 40px; display:flex;
+  justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:.82rem; color:var(--muted)}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+
+<div class="hero">
+  <canvas id="heroCv" aria-hidden="true"></canvas>
+  <div class="veil"></div>
+  <div class="gut"><div class="wrap"><div class="inner">
+    <div class="brand"><span class="dot"></span><b>Nudgely</b></div>
+    <h1>Message the people a message would <em>actually change</em>.</h1>
+    <p class="sub">Every shop blasts the same promotion to everyone. Nudgely reads your WhatsApp
+      chats, works out who is genuinely movable, writes each message from that customer's own
+      history, and proves the lift against a group it deliberately left alone.</p>
+    <div class="cta">
+      <a class="btn solid" href="https://nudgely.streamlit.app">Open the live app</a>
+      <a class="btn" href="#explore">Explore the customers</a>
+    </div>
+    <div class="meta">
+      <span class="pill">AI-GNITION 2026 · top ten</span>
+      <span class="pill">Finals 14 Nov 2026</span>
+    </div>
+  </div></div></div>
+  <span class="grab" id="grab">drag the field</span>
+</div>
+
+<div class="gut"><div class="wrap">
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">The problem</span>
+      <h2>A 40% off blast is money handed to people who were coming anyway</h2>
+      <p>Predicting who returns is the wrong question. The shop needs to know who returns
+        <em>because of the message</em> — and those are different people.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">01 · Listen</span><h3>Read the chats</h3>
+        <p>Every message a customer sends is tagged as it arrives: a restock they asked for, a
+          delivery that went wrong, a party coming up. Evidence has to be quoted from something
+          the customer actually said.</p></div>
+      <div class="step"><span class="n">02 · Score</span><h3>Find who is movable</h3>
+        <p>An uplift model predicts the difference a message makes, not whether someone returns.
+          Someone returning anyway is a wasted discount; someone gone for good is a wasted
+          message.</p></div>
+      <div class="step"><span class="n">03 · Write</span><h3>Fill an approved template</h3>
+        <p>WhatsApp forbids free text to open a conversation, so one of six approved sentences is
+          chosen by the customer's strongest tag and its blanks filled. Invent a price and the
+          message is thrown away, not patched.</p></div>
+      <div class="step"><span class="n">04 · Prove</span><h3>Keep a holdout</h3>
+        <p>Some customers are deliberately not messaged. Without them you cannot tell a good
+          message from a customer who was returning regardless — which is why most campaign
+          dashboards measure nothing at all.</p></div>
+    </div>
+  </section>
+
+  <section id="explore">
+    <div class="head">
+      <span class="eyebrow">Try it</span>
+      <h2>48 real customers, scored</h2>
+      <p>From a 1,254-purchase sales export. Drag to turn the field, click any sphere to see what
+        the model decided about that shopper, then run a campaign on the top 30%.</p>
+    </div>
+
+    <div class="explorer">
+      <div class="stage" id="stage" tabindex="0" role="application"
+           aria-label="Rotatable 3D field of 48 customers. Arrow keys rotate, Enter steps through customers.">
+        <canvas id="cv"></canvas>
+      </div>
+      <div class="side">
+        <div class="legend" id="legend"></div>
+        <div class="readout" id="readout"></div>
+        <div class="cta">
+          <button class="btn solid" id="run">Run campaign</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+        <div class="axes">
+          <b>x</b> days since last visit<br>
+          <b>y</b> uplift — what the message changes<br>
+          <b>z</b> months as a customer
+        </div>
+      </div>
+    </div>
+
+    <div class="result" id="result" hidden>
+      <div>
+        <h3 id="resultTitle">Predicted outcome</h3>
+        <p style="font-size:.86rem; color:var(--muted); margin-top:6px" id="resultSub"></p>
+      </div>
+      <div class="bars">
+        <div class="bar"><span>Messaged</span>
+          <div class="track"><div class="fill" id="fillM" style="background:var(--accent)"></div></div>
+          <span class="v" id="valM">—</span></div>
+        <div class="bar"><span>Held back</span>
+          <div class="track"><div class="fill" id="fillH" style="background:var(--muted)"></div></div>
+          <span class="v" id="valH">—</span></div>
+      </div>
+      <p class="caution">These are the model's own predictions on sample data, not a measured
+        result. A real campaign writes every send to a log, holdout included, and the difference
+        is read weeks later. Nothing has been sent to a real customer yet.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">Where it stands</span>
+      <h2>Measured, with the spread</h2>
+      <p>Every figure moves run to run, so the spread travels with the number.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><span class="big">57%</span>
+        <span class="sub">of the extra visits captured by messaging the top 30%, against 30% for
+          picking at random</span>
+        <span class="spread">± 14 · swings 38–85 across seven splits</span></div>
+      <div class="fact"><span class="big">97%</span>
+        <span class="sub">of tags found across 32 hand-written chats — recall, the number that
+          matters when a missed complaint becomes a promotion</span>
+        <span class="spread">86% precision · exactly right on 72%</span></div>
+      <div class="fact"><span class="big">3</span>
+        <span class="sub">columns a shop has to hand over — phone, date, amount. Everything the
+          model uses is derived from those</span>
+        <span class="spread">down from 190 no local grocer records</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">Honest state</span>
+      <h2>Working, and not working</h2>
+    </div>
+    <div class="state">
+      <div class="panel">
+        <h3><i style="background:var(--accent)"></i>Working</h3>
+        <ul>
+          <li><b>Scoring a real shop</b> from a purchase export, ranked by who to message first</li>
+          <li><b>Tagging</b> one message at a time, fast enough for a live webhook</li>
+          <li><b>Six approved templates</b>, filled and checked, rejected rather than repaired</li>
+          <li><b>A reply bot</b> that answers or hands to a person, and cannot be talked out of handing over</li>
+          <li><b>Campaign measurement</b> with a holdout and a measured lift</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><i style="background:var(--ochre)"></i>Not working yet</h3>
+        <ul>
+          <li><b>No inbound webhook.</b> MantaGO's documented API only sends, so nothing two-way runs for real</li>
+          <li><b>No recency feature.</b> Every lapsed customer scores Lost Cause — visible on the
+            x axis above, and a problem for a win-back tool</li>
+          <li><b>Sarcasm reads as satisfied.</b> "Three days for a carton of eggs, very efficient
+            service" is the one tag the test set still misses</li>
+          <li><b>Nothing sent to a real customer.</b> Broadcasts sit unsent without approved
+            templates on a business number</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="closer">
+      <span class="eyebrow">Built by Bongo Gang</span>
+      <h2>The working app runs on Streamlit today</h2>
+      <p style="color:var(--muted); max-width:52ch">Scores, drafted messages, campaign review and
+        results, on sample data for Kampung Fresh in Tampines.</p>
+      <a class="btn" href="https://nudgely.streamlit.app">Open the live app</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Jack · Thuta · Jayden · Dythan · Shareef</span>
+    <span class="num">AI-GNITION 2026 · sample data throughout</span>
+  </footer>
+
+</div></div>
+
+<script>
+(function(){
+  "use strict";
+  var ROWS = [["3412",7.8,15.8,8.0,"P",57,32.81,1,14.0],["8174",7.4,20.1,12.7,"P",57,31.33,0,14.0],["2821",7.3,15.5,8.2,"P",4,28.91,1,1.0],["9123",6.5,16.5,9.9,"P",4,25.88,2,1.0],["6805",5.9,22.2,16.3,"P",17,45.03,14,10.0],["9220",5.6,14.1,8.5,"P",60,31.0,6,14.0],["0141",5.0,16.0,10.9,"P",58,30.62,5,14.0],["0098",4.6,13.3,8.7,"P",4,26.9,5,1.0],["9619",4.5,11.0,6.5,"P",56,29.79,3,14.0],["6462",4.4,14.3,9.9,"P",25,54.46,10,12.0],["6793",4.2,15.2,11.1,"P",58,30.44,3,14.0],["9774",4.0,14.0,10.0,"P",16,40.59,23,10.0],["0077",3.8,15.3,11.5,"P",3,24.78,11,1.0],["4300",3.3,12.8,9.5,"P",3,27.56,11,1.0],["3712",2.7,8.9,6.2,"P",1,13.07,168,5.5],["2640",2.7,8.9,6.2,"P",1,21.28,133,4.4],["7185",2.7,8.9,6.2,"P",1,14.75,152,5.0],["0181",2.5,7.9,5.5,"L",56,30.04,1,14.0],["9048",2.4,15.1,12.7,"S",57,30.87,5,14.0],["5995",2.4,15.1,12.7,"S",58,32.7,0,14.0],["9910",2.3,8.9,6.6,"L",1,17.57,104,3.4],["6572",2.3,8.9,6.6,"L",1,22.44,96,3.2],["0125",2.3,12.6,10.3,"L",26,48.74,7,12.0],["3204",2.3,11.8,9.5,"L",25,44.91,13,12.0],["7993",2.3,11.8,9.5,"L",26,50.68,8,12.0],["1413",1.9,9.7,7.7,"L",24,33.72,103,11.0],["6750",1.9,9.7,7.7,"L",25,34.91,98,11.0],["9501",1.9,9.7,7.7,"L",24,34.43,104,11.0],["8287",1.9,9.7,7.7,"L",25,35.17,101,11.0],["9333",1.9,9.7,7.7,"L",26,31.4,97,11.0],["4302",1.9,9.7,7.7,"L",26,34.4,100,11.0],["0480",1.9,9.7,7.7,"L",25,32.6,100,11.0],["1557",1.6,11.9,10.3,"L",25,48.58,9,12.0],["7495",1.6,11.9,10.3,"L",23,48.31,11,12.0],["6334",1.5,11.8,10.3,"L",25,47.09,8,12.0],["8505",1.3,14.1,12.8,"S",5,26.82,1,1.0],["8263",1.2,13.9,12.7,"S",58,32.52,6,14.0],["3817",1.0,12.9,11.9,"S",24,45.1,11,12.0],["0721",1.0,12.9,11.9,"S",24,45.19,10,12.0],["5076",0.7,8.7,8.0,"L",14,51.12,8,10.0],["5990",0.3,14.9,14.6,"S",17,49.0,38,10.0],["1270",-0.0,10.2,10.2,"L",23,43.11,16,12.0],["9481",-0.6,13.0,13.6,"S",12,44.29,17,10.0],["3478",-0.8,13.6,14.5,"S",57,30.81,0,14.0],["2391",-1.4,12.0,13.3,"S",13,43.23,31,10.0],["3715",-1.5,15.4,16.9,"S",17,55.5,3,10.0],["4419",-1.8,18.4,20.2,"S",56,31.25,6,14.0],["0984",-1.9,13.0,14.9,"S",11,41.17,14,10.0]];
+
+  var LABELS = {
+    P:{name:"Persuadable", v:"--p", say:"Message them. The model says the nudge moves them."},
+    S:{name:"Sure Thing",  v:"--s", say:"Coming back anyway. A discount here is money given away."},
+    L:{name:"Lost Cause",  v:"--l", say:"The message does not move them. Spend the attention elsewhere."}
+  };
+  var rootCss = getComputedStyle(document.documentElement);
+  function tone(k){ return rootCss.getPropertyValue(LABELS[k].v).trim() || "#888"; }
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function extent(i){
+    var lo=Infinity, hi=-Infinity;
+    for(var n=0;n<ROWS.length;n++){ var v=ROWS[n][i]; if(v<lo)lo=v; if(v>hi)hi=v; }
+    return [lo,hi];
+  }
+  var eGap=extent(7), eUp=extent(1), eTen=extent(8);
+  function span(v,e){ return e[1]===e[0] ? 0 : (v-e[0])/(e[1]-e[0])*2-1; }
+  var ZERO = span(0,eUp)*1.05;
+
+  var DATA = ROWS.map(function(r){
+    return { id:r[0], up:r[1], pm:r[2], pn:r[3], lab:r[4], vis:r[5], spend:r[6], gap:r[7], ten:r[8],
+             x:span(r[7],eGap)*1.05, y:span(r[1],eUp)*1.05, z:span(r[8],eTen)*1.05 };
+  });
+  var byUplift = DATA.slice().sort(function(a,b){ return b.up-a.up; });
+  var PICK = Math.round(DATA.length*0.3);
+  byUplift.forEach(function(d,i){ d.chosen = i<PICK; });
+
+  /* One renderer, two scenes: an ambient hero and an explorer you can pick in. */
+  function makeScene(canvas, opts){
+    var ctx=canvas.getContext("2d"), host=opts.host||canvas;
+    var W=0,H=0, yaw=opts.yaw, pitch=opts.pitch, dist=4.0, k=1;
+    var spin = !reduce, visible=true, running=false;
+    var nodes = DATA.map(function(d){ return {d:d, sx:0, sy:0, sr:0, depth:0}; });
+    var selected=null, hover=null, campaign=false, pulse=0, beams=[], beamAt=0;
+
+    function size(){
+      var r=host.getBoundingClientRect();
+      if(!r.width || !r.height) return;
+      var dpr=Math.min(window.devicePixelRatio||1, 2);
+      W=r.width; H=r.height;
+      canvas.width=Math.round(W*dpr); canvas.height=Math.round(H*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      k=Math.min(W,H)*(opts.zoom||0.33);
+    }
+    function project(x,y,z){
+      var cy=Math.cos(yaw), sy=Math.sin(yaw), cp=Math.cos(pitch), sp=Math.sin(pitch);
+      var x1=x*cy - z*sy, z1=x*sy + z*cy;
+      var y1=y*cp - z1*sp, z2=y*sp + z1*cp;
+      var w=dist/(dist+z2);
+      return {sx:W/2 + x1*w*k + (opts.shiftX||0)*W, sy:H/2 - y1*w*k, w:w, d:z2};
+    }
+    function seg(a,b,alpha,width){
+      var p=project(a[0],a[1],a[2]), q=project(b[0],b[1],b[2]);
+      ctx.globalAlpha=alpha; ctx.lineWidth=width||1;
+      ctx.beginPath(); ctx.moveTo(p.sx,p.sy); ctx.lineTo(q.sx,q.sy); ctx.stroke();
+      ctx.globalAlpha=1;
+    }
+    function label(text,x,y,z){
+      var p=project(x,y,z), pad=9, half=ctx.measureText(text).width/2;
+      ctx.fillText(text, Math.min(Math.max(p.sx,pad+half), W-pad-half),
+                         Math.min(Math.max(p.sy,pad+6), H-pad-6));
+    }
+
+    var ORIGIN=[-1.25,ZERO,-1.25];
+    function addBeam(){
+      var targets=DATA.filter(function(d){ return d.lab==="P"; });
+      var t=targets[Math.floor(Math.random()*targets.length)];
+      beams.push({t:t, at:0});
+      if(beams.length>5) beams.shift();
+    }
+
+    function draw(){
+      if(!W){ size(); if(!W) return; }
+      ctx.clearRect(0,0,W,H);
+      var line=rootCss.getPropertyValue("--scene-line").trim()||"#24372B";
+      var mute=rootCss.getPropertyValue("--scene-muted").trim()||"#7E9387";
+
+      ctx.strokeStyle=line;
+      for(var g=-1;g<=1;g+=0.5){
+        seg([-1.05,ZERO,g],[1.05,ZERO,g], opts.grid||0.5);
+        seg([g,ZERO,-1.05],[g,ZERO,1.05], opts.grid||0.5);
+      }
+      if(opts.axes){
+        ctx.strokeStyle=mute;
+        seg([-1.05,ZERO,-1.05],[1.05,ZERO,-1.05],0.55,1.5);
+        seg([-1.05,ZERO,-1.05],[-1.05,ZERO,1.05],0.55,1.5);
+        seg([-1.05,ZERO,-1.05],[-1.05,1.1,-1.05],0.55,1.5);
+        ctx.font='500 10px "IBM Plex Mono", monospace';
+        ctx.fillStyle=mute; ctx.textAlign="center"; ctx.textBaseline="middle";
+        label(eGap[1]+"d since visit", 1.16, ZERO, -1.05);
+        label(eTen[1]+" months", -1.05, ZERO, 1.18);
+        label("+"+eUp[1]+"% uplift", -1.05, 1.2, -1.05);
+      }
+
+      for(var n=0;n<nodes.length;n++){
+        var nd=nodes[n], pr=project(nd.d.x, nd.d.y, nd.d.z);
+        nd.sx=pr.sx; nd.sy=pr.sy; nd.depth=pr.d;
+        nd.sr=Math.max(2.2, (opts.dot||7.2)*pr.w);
+      }
+
+      if(opts.beams){
+        var o=project(ORIGIN[0],ORIGIN[1],ORIGIN[2]);
+        for(var b=0;b<beams.length;b++){
+          var bm=beams[b], tgt=null;
+          for(var m=0;m<nodes.length;m++){ if(nodes[m].d===bm.t){ tgt=nodes[m]; break; } }
+          if(!tgt) continue;
+          var e=Math.min(1,bm.at), ease=1-Math.pow(1-e,3);
+          var px=o.sx+(tgt.sx-o.sx)*ease, py=o.sy+(tgt.sy-o.sy)*ease;
+          var trail=Math.max(0,ease-0.16);
+          ctx.globalAlpha=0.5*(1-e*0.7); ctx.strokeStyle=tone("P"); ctx.lineWidth=1;
+          ctx.beginPath();
+          ctx.moveTo(o.sx+(tgt.sx-o.sx)*trail, o.sy+(tgt.sy-o.sy)*trail);
+          ctx.lineTo(px,py); ctx.stroke();
+          ctx.globalAlpha=1-e*0.55; ctx.fillStyle=tone("P");
+          ctx.beginPath(); ctx.arc(px,py,1.9,0,Math.PI*2); ctx.fill();
+          ctx.globalAlpha=1;
+        }
+      }
+
+      var order = nodes.slice().sort(function(a,b){ return b.depth-a.depth; });
+      for(var i=0;i<order.length;i++){
+        var q=order[i], dim = campaign && !q.d.chosen;
+        var near = 1-Math.min(1,Math.max(0,(q.depth+1.4)/2.9));
+        var a = (0.3+near*0.7) * (dim?0.2:1) * (opts.fade||1);
+        var r = q.sr * (q===selected?1.75 : q===hover?1.35 : 1);
+        if(campaign && q.d.chosen) r *= 1+0.18*Math.sin(pulse+i*0.4);
+        var col=tone(q.d.lab);
+        var grad=ctx.createRadialGradient(q.sx-r*0.35, q.sy-r*0.4, r*0.1, q.sx, q.sy, r);
+        grad.addColorStop(0,col); grad.addColorStop(1,"rgba(0,0,0,0.55)");
+        ctx.globalAlpha=a; ctx.fillStyle=grad;
+        ctx.beginPath(); ctx.arc(q.sx,q.sy,r,0,Math.PI*2); ctx.fill();
+        if(q===selected || q===hover){
+          ctx.globalAlpha=1; ctx.strokeStyle=col; ctx.lineWidth=1.5;
+          ctx.beginPath(); ctx.arc(q.sx,q.sy,r+3.5,0,Math.PI*2); ctx.stroke();
+        }
+        ctx.globalAlpha=1;
+      }
+    }
+
+    function tick(ts){
+      running=false;
+      if(spin) yaw += (opts.spin||0.0022);
+      if(campaign && !reduce) pulse += 0.055;
+      if(opts.beams && !reduce){
+        for(var i=beams.length-1;i>=0;i--){ beams[i].at += 0.016; if(beams[i].at>1.3) beams.splice(i,1); }
+        if(ts-beamAt > 900){ addBeam(); beamAt=ts; }
+      }
+      draw();
+      if(visible && (spin || (campaign && !reduce) || (opts.beams && !reduce))) start();
+    }
+    function start(){ if(!running && visible){ running=true; requestAnimationFrame(tick); } }
+
+    function at(mx,my){
+      var best=null, bd=Infinity;
+      for(var n=0;n<nodes.length;n++){
+        var q=nodes[n], dx=q.sx-mx, dy=q.sy-my, d2=dx*dx+dy*dy;
+        var reach=Math.max(13, q.sr+9);
+        if(d2 < reach*reach && d2 < bd){ bd=d2; best=q; }
+      }
+      return best;
+    }
+
+    var drag=false, lx=0, ly=0, moved=0;
+    host.addEventListener("pointerdown", function(e){
+      drag=true; moved=0; lx=e.clientX; ly=e.clientY;
+      host.setPointerCapture(e.pointerId);
+      if(spin){ spin=false; if(opts.onGrab) opts.onGrab(); }
+      start();
+    });
+    host.addEventListener("pointermove", function(e){
+      var r=canvas.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+      if(drag){
+        var dx=e.clientX-lx, dy=e.clientY-ly;
+        moved += Math.abs(dx)+Math.abs(dy);
+        yaw -= dx*0.008;                       // the near face follows the hand
+        pitch = Math.max(-1.25, Math.min(1.25, pitch + dy*0.006));
+        lx=e.clientX; ly=e.clientY; draw();
+      } else if(opts.pick){
+        var h=at(mx,my);
+        if(h!==hover){ hover=h; host.style.cursor = h?"pointer":"grab"; draw(); }
+      }
+    });
+    host.addEventListener("pointerup", function(e){
+      drag=false;
+      if(opts.pick && moved<7){
+        var r=canvas.getBoundingClientRect();
+        var hit=at(e.clientX-r.left, e.clientY-r.top);
+        selected = (hit===selected) ? null : hit;
+        opts.onSelect(selected && selected.d); draw();
+      }
+    });
+    host.addEventListener("pointerleave", function(){ if(hover){ hover=null; draw(); } });
+
+    if(opts.pick){
+      host.addEventListener("keydown", function(e){
+        var step=0.12, used=true;
+        if(e.key==="ArrowLeft") yaw+=step;
+        else if(e.key==="ArrowRight") yaw-=step;
+        else if(e.key==="ArrowUp") pitch=Math.min(1.25,pitch+step);
+        else if(e.key==="ArrowDown") pitch=Math.max(-1.25,pitch-step);
+        else if(e.key==="Enter" || e.key===" "){
+          var list=nodes.slice().sort(function(a,b){ return b.d.up-a.d.up; });
+          var i = selected ? (list.indexOf(selected)+1)%list.length : 0;
+          selected=list[i]; opts.onSelect(selected.d);
+        } else used=false;
+        if(used){ e.preventDefault(); spin=false; draw(); }
+      });
+    }
+
+    if(window.ResizeObserver) new ResizeObserver(function(){ size(); draw(); }).observe(host);
+    else window.addEventListener("resize", function(){ size(); draw(); });
+
+    if(window.IntersectionObserver){
+      new IntersectionObserver(function(es){
+        visible = es[0].isIntersecting;
+        if(visible) start();
+      },{threshold:0.01}).observe(host);
+    }
+
+    size(); draw(); start();
+
+    return {
+      redraw:draw,
+      resize:function(){ size(); draw(); },
+      setCampaign:function(on){ campaign=on; start(); draw(); },
+      clear:function(){ selected=null; hover=null; campaign=false; yaw=opts.yaw; pitch=opts.pitch; draw(); }
+    };
+  }
+
+  /* ---- hero: ambient, wide, messages flying to the persuadable ---- */
+  var grab=document.getElementById("grab");
+  makeScene(document.getElementById("heroCv"), {
+    host:document.getElementById("heroCv"),
+    yaw:-0.55, pitch:0.34, zoom:0.42, dot:9.5, grid:0.4, fade:1,
+    spin:0.0016, beams:true, axes:false, pick:false,
+    onGrab:function(){ grab.style.opacity=0; }
+  });
+
+  /* ---- explorer: pickable, with axes ---- */
+  var readout=document.getElementById("readout");
+  function esc(s){ return String(s).replace(/[&<>]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
+
+  function show(d){
+    if(!d){
+      readout.innerHTML='<p class="empty">Click any sphere to see what the model decided about '
+        +'that shopper, and why.<br><br>Height is uplift. The flat grid is zero — below it, '
+        +'messaging makes things slightly worse.</p>';
+      return;
+    }
+    var L=LABELS[d.lab];
+    readout.innerHTML =
+      '<div class="who"><b>·'+esc(d.id)+'</b><span class="tag" style="background:'+tone(d.lab)
+      +'22; color:'+tone(d.lab)+'">'+esc(L.name)+'</span></div><div class="rows">'
+      +'<div class="row"><span>Returns if messaged</span><span>'+d.pm.toFixed(1)+'%</span></div>'
+      +'<div class="row"><span>Returns if left alone</span><span>'+d.pn.toFixed(1)+'%</span></div>'
+      +'<div class="row"><span>Uplift</span><span>'+(d.up>0?"+":"")+d.up.toFixed(1)+' pts</span></div>'
+      +'<div class="row"><span>Visits on record</span><span>'+d.vis+'</span></div>'
+      +'<div class="row"><span>Average basket</span><span>$'+d.spend.toFixed(2)+'</span></div>'
+      +'<div class="row"><span>Days since last visit</span><span>'+d.gap+'</span></div>'
+      +'</div><p class="verdict">'+esc(L.say)+'</p>';
+  }
+  show(null);
+
+  var counts={P:0,S:0,L:0};
+  DATA.forEach(function(d){ counts[d.lab]++; });
+  document.getElementById("legend").innerHTML = ["P","S","L"].map(function(key){
+    return '<div class="key"><i style="background:'+tone(key)+'"></i><b>'+counts[key]+'</b> '
+      +LABELS[key].name+'</div>';
+  }).join("");
+
+  var explorer = makeScene(document.getElementById("cv"), {
+    host:document.getElementById("stage"),
+    yaw:-0.72, pitch:0.42, zoom:0.33, dot:7.2, axes:true, pick:true, beams:false,
+    onSelect:show
+  });
+
+  var result=document.getElementById("result");
+  document.getElementById("run").addEventListener("click", function(){
+    var chosen=DATA.filter(function(d){ return d.chosen; });
+    var withMsg=0, without=0;
+    chosen.forEach(function(d){ withMsg+=d.pm; without+=d.pn; });
+    withMsg/=chosen.length; without/=chosen.length;
+    document.getElementById("resultSub").textContent =
+      "Top "+chosen.length+" of "+DATA.length+" customers by uplift. The other "
+      +(DATA.length-chosen.length)+" are dimmed in the field above.";
+    document.getElementById("resultTitle").textContent =
+      "Predicted lift: +"+(withMsg-without).toFixed(1)+" points";
+    document.getElementById("valM").textContent=withMsg.toFixed(1)+"%";
+    document.getElementById("valH").textContent=without.toFixed(1)+"%";
+    var max=Math.max(withMsg,without)*1.25;
+    result.hidden=false;
+    requestAnimationFrame(function(){
+      document.getElementById("fillM").style.width=(withMsg/max*100)+"%";
+      document.getElementById("fillH").style.width=(without/max*100)+"%";
+    });
+    explorer.setCampaign(true);
+  });
+  document.getElementById("reset").addEventListener("click", function(){
+    result.hidden=true;
+    document.getElementById("fillM").style.width="0%";
+    document.getElementById("fillH").style.width="0%";
+    show(null); explorer.clear();
+  });
+
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(){
+    explorer.redraw();
+  });
+})();
+</script>
+
+</body></html>
