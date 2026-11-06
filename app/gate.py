@@ -27,30 +27,89 @@ from datetime import datetime, timezone
 
 import streamlit as st
 from hero import render_hero
-from lib import DATA, load_customers
+from lib import DATA, load_customers, summary
 
 USERS = os.path.join(DATA, "users.json")
 ITERATIONS = 240_000
 MIN_PASSWORD = 8
 EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
-# The landing page has to fit one screen without scrolling, so the app's normal
-# chrome and generous page padding are pulled in tight for this page only.
-HIDE_CHROME = """
+# The landing page is its own world: dark, full bleed, the customer field running
+# edge to edge behind the words. The app's light theme resumes once you are
+# through the door, so every override here is scoped to this page only.
+#
+# The field is a Streamlit component, which means an iframe in the normal flow.
+# Pinning its container to the viewport puts it behind everything, and because
+# the text and form sit above it on z-index, clicks reach the form while drags on
+# bare background still reach the canvas.
+BG = "#09120E"
+HIDE_CHROME = f"""
 <style>
-[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"]{display:none !important}
-[data-testid="stAppViewContainer"] .block-container{
-  max-width:1280px; padding-top:1.1rem !important; padding-bottom:0 !important}
-[data-testid="stHeader"]{height:0}
-.gate-brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.gate-brand i{width:11px;height:11px;border-radius:50%;background:#0E9F6E;
-  box-shadow:0 0 0 5px #0E9F6E24;flex:none}
-.gate-brand b{font-size:17px;font-weight:800;letter-spacing:-.02em;color:#153F36}
-.gate-head{font-size:clamp(1.5rem,2.5vw,2.1rem);line-height:1.12;letter-spacing:-.035em;
-  font-weight:700;color:#153F36;margin:0 0 8px;text-wrap:balance}
-.gate-head em{font-style:normal;color:#0E9F6E}
-.gate-sub{color:#5C7268;font-size:14px;line-height:1.6;margin:0 0 4px;max-width:60ch}
-.gate-foot{color:#7B8B82;font-size:11.5px;line-height:1.5;padding-top:4px}
+[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"]{{display:none !important}}
+[data-testid="stHeader"]{{background:transparent}}
+.stApp{{background:{BG} !important}}
+[data-testid="stAppViewContainer"] .block-container{{
+  max-width:1320px; padding-top:3.2rem !important; padding-bottom:1rem !important;
+  position:relative; z-index:1}}
+
+/* the field, pinned behind the page */
+.st-key-fieldbg{{position:fixed; inset:0; z-index:0; pointer-events:auto}}
+.st-key-fieldbg iframe{{width:100vw !important; height:100vh !important}}
+
+.gate-brand{{display:flex;align-items:center;gap:11px;margin-bottom:26px}}
+.gate-brand i{{width:13px;height:13px;border-radius:50%;background:#3FD79A;
+  box-shadow:0 0 0 5px #3FD79A26;flex:none}}
+.gate-brand b{{font-size:21px;font-weight:800;letter-spacing:-.02em;color:#EAF3ED}}
+.gate-head{{font-size:clamp(2rem,4.4vw,3.6rem);line-height:1.04;letter-spacing:-.04em;
+  font-weight:800;color:#F2F8F3;margin:0 0 22px;max-width:15ch;text-wrap:balance}}
+.gate-head em{{font-style:normal;color:#3FD79A}}
+.gate-sub{{color:#A8BEB1;font-size:16px;line-height:1.65;margin:0;max-width:46ch}}
+.gate-pills{{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}}
+.gate-pills span{{border-radius:99px;padding:6px 12px;background:#FFFFFF0F;
+  border:1px solid #FFFFFF1F;color:#BCD2C4;font-size:11.5px;
+  font-family:ui-monospace,"Consolas",monospace}}
+.gate-foot{{color:#7E9488;font-size:11.5px;line-height:1.55;padding-top:8px}}
+
+/* the sign-in card, and the controls inside it.
+   Selectors checked against the running DOM: this Streamlit names the bordered
+   container stVerticalBlock and the input shell stTextInputRootElement. */
+.st-key-signincard{{
+  background:#0E1B16F2 !important; border:1px solid #2A463A !important;
+  border-radius:16px !important; backdrop-filter:blur(8px); padding:4px 4px 0}}
+[data-testid="stTextInput"] label p, [data-testid="stTab"] p{{color:#C7D9CD !important}}
+[data-testid="stTextInputRootElement"]{{
+  background:#14241D !important; border-color:#2E4A3D !important}}
+[data-testid="stTextInputField"]{{
+  background:transparent !important; color:#EAF3ED !important; -webkit-text-fill-color:#EAF3ED}}
+[data-testid="stTextInputField"]::placeholder{{color:#6C8578 !important}}
+[data-testid="stTextInputRootElement"] svg{{fill:#8AA396}}
+[data-testid="stTabs"] [role="tablist"]{{border-bottom-color:#2A463A !important}}
+[data-testid="stTab"][aria-selected="true"] p{{color:#3FD79A !important}}
+[data-testid="stForm"]{{border:0 !important; padding:0 !important; background:transparent}}
+.stButton button[kind="secondary"]{{
+  background:#FFFFFF0D !important; border:1px solid #FFFFFF26 !important; color:#EAF3ED !important}}
+.stButton button[kind="secondary"]:hover{{border-color:#3FD79A !important}}
+
+/* the "explore more" sections, dark to match */
+.more-label{{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  color:#7E9488;margin:34px 0 14px}}
+.more-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}}
+.more-grid.three{{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}}
+.more-grid.two{{grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}}
+.more-card{{background:#0E1B16CC;border:1px solid #27413688;border-radius:14px;padding:20px;
+  min-width:0;backdrop-filter:blur(6px)}}
+.more-card .n{{font-family:ui-monospace,"Consolas",monospace;font-size:11.5px;color:#3FD79A}}
+.more-card h3{{font-size:16px;font-weight:700;color:#EAF3ED;margin:10px 0 8px;
+  display:flex;align-items:center;gap:9px}}
+.more-card h3 i{{width:8px;height:8px;border-radius:50%;flex:none}}
+.more-card p{{font-size:13.5px;line-height:1.6;color:#A8BEB1;margin:0}}
+.more-card .big{{display:block;font-size:34px;font-weight:800;letter-spacing:-.03em;
+  color:#F2F8F3;line-height:1;margin-bottom:10px}}
+.more-card .spread{{display:block;font-family:ui-monospace,"Consolas",monospace;font-size:11px;
+  color:#E0A341;margin-top:10px}}
+.more-card ul{{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}}
+.more-card li{{font-size:13.5px;line-height:1.55;color:#A8BEB1}}
+.more-card li b{{color:#EAF3ED;font-weight:600}}
 </style>
 """
 
@@ -127,21 +186,26 @@ def require_access():
     df = load_customers()
     movable = int((df.label == "Persuadable").sum())
 
-    field, door = st.columns([1.45, 1], gap="large")
+    with st.container(key="fieldbg"):
+        render_hero(df, height=900, background=True, bg_color=BG)
 
-    with field:
+    words, door = st.columns([1.25, 1], gap="large")
+
+    with words:
         st.markdown(
             '<div class="gate-brand"><i></i><b>Nudgely</b></div>'
             '<h1 class="gate-head">Message the people a message would '
             '<em>actually change</em>.</h1>'
-            f'<p class="gate-sub">That is your customer book turning below — height is uplift, '
-            f'and the darts fly to the {movable} of {len(df)} customers a nudge would actually '
-            f'move. Everyone else is a wasted discount or a wasted message.</p>',
+            f'<p class="gate-sub">Every shop blasts the same promotion to everyone. Nudgely '
+            f'reads your WhatsApp chats, works out which {movable} of your {len(df)} customers '
+            f'are genuinely movable, writes each message from that customer\'s own history, and '
+            f'proves the lift against a group it deliberately left alone.</p>'
+            '<div class="gate-pills"><span>AI-GNITION 2026 · top ten</span>'
+            '<span>Finals 14 Nov 2026</span></div>',
             unsafe_allow_html=True)
-        render_hero(df, height=430)
 
     with door:
-        with st.container(border=True):
+        with st.container(border=True, key="signincard"):
             tab_in, tab_up = st.tabs(["Sign in", "Create an account"])
             with tab_in:
                 _sign_in_form()
@@ -154,12 +218,90 @@ def require_access():
         if st.button("Explore the demo", width="stretch"):
             _enter("Demo visitor", demo=True)
 
-        st.markdown(
-            '<div class="gate-foot">AI-GNITION 2026 · top ten · finals 14 Nov<br>'
-            'Fictional identities · Lenta and Hillstrom scores · no live campaign sent<br>'
-            'Accounts are stored on this machine only</div>', unsafe_allow_html=True)
+        open_more = st.session_state.get("gate_more", False)
+        if st.button("Hide the details ↑" if open_more else "Explore more ↓", width="stretch"):
+            st.session_state["gate_more"] = not open_more
+            st.rerun()
+
+    if st.session_state.get("gate_more"):
+        _more()
 
     st.stop()
+
+
+def _more():
+    """The rest of the pitch, revealed on request so the landing stays one screen."""
+    st.markdown('<div style="height:30px"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="more-label">How it works</div>', unsafe_allow_html=True)
+    steps = [
+        ("01 · Listen", "Read the chats",
+         "Every message a customer sends is tagged as it arrives: a restock they asked for, a "
+         "delivery that went wrong, a party coming up. Evidence has to be quoted from something "
+         "the customer actually said."),
+        ("02 · Score", "Find who is movable",
+         "An uplift model predicts the difference a message makes, not whether someone returns. "
+         "Someone returning anyway is a wasted discount; someone gone for good is a wasted "
+         "message."),
+        ("03 · Write", "Fill an approved template",
+         "WhatsApp forbids free text to open a conversation, so one of six approved sentences is "
+         "chosen by the customer's strongest tag and its blanks filled. Invent a price and the "
+         "message is thrown away, not patched."),
+        ("04 · Prove", "Keep a holdout",
+         "Some customers are deliberately not messaged. Without them you cannot tell a good "
+         "message from a customer who was returning regardless."),
+    ]
+    cards = "".join(
+        f'<div class="more-card"><span class="n">{n}</span><h3>{t}</h3><p>{b}</p></div>'
+        for n, t, b in steps)
+    st.markdown(f'<div class="more-grid">{cards}</div>', unsafe_allow_html=True)
+
+    s = summary()
+    capture = s["top30_capture_share"] if s else None
+    ci = s.get("top30_capture_ci90") if s else None
+    facts = [
+        (f"{capture:.0%}" if capture else "—",
+         "of the extra visits captured by messaging the top 30%, against 30% for picking at random",
+         f"90% interval {ci[0]:.0%}–{ci[1]:.0%} · the spread is as much the finding as the number"
+         if ci else "historical Lenta experiment"),
+        ("97%",
+         "of tags found across 32 hand-written chats — recall, the number that matters when a "
+         "missed complaint becomes a promotion",
+         "86% precision · exactly right on 72%"),
+        ("3",
+         "columns a shop has to hand over: phone, date and amount. Everything the model uses is "
+         "derived from those",
+         "down from 190 no local grocer records"),
+    ]
+    st.markdown('<div class="more-label">Where it stands</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="more-grid three">' + "".join(
+            f'<div class="more-card"><span class="big">{big}</span><p>{sub}</p>'
+            f'<span class="spread">{spread}</span></div>' for big, sub, spread in facts)
+        + "</div>", unsafe_allow_html=True)
+
+    st.markdown('<div class="more-label">Honest state</div>', unsafe_allow_html=True)
+    working = ["Scoring a real shop from a purchase export",
+               "Tagging one message at a time, fast enough for a live webhook",
+               "Six approved templates, filled and checked, rejected rather than repaired",
+               "A reply bot that answers or hands to a person",
+               "Campaign measurement with a holdout and a measured lift"]
+    broken = ["<b>No inbound webhook.</b> MantaGO's documented API only sends",
+              "<b>No recency feature.</b> Every lapsed customer scores Lost Cause",
+              "<b>Sarcasm reads as satisfied</b>, the one tag the test set still misses",
+              "<b>Nothing sent to a real customer</b> without approved templates on a "
+              "business number"]
+    st.markdown(
+        '<div class="more-grid two">'
+        '<div class="more-card"><h3><i style="background:#3FD79A"></i>Working</h3><ul>'
+        + "".join(f"<li>{w}</li>" for w in working) + "</ul></div>"
+        '<div class="more-card"><h3><i style="background:#E0A341"></i>Not working yet</h3><ul>'
+        + "".join(f"<li>{b}</li>" for b in broken) + "</ul></div></div>",
+        unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="gate-foot" style="padding-bottom:24px">Fictional identities and chats · '
+        'Lenta and Hillstrom model scores · no live campaign has been sent · accounts are '
+        'stored on this machine only</div>', unsafe_allow_html=True)
 
 
 def _sign_in_form():

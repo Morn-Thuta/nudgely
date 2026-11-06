@@ -16,9 +16,9 @@ from lib import LABEL_COLORS
 HERO = """
 <!doctype html><html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#0B201A;overflow:hidden;
+html,body{margin:0;height:100%;background:__BG__;overflow:hidden;
   font-family:"Source Sans Pro",-apple-system,"Segoe UI",Roboto,sans-serif}
-.panel{position:relative;height:100%;border-radius:18px;overflow:hidden;background:#0B201A}
+.panel{position:relative;height:100%;border-radius:__RADIUS__;overflow:hidden;background:__BG__}
 canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
 canvas:active{cursor:grabbing}
 .vig{position:absolute;inset:0;pointer-events:none;
@@ -41,9 +41,17 @@ canvas:active{cursor:grabbing}
 <script>
 (function(){
   "use strict";
-  var DATA=__DATA__, COLORS=__COLORS__;
+  var DATA=__DATA__, COLORS=__COLORS__, BARE=__BARE__;
   var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(!DATA.length) return;
+  // As a page background the field carries no furniture: the headline sits over
+  // it, so a legend and axis labels would just be clutter behind the words.
+  if(BARE){
+    // A scrim down the left so the headline always reads, whatever drifts past.
+    document.querySelector(".vig").style.background =
+      "linear-gradient(to right, __BG__ 0%, __BG__ 30%, __BG__dd 44%, transparent 68%)";
+    document.getElementById("legend").style.display="none";
+  }
 
   function extent(k){ var lo=Infinity,hi=-Infinity;
     DATA.forEach(function(d){ if(d[k]<lo)lo=d[k]; if(d[k]>hi)hi=d[k]; }); return [lo,hi]; }
@@ -60,13 +68,15 @@ canvas:active{cursor:grabbing}
     var r=cv.getBoundingClientRect(); if(!r.width||!r.height) return;
     var dpr=Math.min(window.devicePixelRatio||1,2);
     W=r.width; H=r.height; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0); k=Math.min(W,H)*0.46;
+    ctx.setTransform(dpr,0,0,dpr,0,0); k=Math.min(W,H)*(BARE?0.40:0.46);
   }
   function project(x,y,z){
     var cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);
     var x1=x*cy-z*sy, z1=x*sy+z*cy, y1=y*cp-z1*sp, z2=y*sp+z1*cp;
     var w=dist/(dist+z2);
-    return {sx:W/2+x1*w*k, sy:H/2-y1*w*k, w:w, d:z2};
+    // Pushed right as a background, so the cloud sits beside the headline
+    // instead of behind it.
+    return {sx:W/2+x1*w*k+(BARE?W*0.24:0), sy:H/2-y1*w*k, w:w, d:z2};
   }
   function seg(a,b,alpha,width){
     var p=project(a[0],a[1],a[2]), q=project(b[0],b[1],b[2]);
@@ -100,20 +110,22 @@ canvas:active{cursor:grabbing}
     if(!W){ size(); if(!W) return; }
     ctx.clearRect(0,0,W,H);
 
-    ctx.strokeStyle="#2F6253";
+    ctx.strokeStyle=BARE?"#1E3A30":"#2F6253";
     for(var g=-1;g<=1;g+=0.5){
-      seg([-1.05,ZERO,g],[1.05,ZERO,g],0.6);
-      seg([g,ZERO,-1.05],[g,ZERO,1.05],0.6);
+      seg([-1.05,ZERO,g],[1.05,ZERO,g],BARE?0.5:0.6);
+      seg([g,ZERO,-1.05],[g,ZERO,1.05],BARE?0.5:0.6);
     }
-    ctx.strokeStyle="#9FBDAE";
-    seg([-1.05,ZERO,-1.05],[1.05,ZERO,-1.05],0.6,1.5);
-    seg([-1.05,ZERO,-1.05],[-1.05,ZERO,1.05],0.6,1.5);
-    seg([-1.05,ZERO,-1.05],[-1.05,1.1,-1.05],0.6,1.5);
-    ctx.font='600 11px -apple-system,"Segoe UI",sans-serif';
-    ctx.fillStyle="#9FBDAE"; ctx.textAlign="center"; ctx.textBaseline="middle";
-    label("uplift", -1.05, 1.2, -1.05);
-    label(eGap[1]+" days since visit", 1.16, ZERO, -1.05);
-    label("$"+Math.round(eSpend[1])+" basket", -1.05, ZERO, 1.18);
+    if(!BARE){
+      ctx.strokeStyle="#9FBDAE";
+      seg([-1.05,ZERO,-1.05],[1.05,ZERO,-1.05],0.6,1.5);
+      seg([-1.05,ZERO,-1.05],[-1.05,ZERO,1.05],0.6,1.5);
+      seg([-1.05,ZERO,-1.05],[-1.05,1.1,-1.05],0.6,1.5);
+      ctx.font='600 11px -apple-system,"Segoe UI",sans-serif';
+      ctx.fillStyle="#9FBDAE"; ctx.textAlign="center"; ctx.textBaseline="middle";
+      label("uplift", -1.05, 1.2, -1.05);
+      label(eGap[1]+" days since visit", 1.16, ZERO, -1.05);
+      label("$"+Math.round(eSpend[1])+" basket", -1.05, ZERO, 1.18);
+    }
 
     DATA.forEach(function(d){
       var p=project(d.x,d.y,d.z);
@@ -182,8 +194,12 @@ canvas:active{cursor:grabbing}
 """
 
 
-def render_hero(df, height=430):
-    """Draw the customer field. `df` is the customers table from `lib.load_customers`."""
+def render_hero(df, height=430, background=False, bg_color="#0B201A"):
+    """Draw the customer field. `df` is the customers table from `lib.load_customers`.
+
+    `background=True` strips the legend, axis labels and rounded edge, and shifts
+    the cloud right, for use as a full-page backdrop with text over it.
+    """
     rows = [
         {
             "lab": r.label,
@@ -195,6 +211,9 @@ def render_hero(df, height=430):
     ]
     components.html(
         HERO.replace("__DATA__", json.dumps(rows))
-            .replace("__COLORS__", json.dumps(LABEL_COLORS)),
+            .replace("__COLORS__", json.dumps(LABEL_COLORS))
+            .replace("__BARE__", "true" if background else "false")
+            .replace("__BG__", bg_color)
+            .replace("__RADIUS__", "0" if background else "18px"),
         height=height,
     )
