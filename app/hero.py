@@ -1,18 +1,16 @@
-"""Welcome: the landing screen, with the shop's own customers floating behind it.
+"""The hero: this shop's customer book, in three dimensions, behind the headline.
 
-The hero is not decoration. It is this shop's customer book in three dimensions -
-height is uplift, so the handful of people worth messaging stand above everyone
-else - and the messages flying out of the corner go to exactly those people. The
-pitch and the product are the same picture.
+Not decoration. Height is uplift, so the few customers worth messaging stand
+above everyone else, and the darts flying out of the corner go to exactly those
+people. The pitch and the product end up being the same picture.
 
-Overview is untouched; this sits in front of it as the first thing the app shows.
+Used by the sign-in gate, which is the first thing anyone sees.
 """
 
 import json
 
-import streamlit as st
 import streamlit.components.v1 as components
-from lib import LABEL_COLORS, load_customers, summary
+from lib import LABEL_COLORS
 
 HERO = """
 <!doctype html><html><head><meta charset="utf-8"><style>
@@ -167,102 +165,23 @@ p{margin:0;color:#BFCEC5;font-size:15px;line-height:1.7;max-width:34rem}
 </script></body></html>
 """
 
-df = load_customers()
-movable = int((df.label == "Persuadable").sum())
 
-rows = [
-    {
-        "lab": r.label,
-        "up": round(float(r.uplift) * 100, 1),
-        "gap": int(r.days_since_last_visit),
-        "spend": round(float(r.avg_spend_sgd), 2),
-    }
-    for _, r in df.iterrows()
-]
-
-pills = ["AI-GNITION 2026 · top ten", "Finals 14 Nov 2026", "Kampung Fresh · demo data"]
-
-components.html(
-    HERO.replace("__DATA__", json.dumps(rows))
-        .replace("__COLORS__", json.dumps(LABEL_COLORS))
-        .replace("__EYEBROW__", "Small messages. Meaningful returns.")
-        .replace("__LEDE__",
-                 f"Every shop blasts the same promotion to everyone. Nudgely reads your WhatsApp "
-                 f"chats, works out which {movable} of your {len(df)} customers are genuinely "
-                 f"movable, writes each message from that customer's own history, and proves the "
-                 f"lift against a group it deliberately left alone.")
-        .replace("__PILLS__", "".join(f'<span class="pill">{p}</span>' for p in pills)),
-    height=440,
-)
-st.caption("That is your own customer book behind the text: height is uplift, and the messages "
-           "fly to the customers a nudge would actually move. Drag it.")
-
-a, b, c = st.columns(3)
-if a.button("Build a campaign →", type="primary", width="stretch"):
-    st.switch_page("views/campaign.py")
-if b.button("Explore your customers", width="stretch"):
-    st.switch_page("views/customers.py")
-if c.button("See the evidence", width="stretch"):
-    st.switch_page("views/results.py")
-
-st.markdown('<div class="section-label">How it works</div>', unsafe_allow_html=True)
-steps = [
-    ("01 · Listen", "Read the chats",
-     "Every message a customer sends is tagged as it arrives: a restock they asked for, a "
-     "delivery that went wrong, a party coming up. Evidence has to be quoted from something "
-     "the customer actually said."),
-    ("02 · Score", "Find who is movable",
-     "An uplift model predicts the difference a message makes, not whether someone returns. "
-     "Someone returning anyway is a wasted discount; someone gone for good is a wasted message."),
-    ("03 · Write", "Fill an approved template",
-     "WhatsApp forbids free text to open a conversation, so one of six approved sentences is "
-     "chosen by the customer's strongest tag and its blanks filled. Invent a price and the "
-     "message is thrown away, not patched."),
-    ("04 · Prove", "Keep a holdout",
-     "Some customers are deliberately not messaged. Without them you cannot tell a good message "
-     "from a customer who was returning regardless."),
-]
-for col, (num, title, body) in zip(st.columns(4), steps):
-    col.markdown(f'<div class="feature"><div class="num">{num}</div><h3>{title}</h3>'
-                 f'<p>{body}</p></div>', unsafe_allow_html=True)
-
-st.markdown('<div class="section-label">Where it stands</div>', unsafe_allow_html=True)
-s = summary()
-capture = s["top30_capture_share"] if s else None
-ci = s.get("top30_capture_ci90") if s else None
-
-f1, f2, f3 = st.columns(3)
-with f1, st.container(border=True):
-    st.metric("Top 30% captures", f"{capture:.0%}" if capture else "-",
-              f"{capture / 0.3:.1f}x vs random" if capture else None)
-    st.caption(f"Share of the extra visits, against 30% for picking at random. 90% interval "
-               f"{ci[0]:.0%}-{ci[1]:.0%} - the spread is as much the finding as the number."
-               if ci else "Share of the extra visits, from the historical Lenta experiment.")
-with f2, st.container(border=True):
-    st.metric("Tags found", "97%", "86% precision")
-    st.caption("Across 32 hand-written test chats. Recall is the one that matters: a missed "
-               "complaint becomes a promotion.")
-with f3, st.container(border=True):
-    st.metric("Columns needed", "3")
-    st.caption("Phone, date and amount. Everything the model uses is derived from those three.")
-
-st.markdown('<div class="section-label">Honest state</div>', unsafe_allow_html=True)
-good, bad = st.columns(2)
-with good, st.container(border=True):
-    st.markdown("**Working**")
-    st.markdown(
-        "- Scoring a real shop from a purchase export\n"
-        "- Tagging one message at a time, fast enough for a live webhook\n"
-        "- Six approved templates, filled and checked, rejected rather than repaired\n"
-        "- A reply bot that answers or hands to a person\n"
-        "- Campaign measurement with a holdout and a measured lift")
-with bad, st.container(border=True):
-    st.markdown("**Not working yet**")
-    st.markdown(
-        "- **No inbound webhook.** MantaGO's documented API only sends\n"
-        "- **No recency feature.** Every lapsed customer scores Lost Cause\n"
-        "- **Sarcasm reads as satisfied**, the one tag the test set still misses\n"
-        "- **Nothing sent to a real customer** without approved templates on a business number")
-
-st.caption("Fictional identities and chats · Lenta and Hillstrom model scores · "
-           "no live campaign has been sent.")
+def render_hero(df, eyebrow, headline_lede, pills, height=440):
+    """Draw the hero with `df` as the customers floating behind the text."""
+    rows = [
+        {
+            "lab": r.label,
+            "up": round(float(r.uplift) * 100, 1),
+            "gap": int(r.days_since_last_visit),
+            "spend": round(float(r.avg_spend_sgd), 2),
+        }
+        for _, r in df.iterrows()
+    ]
+    components.html(
+        HERO.replace("__DATA__", json.dumps(rows))
+            .replace("__COLORS__", json.dumps(LABEL_COLORS))
+            .replace("__EYEBROW__", eyebrow)
+            .replace("__LEDE__", headline_lede)
+            .replace("__PILLS__", "".join(f'<span class="pill">{p}</span>' for p in pills)),
+        height=height,
+    )

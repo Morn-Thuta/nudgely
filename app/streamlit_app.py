@@ -2,13 +2,17 @@
 
 import streamlit as st
 from design import apply_design
+from gate import require_access, sidebar_account
 
 st.set_page_config(page_title="Nudgely", page_icon="💬", layout="wide")
 apply_design()
 
+# The landing page stands in front of everything. Nothing below runs until
+# someone has signed in or opened the demo.
+require_access()
+
 pages = [
-    st.Page("views/welcome.py", title="Welcome", icon="✨", default=True),
-    st.Page("views/overview.py", title="Overview", icon="🏠"),
+    st.Page("views/overview.py", title="Overview", icon="🏠", default=True),
     st.Page("views/customers.py", title="Customers", icon="👥"),
     st.Page("views/customer_detail.py", title="Customer detail", icon="💬"),
     st.Page("views/campaign.py", title="Campaign", icon="📤"),
@@ -23,4 +27,5 @@ with st.sidebar:
 st.navigation(pages).run()
 
 st.sidebar.divider()
+sidebar_account()
 st.sidebar.caption("Names and chats are fictional. Model results come from public datasets (Lenta, Hillstrom).")

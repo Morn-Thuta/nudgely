@@ -29,3 +29,4 @@ Thumbs.db
 .streamlit/test_accounts_for_secrets.toml
 data/tagging_results.json
 data/template_messages.json
+data/users.json
