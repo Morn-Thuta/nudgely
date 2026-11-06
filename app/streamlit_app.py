@@ -7,7 +7,8 @@ st.set_page_config(page_title="Nudgely", page_icon="💬", layout="wide")
 apply_design()
 
 pages = [
-    st.Page("views/overview.py", title="Overview", icon="🏠", default=True),
+    st.Page("views/welcome.py", title="Welcome", icon="✨", default=True),
+    st.Page("views/overview.py", title="Overview", icon="🏠"),
     st.Page("views/customers.py", title="Customers", icon="👥"),
     st.Page("views/customer_detail.py", title="Customer detail", icon="💬"),
     st.Page("views/campaign.py", title="Campaign", icon="📤"),
