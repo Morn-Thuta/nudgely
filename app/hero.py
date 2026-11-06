@@ -1,6 +1,7 @@
-"""The hero: this shop's customer book, in three dimensions, behind the headline.
+"""The customer field: this shop's customers as a 3D cloud you can turn.
 
-Not decoration. Height is uplift, so the few customers worth messaging stand
+Not a backdrop with text over it. The field is the thing you look at, so it gets
+the whole panel: height is uplift, so the few customers worth messaging stand
 above everyone else, and the darts flying out of the corner go to exactly those
 people. The pitch and the product end up being the same picture.
 
@@ -15,40 +16,27 @@ from lib import LABEL_COLORS
 HERO = """
 <!doctype html><html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#0D241E;overflow:hidden;
+html,body{margin:0;height:100%;background:#0B201A;overflow:hidden;
   font-family:"Source Sans Pro",-apple-system,"Segoe UI",Roboto,sans-serif}
-.hero{position:relative;height:100%;border-radius:22px;overflow:hidden;isolation:isolate}
-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;touch-action:none;cursor:grab}
+.panel{position:relative;height:100%;border-radius:18px;overflow:hidden;background:#0B201A}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
 canvas:active{cursor:grabbing}
-.veil{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(130% 100% at 74% 44%,transparent 44%,rgba(13,36,30,.55) 90%),
-             linear-gradient(to right,rgba(13,36,30,.94) 0%,rgba(13,36,30,.52) 42%,transparent 66%)}
-.inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;
-  justify-content:center;gap:18px;padding:34px 38px;max-width:36rem;pointer-events:none}
-.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#D4EF9B}
-h1{margin:0;color:#F5FAF4;font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.12;
-  letter-spacing:-.035em;font-weight:700;text-wrap:balance}
-h1 em{font-style:normal;color:#5FE0A4}
-p{margin:0;color:#BFCEC5;font-size:15px;line-height:1.7;max-width:34rem}
-.pills{display:flex;gap:7px;flex-wrap:wrap}
-.pill{border-radius:99px;padding:5px 11px;background:#FFFFFF14;border:1px solid #FFFFFF26;
-  color:#D8E8DD;font-size:11px;font-weight:600}
-.grab{position:absolute;right:18px;bottom:14px;z-index:2;font-size:11px;color:#7E9C8C;
+.vig{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 110% at 50% 45%,transparent 52%,rgba(7,20,16,.72) 100%)}
+.legend{position:absolute;left:16px;bottom:14px;display:flex;gap:14px;flex-wrap:wrap;
+  pointer-events:none;font-size:12px}
+.key{display:flex;align-items:center;gap:6px;color:#A9C3B5}
+.key i{width:9px;height:9px;border-radius:50%;flex:none}
+.key b{color:#EAF3ED;font-weight:700}
+.grab{position:absolute;right:16px;bottom:14px;font-size:11px;color:#7E9C8C;
   pointer-events:none;transition:opacity .5s}
-@media (max-width:620px){.inner{padding:24px;max-width:none}.veil{
-  background:linear-gradient(to bottom,rgba(13,36,30,.9) 0%,rgba(13,36,30,.6) 60%,rgba(13,36,30,.8) 100%)}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
 </style></head><body>
-<div class="hero">
-  <canvas id="cv" aria-hidden="true"></canvas>
-  <div class="veil"></div>
-  <div class="inner">
-    <span class="eyebrow">__EYEBROW__</span>
-    <h1>Message the people a message would <em>actually change</em>.</h1>
-    <p>__LEDE__</p>
-    <div class="pills">__PILLS__</div>
-  </div>
-  <span class="grab" id="grab">drag the field</span>
+<div class="panel">
+  <canvas id="cv" aria-label="Rotatable 3D field of this shop's customers"></canvas>
+  <div class="vig"></div>
+  <div class="legend" id="legend"></div>
+  <span class="grab" id="grab">drag to turn</span>
 </div>
 <script>
 (function(){
@@ -66,24 +54,29 @@ p{margin:0;color:#BFCEC5;font-size:15px;line-height:1.7;max-width:34rem}
     d.x=span(d.gap,eGap)*1.05; d.y=span(d.up,eUp)*1.05; d.z=span(d.spend,eSpend)*1.05; });
 
   var cv=document.getElementById("cv"), ctx=cv.getContext("2d"), grab=document.getElementById("grab");
-  var W=0,H=0,k=1,yaw=-0.55,pitch=0.34,dist=4.0,spin=!reduce,beams=[],last=0;
+  var W=0,H=0,k=1,yaw=-0.6,pitch=0.36,dist=4.2,spin=!reduce,beams=[],last=0;
 
   function size(){
     var r=cv.getBoundingClientRect(); if(!r.width||!r.height) return;
     var dpr=Math.min(window.devicePixelRatio||1,2);
     W=r.width; H=r.height; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0); k=Math.min(W,H)*0.42;
+    ctx.setTransform(dpr,0,0,dpr,0,0); k=Math.min(W,H)*0.46;
   }
   function project(x,y,z){
     var cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);
     var x1=x*cy-z*sy, z1=x*sy+z*cy, y1=y*cp-z1*sp, z2=y*sp+z1*cp;
     var w=dist/(dist+z2);
-    return {sx:W/2+x1*w*k+W*0.16, sy:H/2-y1*w*k, w:w, d:z2};
+    return {sx:W/2+x1*w*k, sy:H/2-y1*w*k, w:w, d:z2};
   }
-  function seg(a,b,alpha){
+  function seg(a,b,alpha,width){
     var p=project(a[0],a[1],a[2]), q=project(b[0],b[1],b[2]);
-    ctx.globalAlpha=alpha; ctx.lineWidth=1;
+    ctx.globalAlpha=alpha; ctx.lineWidth=width||1;
     ctx.beginPath(); ctx.moveTo(p.sx,p.sy); ctx.lineTo(q.sx,q.sy); ctx.stroke(); ctx.globalAlpha=1;
+  }
+  function label(text,x,y,z){
+    var p=project(x,y,z), pad=10, half=ctx.measureText(text).width/2;
+    ctx.fillText(text, Math.min(Math.max(p.sx,pad+half),W-pad-half),
+                       Math.min(Math.max(p.sy,pad+7),H-pad-7));
   }
   var LIT={};
   function lit(hex){
@@ -91,7 +84,7 @@ p{margin:0;color:#BFCEC5;font-size:15px;line-height:1.7;max-width:34rem}
     var m=/^#?([0-9a-f]{6})$/i.exec(hex); if(!m){ LIT[hex]=hex; return hex; }
     var n=parseInt(m[1],16), out="#";
     [(n>>16)&255,(n>>8)&255,n&255].forEach(function(c){
-      out+=Math.round(c+(255-c)*0.5).toString(16).padStart(2,"0"); });
+      out+=Math.round(c+(255-c)*0.55).toString(16).padStart(2,"0"); });
     LIT[hex]=out; return out;
   }
 
@@ -100,50 +93,73 @@ p{margin:0;color:#BFCEC5;font-size:15px;line-height:1.7;max-width:34rem}
   function addBeam(){
     if(!MOVABLE.length) return;
     beams.push({t:MOVABLE[Math.floor(Math.random()*MOVABLE.length)],at:0});
-    if(beams.length>5) beams.shift();
+    if(beams.length>6) beams.shift();
   }
 
   function draw(){
     if(!W){ size(); if(!W) return; }
     ctx.clearRect(0,0,W,H);
-    ctx.strokeStyle="#2E5A4C";
+
+    ctx.strokeStyle="#2F6253";
     for(var g=-1;g<=1;g+=0.5){
-      seg([-1.05,ZERO,g],[1.05,ZERO,g],0.4);
-      seg([g,ZERO,-1.05],[g,ZERO,1.05],0.4);
+      seg([-1.05,ZERO,g],[1.05,ZERO,g],0.6);
+      seg([g,ZERO,-1.05],[g,ZERO,1.05],0.6);
     }
+    ctx.strokeStyle="#9FBDAE";
+    seg([-1.05,ZERO,-1.05],[1.05,ZERO,-1.05],0.6,1.5);
+    seg([-1.05,ZERO,-1.05],[-1.05,ZERO,1.05],0.6,1.5);
+    seg([-1.05,ZERO,-1.05],[-1.05,1.1,-1.05],0.6,1.5);
+    ctx.font='600 11px -apple-system,"Segoe UI",sans-serif';
+    ctx.fillStyle="#9FBDAE"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    label("uplift", -1.05, 1.2, -1.05);
+    label(eGap[1]+" days since visit", 1.16, ZERO, -1.05);
+    label("$"+Math.round(eSpend[1])+" basket", -1.05, ZERO, 1.18);
+
     DATA.forEach(function(d){
       var p=project(d.x,d.y,d.z);
-      d.sx=p.sx; d.sy=p.sy; d.depth=p.d; d.sr=Math.max(2.6,9*p.w);
+      d.sx=p.sx; d.sy=p.sy; d.depth=p.d; d.sr=Math.max(2.8,8.5*p.w);
     });
+
     var o=project(ORIGIN[0],ORIGIN[1],ORIGIN[2]);
     beams.forEach(function(b){
       var e=Math.min(1,b.at), ease=1-Math.pow(1-e,3), t=b.t;
       if(t.sx===undefined) return;
-      var px=o.sx+(t.sx-o.sx)*ease, py=o.sy+(t.sy-o.sy)*ease, tail=Math.max(0,ease-0.16);
-      ctx.globalAlpha=0.45*(1-e*0.7); ctx.strokeStyle=lit(COLORS["Persuadable"]); ctx.lineWidth=1;
+      var px=o.sx+(t.sx-o.sx)*ease, py=o.sy+(t.sy-o.sy)*ease, tail=Math.max(0,ease-0.2);
+      ctx.globalAlpha=0.65*(1-e*0.6); ctx.strokeStyle=lit(COLORS["Persuadable"]); ctx.lineWidth=1.4;
       ctx.beginPath(); ctx.moveTo(o.sx+(t.sx-o.sx)*tail,o.sy+(t.sy-o.sy)*tail);
       ctx.lineTo(px,py); ctx.stroke();
-      ctx.globalAlpha=1-e*0.55; ctx.fillStyle=lit(COLORS["Persuadable"]);
-      ctx.beginPath(); ctx.arc(px,py,2,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+      ctx.globalAlpha=1-e*0.45; ctx.fillStyle=lit(COLORS["Persuadable"]);
+      ctx.beginPath(); ctx.arc(px,py,2.6,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
     });
+
     DATA.slice().sort(function(a,b){ return b.depth-a.depth; }).forEach(function(d){
       var near=1-Math.min(1,Math.max(0,(d.depth+1.4)/2.9));
       var col=COLORS[d.lab]||"#9CA3AF", r=d.sr;
-      var grad=ctx.createRadialGradient(d.sx-r*0.35,d.sy-r*0.4,r*0.1,d.sx,d.sy,r);
-      grad.addColorStop(0,lit(col)); grad.addColorStop(0.5,col);
-      grad.addColorStop(1,"rgba(0,0,0,0.5)");
-      ctx.globalAlpha=0.3+near*0.7; ctx.fillStyle=grad;
+      // a faint halo so each sphere separates from the dark panel
+      ctx.globalAlpha=(0.07+near*0.1); ctx.fillStyle=col;
+      ctx.beginPath(); ctx.arc(d.sx,d.sy,r*1.7,0,Math.PI*2); ctx.fill();
+      var grad=ctx.createRadialGradient(d.sx-r*0.33,d.sy-r*0.38,r*0.08,d.sx,d.sy,r);
+      grad.addColorStop(0,"#ffffff"); grad.addColorStop(0.28,lit(col));
+      grad.addColorStop(0.72,col); grad.addColorStop(1,"rgba(0,0,0,0.45)");
+      ctx.globalAlpha=0.55+near*0.45; ctx.fillStyle=grad;
       ctx.beginPath(); ctx.arc(d.sx,d.sy,r,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
     });
   }
   function tick(ts){
-    if(spin) yaw+=0.0016;
+    if(spin) yaw+=0.0022;
     if(!reduce){
-      for(var i=beams.length-1;i>=0;i--){ beams[i].at+=0.016; if(beams[i].at>1.3) beams.splice(i,1); }
-      if(ts-last>1000){ addBeam(); last=ts; }
+      for(var i=beams.length-1;i>=0;i--){ beams[i].at+=0.018; if(beams[i].at>1.3) beams.splice(i,1); }
+      if(ts-last>750){ addBeam(); last=ts; }
     }
     draw(); requestAnimationFrame(tick);
   }
+
+  var counts={};
+  DATA.forEach(function(d){ counts[d.lab]=(counts[d.lab]||0)+1; });
+  document.getElementById("legend").innerHTML =
+    ["Persuadable","Sure Thing","Lost Cause"].filter(function(l){ return counts[l]; })
+    .map(function(l){ return '<span class="key"><i style="background:'+COLORS[l]+'"></i>'
+      +'<b>'+counts[l]+'</b> '+l+'</span>'; }).join("");
 
   var drag=false,lx=0,ly=0;
   cv.addEventListener("pointerdown",function(e){
@@ -166,8 +182,8 @@ p{margin:0;color:#BFCEC5;font-size:15px;line-height:1.7;max-width:34rem}
 """
 
 
-def render_hero(df, eyebrow, headline_lede, pills, height=440):
-    """Draw the hero with `df` as the customers floating behind the text."""
+def render_hero(df, height=430):
+    """Draw the customer field. `df` is the customers table from `lib.load_customers`."""
     rows = [
         {
             "lab": r.label,
@@ -179,9 +195,6 @@ def render_hero(df, eyebrow, headline_lede, pills, height=440):
     ]
     components.html(
         HERO.replace("__DATA__", json.dumps(rows))
-            .replace("__COLORS__", json.dumps(LABEL_COLORS))
-            .replace("__EYEBROW__", eyebrow)
-            .replace("__LEDE__", headline_lede)
-            .replace("__PILLS__", "".join(f'<span class="pill">{p}</span>' for p in pills)),
+            .replace("__COLORS__", json.dumps(LABEL_COLORS)),
         height=height,
     )

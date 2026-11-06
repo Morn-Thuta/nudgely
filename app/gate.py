@@ -34,11 +34,23 @@ ITERATIONS = 240_000
 MIN_PASSWORD = 8
 EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
+# The landing page has to fit one screen without scrolling, so the app's normal
+# chrome and generous page padding are pulled in tight for this page only.
 HIDE_CHROME = """
 <style>
 [data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"]{display:none !important}
-[data-testid="stAppViewContainer"] > .main .block-container{max-width:1100px}
-.gate-foot{color:#7B8B82;font-size:12px;line-height:1.6;padding-top:6px}
+[data-testid="stAppViewContainer"] .block-container{
+  max-width:1280px; padding-top:1.1rem !important; padding-bottom:0 !important}
+[data-testid="stHeader"]{height:0}
+.gate-brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.gate-brand i{width:11px;height:11px;border-radius:50%;background:#0E9F6E;
+  box-shadow:0 0 0 5px #0E9F6E24;flex:none}
+.gate-brand b{font-size:17px;font-weight:800;letter-spacing:-.02em;color:#153F36}
+.gate-head{font-size:clamp(1.5rem,2.5vw,2.1rem);line-height:1.12;letter-spacing:-.035em;
+  font-weight:700;color:#153F36;margin:0 0 8px;text-wrap:balance}
+.gate-head em{font-style:normal;color:#0E9F6E}
+.gate-sub{color:#5C7268;font-size:14px;line-height:1.6;margin:0 0 4px;max-width:60ch}
+.gate-foot{color:#7B8B82;font-size:11.5px;line-height:1.5;padding-top:4px}
 </style>
 """
 
@@ -114,35 +126,21 @@ def require_access():
 
     df = load_customers()
     movable = int((df.label == "Persuadable").sum())
-    render_hero(
-        df,
-        eyebrow="Small messages. Meaningful returns.",
-        headline_lede=(
-            f"Every shop blasts the same promotion to everyone. Nudgely reads your WhatsApp "
-            f"chats, works out which {movable} of your {len(df)} customers are genuinely "
-            f"movable, writes each message from that customer's own history, and proves the "
-            f"lift against a group it deliberately left alone."),
-        pills=["AI-GNITION 2026 · top ten", "Finals 14 Nov 2026", "Kampung Fresh · demo data"],
-        height=430,
-    )
 
-    left, right = st.columns([1.15, 1], gap="large")
+    field, door = st.columns([1.45, 1], gap="large")
 
-    with left:
-        st.markdown('<div class="section-label">Why it is different</div>', unsafe_allow_html=True)
+    with field:
         st.markdown(
-            "**It does not ask who will come back.** It asks who comes back *because of the "
-            "message*, which is a different and much smaller group of people.\n\n"
-            "**It writes from the customer's own words.** A restock they asked for, a delivery "
-            "that went wrong, a party coming up — never a blank template with a name dropped in.\n\n"
-            "**It keeps a holdout.** Some customers are deliberately not messaged, because "
-            "without them you cannot tell a good message from a customer who was returning anyway.")
-        a, b, c = st.columns(3)
-        a.metric("Customers scored", len(df))
-        b.metric("Worth messaging", movable)
-        c.metric("Columns needed", 3, help="Phone, date and amount. Everything else is derived.")
+            '<div class="gate-brand"><i></i><b>Nudgely</b></div>'
+            '<h1 class="gate-head">Message the people a message would '
+            '<em>actually change</em>.</h1>'
+            f'<p class="gate-sub">That is your customer book turning below — height is uplift, '
+            f'and the darts fly to the {movable} of {len(df)} customers a nudge would actually '
+            f'move. Everyone else is a wasted discount or a wasted message.</p>',
+            unsafe_allow_html=True)
+        render_hero(df, height=430)
 
-    with right:
+    with door:
         with st.container(border=True):
             tab_in, tab_up = st.tabs(["Sign in", "Create an account"])
             with tab_in:
@@ -151,14 +149,16 @@ def require_access():
                 _sign_up_form()
 
         st.markdown(
-            '<div class="gate-foot">Looking around rather than signing up? '
-            'Open the demo below — everything works, on fictional customers.</div>',
-            unsafe_allow_html=True)
+            '<div class="gate-foot">Just looking? Open the demo — everything works, '
+            'on fictional customers.</div>', unsafe_allow_html=True)
         if st.button("Explore the demo", width="stretch"):
             _enter("Demo visitor", demo=True)
 
-    st.caption("Fictional identities and chats · Lenta and Hillstrom model scores · no live "
-               "campaign has been sent · accounts are stored on this machine only")
+        st.markdown(
+            '<div class="gate-foot">AI-GNITION 2026 · top ten · finals 14 Nov<br>'
+            'Fictional identities · Lenta and Hillstrom scores · no live campaign sent<br>'
+            'Accounts are stored on this machine only</div>', unsafe_allow_html=True)
+
     st.stop()
 
 
