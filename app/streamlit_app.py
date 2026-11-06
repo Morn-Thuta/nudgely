@@ -22,10 +22,12 @@ pages = [
 with st.sidebar:
     st.markdown('<div class="brandmark">nudgely<span>↗</span></div>', unsafe_allow_html=True)
     st.caption("A little nudge. A lasting connection.")
+    # Who you are and the way out live at the top, where you look for them,
+    # rather than under the fold of whichever page you happen to be on.
+    sidebar_account()
     st.markdown('<div class="store-card"><small>YOUR WORKSPACE</small><br><strong>Kampung Fresh</strong><br><small>Singapore · Grocery · Demo</small></div>', unsafe_allow_html=True)
 
 st.navigation(pages).run()
 
 st.sidebar.divider()
-sidebar_account()
 st.sidebar.caption("Names and chats are fictional. Model results come from public datasets (Lenta, Hillstrom).")

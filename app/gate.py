@@ -359,12 +359,30 @@ def _sign_up_form():
     _enter(name.strip())
 
 
+ACCOUNT_CSS = """
+<style>
+.st-key-accountrow{border:1px solid #FFFFFF1F;border-radius:12px;padding:10px 12px 4px;
+  background:#FFFFFF0D;margin-bottom:14px}
+.st-key-accountrow .who{font-size:12px;color:#CFE3D7;line-height:1.35;margin-bottom:8px}
+.st-key-accountrow .who b{color:#F2F8F3;font-weight:650}
+.st-key-accountrow .who span{color:#9FBDAE}
+.st-key-accountrow button{background:#FFFFFF12 !important;border:1px solid #FFFFFF2E !important;
+  color:#EAF3ED !important;font-size:12.5px !important;padding:5px 10px !important}
+.st-key-accountrow button:hover{border-color:#6FE3AC !important;color:#9CF0C8 !important}
+</style>
+"""
+
+
 def sidebar_account():
-    """The signed-in footer for the sidebar."""
+    """Who is signed in, and the way out. Sits at the top of the sidebar."""
     name = current_user()
     if not name:
         return
-    st.caption(f"Signed in as **{name}**" + ("  ·  demo" if st.session_state.get("demo") else ""))
-    if st.button("Sign out", width="stretch"):
-        sign_out()
-        st.rerun()
+    st.markdown(ACCOUNT_CSS, unsafe_allow_html=True)
+    with st.container(key="accountrow"):
+        tail = " <span>· demo</span>" if st.session_state.get("demo") else ""
+        st.markdown(f'<div class="who">Signed in as <b>{name}</b>{tail}</div>',
+                    unsafe_allow_html=True)
+        if st.button("Sign out", width="stretch"):
+            sign_out()
+            st.rerun()
