@@ -1,0 +1,55 @@
+{
+  "dataset": "Lenta (687k grocery customers, SMS test)",
+  "random_baseline": 0.3,
+  "all_features": {
+    "features": 190,
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "capture_mean": 0.44806157118649864,
+    "capture_sd": 0.10512177271591315,
+    "capture_min": 0.30617367904853,
+    "capture_max": 0.6345063662082695,
+    "qini_mean": 0.0068662370606323644,
+    "seconds": 200.3
+  },
+  "transferable": {
+    "features": 10,
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "capture_mean": 0.5698030674383782,
+    "capture_sd": 0.14229786309559594,
+    "capture_min": 0.37650405760720673,
+    "capture_max": 0.8464947403154243,
+    "qini_mean": 0.010636403720138013,
+    "seconds": 25.8
+  },
+  "transferable_features": {
+    "months_from_register": "days since first purchase",
+    "k_var_days_between_visits_15d": "how irregular their visits are (15d)",
+    "k_var_days_between_visits_1m": "how irregular their visits are (1m)",
+    "k_var_days_between_visits_3m": "how irregular their visits are (3m)",
+    "stdev_days_between_visits_15d": "spread of gaps between visits",
+    "perdelta_days_between_visits_15_30d": "are their visits speeding up or slowing down",
+    "k_var_cheque_15d": "how much their basket value varies (15d)",
+    "k_var_cheque_3m": "how much their basket value varies (3m)",
+    "response_sms": "responded to an SMS before",
+    "response_viber": "responded to a Viber message before"
+  },
+  "capture_gain_vs_all_features": 0.12174149625187952,
+  "verdict": "usable on a real shop: better than random even one standard deviation down",
+  "note": "Means over several random splits, because a single split moved the capture share by 30 points. Trained on Lenta but using only features a shop can compute from its own purchase history, so the model can score real customers. Retrain on the shop's own campaign outcomes once there are enough."
+}

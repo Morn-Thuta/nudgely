@@ -27,7 +27,8 @@ Return ONLY a JSON object with keys:
 customer_id, tags (list of {{type, value, evidence, date}}), sentiment (positive|neutral|negative),
 open_promise (string, "" if none), best_hook (short string), avoid (string, "" if none).
 Allowed tag types: {", ".join(TAG_TYPES)}.
-Every tag MUST quote evidence copied word-for-word from a customer or store message. Drop any tag without evidence.
+Every tag MUST quote evidence copied word-for-word from a message the CUSTOMER sent. Drop any tag
+without evidence. The store's own messages are context: never tag something only the store said.
 Do not invent anything not in the chat."""
 
 WRITE_SYSTEM = """You write ONE short WhatsApp message from a Singapore grocery store to a customer.
@@ -64,12 +65,76 @@ def _parse_json(text):
     return json.loads(m.group(0) if m else text)
 
 
-def complete_json(system, user):
+# Each provider's own key, if one is set, so a dead provider can hand over to another.
+PROVIDER_KEY_ENV = {"gemini": "GEMINI_API_KEY", "openai": "OPENAI_API_KEY",
+                    "anthropic": "ANTHROPIC_API_KEY", "openrouter": "OPENROUTER_API_KEY"}
+
+# Free tiers are counted per model per day, so a second model on the same key is
+# a real fallback, not a formality. This is what the 20/day Gemini cap needs.
+MODEL_FALLBACKS = {"gemini": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+                   "anthropic": ["claude-haiku-5-5"],
+                   "openai": ["gpt-4o-mini"],
+                   "openrouter": []}  # _openrouter already walks its own model list
+
+RETRYABLE = ("quota", "rate limit", "rate_limit", "resource_exhausted", "429", "500", "502",
+             "503", "overloaded", "unavailable", "timeout", "temporarily")
+
+
+def _retryable(exc):
+    """Worth trying the next model or provider, rather than a mistake in our request."""
+    text = str(exc).lower()
+    return any(sign in text for sign in RETRYABLE)
+
+
+def _chain():
+    """Where to try, in order: the configured provider and model, then its other
+    models, then any other provider that has a key of its own in the environment."""
     c = _config()
     provider, key, model = c["provider"].lower(), c["api_key"], c["model"]
     if not (provider and key):
         raise RuntimeError("LLM not configured: set LLM_PROVIDER and LLM_API_KEY")
 
+    steps = [(provider, key, model)]
+    for alt in MODEL_FALLBACKS.get(provider, []):
+        if alt != model:
+            steps.append((provider, key, alt))
+    for other, env in PROVIDER_KEY_ENV.items():
+        other_key = os.getenv(env, "")
+        if other != provider and other_key:
+            steps.append((other, other_key, ""))
+    return steps
+
+
+GEMINI_TIMEOUT_MS = 30_000
+CHAIN_DEADLINE = 75  # seconds for the whole chain; a reply bot must answer or give up
+
+
+def complete_json(system, user, on_fallback=None, deadline=CHAIN_DEADLINE):
+    """Ask the LLM for JSON, moving down the chain when a provider is rate-limited.
+
+    `on_fallback(provider, model, error)` is called each time a step fails, so the
+    caller can log which provider actually answered.
+    """
+    import time
+
+    started = time.monotonic()
+    problems = []
+    for provider, key, model in _chain():
+        if deadline and time.monotonic() - started > deadline:
+            problems.append(f"gave up after {deadline}s")
+            break
+        try:
+            return _call(provider, key, model, system, user)
+        except Exception as e:  # noqa: BLE001 - any provider error should fall through
+            problems.append(f"{provider}/{model or 'default'}: {str(e)[:120]}")
+            if on_fallback:
+                on_fallback(provider, model, e)
+            if not _retryable(e):
+                raise
+    raise RuntimeError("Every provider failed. " + " | ".join(problems))
+
+
+def _call(provider, key, model, system, user):
     if provider == "anthropic":
         import anthropic
 
@@ -90,7 +155,9 @@ def complete_json(system, user):
         from google import genai
         from google.genai import types
 
-        client = genai.Client(api_key=key)
+        client = genai.Client(api_key=key,
+                              http_options=types.HttpOptions(timeout=GEMINI_TIMEOUT_MS,
+                                                             retry_options=types.HttpRetryOptions(attempts=1)))
         r = client.models.generate_content(
             model=model or "gemini-2.5-flash", contents=user,
             config=types.GenerateContentConfig(system_instruction=system, response_mime_type="application/json"))
@@ -103,8 +170,8 @@ def complete_json(system, user):
 
 
 # Free models change often: list them with GET https://openrouter.ai/api/v1/models (ids ending ":free")
-OPENROUTER_FALLBACKS = ["google/gemma-4-31b-it:free", "minimax/minimax-m3.1-flash:free",
-                        "nvidia/nemotron-3-super-120b-a12b:free"]
+OPENROUTER_FALLBACKS = ["nvidia/nemotron-3.5-lightning:free", "google/gemma-4-31b-it:free",
+                        "google/gemma-4-26b-a4b-it:free", "nvidia/nemotron-3-ultra-550b-a55b:free"]
 
 
 def _openrouter(system, user, key, model):
@@ -157,10 +224,83 @@ def extract_tags(customer_id, chat, names=()):
     user = f"customer_id: {customer_id}\nChat history:\n" + "\n".join(lines)
     out = complete_json(EXTRACT_SYSTEM, user)
     out["customer_id"] = customer_id
-    # Keep only tags whose evidence is really quoted from the chat (no invented evidence)
-    chat_text = " ".join(lines).lower()
+    # Evidence must be quoted from something the CUSTOMER said. The store's own
+    # messages are context: a shop announcing a Deepavali promotion is not evidence
+    # that this customer has Deepavali coming up, and a tag sourced that way puts a
+    # fact on their record they never gave us.
+    chat_text = " ".join(f"{m['from']}: {scrub(m['text'], names)}"
+                         for m in chat if m.get("from") == "customer").lower()
     out["tags"] = [t for t in out.get("tags", []) if t.get("type") in TAG_TYPES and t.get("evidence")
                    and t["evidence"].strip(" .\"'“”").lower() in chat_text]
+    return out
+
+
+TAG_ONE_SYSTEM = f"""You read ONE new message a customer just sent a grocery store, and extract memory tags from it.
+Return ONLY a JSON object with keys:
+tags (list of {{type, value, evidence, date}}), sentiment (positive|neutral|negative),
+open_promise (string, "" if none), best_hook (short string), avoid (string, "" if none).
+Allowed tag types: {", ".join(TAG_TYPES)}.
+Every tag MUST quote evidence copied word-for-word from the new message. Drop any tag without evidence.
+Earlier tags are given for context only: do NOT repeat them, and do not tag anything the new message
+does not itself say. Return an empty tags list when the message carries nothing worth remembering.
+Do not invent anything."""
+
+
+def tag_message(customer_id, text, date="", prior=None, names=()):
+    """Tag ONE incoming message, for the API to call as each message arrives.
+
+    `extract_tags` re-reads a whole chat, which suits the nightly batch and is
+    wasteful per message: it costs more every time the conversation grows and it
+    re-decides tags that were already settled. This looks at the new message
+    only, with `prior` passed as context so the model does not repeat itself.
+
+    Returns the same shape as `extract_tags`. Merge it into what you already hold
+    with `merge_tags`.
+    """
+    user = json.dumps({
+        "customer_id": customer_id,
+        "new_message": {"date": date, "from": "customer", "text": scrub(text, names)},
+        "tags_we_already_have": [
+            {k: t.get(k) for k in ("type", "value")} for t in (prior or {}).get("tags", [])],
+    }, default=str)
+    out = complete_json(TAG_ONE_SYSTEM, user)
+    out["customer_id"] = customer_id
+
+    # Evidence must be quoted from this message, not from the conversation at large.
+    low = scrub(text, names).lower()
+    out["tags"] = [t for t in out.get("tags", [])
+                   if t.get("type") in TAG_TYPES and t.get("evidence")
+                   and t["evidence"].strip(" .\"'“”").lower() in low]
+    for tag in out["tags"]:
+        tag.setdefault("date", date)
+    return out
+
+
+def merge_tags(prior, new):
+    """Fold a single message's tags into what we already remember.
+
+    Same type and same value is the same fact mentioned twice, so the newer one
+    wins and carries the newer evidence. Everything else accumulates, because a
+    customer who asked about oat milk in September and durian in October wants
+    both remembered.
+
+    `sentiment`, `best_hook` and `avoid` come from the newest message that has
+    them: they describe where the customer stands now, not where they stood.
+    """
+    prior = prior or {}
+    merged = {t.get("type", "") + "|" + str(t.get("value", "")).strip().lower(): t
+              for t in prior.get("tags", [])}
+    for tag in new.get("tags", []):
+        merged[tag.get("type", "") + "|" + str(tag.get("value", "")).strip().lower()] = tag
+
+    out = dict(prior)
+    out["customer_id"] = new.get("customer_id") or prior.get("customer_id", "")
+    out["tags"] = list(merged.values())
+    for key in ("sentiment", "best_hook", "avoid", "open_promise"):
+        if str(new.get(key, "")).strip():
+            out[key] = new[key]
+        else:
+            out.setdefault(key, prior.get(key, ""))
     return out
 
 

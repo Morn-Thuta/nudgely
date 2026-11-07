@@ -2,7 +2,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from lib import BRAND, campaign_results, header, summary
+from field import customer_field
+from lib import BRAND, campaign_results, header, load_customers, summary
 
 header("Know what made the difference.", "Explore historical evidence, campaign delivery and the outcomes still to measure.")
 
@@ -54,6 +55,17 @@ fig.add_bar(x=dec.decile.astype(str), y=dec.observed_uplift,
 fig.update_layout(xaxis_title="Decile (1 = highest predicted uplift)", yaxis_title="Observed lift in visit rate",
                   yaxis_tickformat=".1%", height=340, margin=dict(t=20, b=10))
 st.plotly_chart(fig, width="stretch")
+
+st.markdown("#### Your customers, in one picture")
+st.caption("The charts above are how well the model separates customers in general. This is what "
+           "it decided about yours: every customer placed by how recently they visited, what they "
+           "spend, and how much a message would change them.")
+customers = load_customers()
+field_cols = st.columns(4)
+field_cols[0].metric("Customers scored", len(customers))
+for field_col, field_label in zip(field_cols[1:], ["Persuadable", "Sure Thing", "Lost Cause"]):
+    field_col.metric(field_label, int((customers.label == field_label).sum()))
+customer_field(customers)
 
 plan = st.session_state.get("last_plan")
 if plan is not None:

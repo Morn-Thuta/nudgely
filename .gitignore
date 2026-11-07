@@ -6,6 +6,8 @@
 data/test_accounts.json
 data/send_log.csv
 data/campaign_log.csv
+data/run_daily.log
+data/model_transferable.pkl
 
 # big raw data - keep only small CSV/JSON in data/
 data/raw/
@@ -25,3 +27,6 @@ venv/
 .DS_Store
 Thumbs.db
 .streamlit/test_accounts_for_secrets.toml
+data/tagging_results.json
+data/template_messages.json
+data/users.json
