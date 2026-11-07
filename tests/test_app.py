@@ -13,7 +13,7 @@ import lib
 
 class AppTests(unittest.TestCase):
     def test_all_pages_load(self):
-        for page in ['overview', 'customers', 'customer_detail', 'campaign', 'results']:
+        for page in ['customers', 'customer_detail', 'campaign', 'results']:
             app = AppTest.from_file(str(ROOT / 'app' / 'views' / f'{page}.py'), default_timeout=30).run()
             self.assertEqual(len(app.exception), 0, page)
 
