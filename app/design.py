@@ -9,6 +9,15 @@ def apply_design():
     [data-testid="stSidebar"]{background:#123D35}[data-testid="stSidebar"] *{color:#E8F3EE}
     [data-testid="stSidebarNavLink"]{border-radius:10px;margin:5px 0;padding:9px 12px!important}
     [data-testid="stSidebar"] [aria-current="page"]{background:#28574B!important}
+    /* Brand and the way out sit above the page links; workspace card and footnote below.
+       display:contents lifts the sidebar's own blocks out of their wrapper so each one
+       becomes a flex item next to Streamlit's nav, which is the only way to reorder them. */
+    [data-testid="stSidebarContent"]{display:flex;flex-direction:column}
+    [data-testid="stSidebarUserContent"],[data-testid="stSidebarUserContent"]>div,[data-testid="stSidebarUserContent"]>div>[data-testid="stVerticalBlock"],[data-testid="stSidebarUserContent"]>div>[data-testid="stVerticalBlock"]>[data-testid="stLayoutWrapper"]{display:contents}
+    [data-testid="stSidebarHeader"]{order:0}
+    .st-key-sidebartop{order:1;padding:0 1.5rem}
+    [data-testid="stSidebarNav"]{order:2}
+    .st-key-sidebarbottom{order:3;padding:0 1.5rem}
     [data-testid="stMetric"]{background:white;border:1px solid #E1EAE5;border-radius:16px;padding:22px 24px;box-shadow:0 3px 10px #153B3504}
     [data-testid="stMetricLabel"]{color:#667D75;font-size:.85rem}[data-testid="stMetricValue"]{color:#173E35;font-weight:650;letter-spacing:-.05em}
     [data-testid="stVerticalBlockBorderWrapper"]>div{border-radius:16px!important;border-color:#DEE7E1!important}

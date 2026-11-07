@@ -20,14 +20,16 @@ pages = [
 ]
 
 with st.sidebar:
-    st.markdown('<div class="brandmark">nudgely<span>↗</span></div>', unsafe_allow_html=True)
-    st.caption("A little nudge. A lasting connection.")
-    # Who you are and the way out live at the top, where you look for them,
-    # rather than under the fold of whichever page you happen to be on.
-    sidebar_account()
-    st.markdown('<div class="store-card"><small>YOUR WORKSPACE</small><br><strong>Kampung Fresh</strong><br><small>Singapore · Grocery · Demo</small></div>', unsafe_allow_html=True)
+    # Who you are and the way out live at the top, above the page links, where you
+    # look for them - rather than under the fold of whichever page you happen to be
+    # on. The top/bottom split is what design.py reorders around the nav.
+    with st.container(key="sidebartop"):
+        st.markdown('<div class="brandmark">nudgely<span>↗</span></div>', unsafe_allow_html=True)
+        st.caption("A little nudge. A lasting connection.")
+        sidebar_account()
+    with st.container(key="sidebarbottom"):
+        st.markdown('<div class="store-card"><small>YOUR WORKSPACE</small><br><strong>Kampung Fresh</strong><br><small>Singapore &middot; Grocery &middot; Demo</small></div>', unsafe_allow_html=True)
+        st.divider()
+        st.caption("Names and chats are fictional. Model results come from public datasets (Lenta, Hillstrom).")
 
 st.navigation(pages).run()
-
-st.sidebar.divider()
-st.sidebar.caption("Names and chats are fictional. Model results come from public datasets (Lenta, Hillstrom).")
