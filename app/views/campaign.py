@@ -36,33 +36,34 @@ m4.metric("Extra visits expected", f"{to_msg.uplift.sum():.1f}",
           help="Visits we expect to get *because* of these messages, on top of who would have come back anyway. A model estimate, not a measurement.")
 
 st.markdown('<div class="section-label">Step 2 &middot; Read what they will get</div>', unsafe_allow_html=True)
-tab_msg, tab_hold, tab_skip = st.tabs([f"📤 Getting a message ({len(to_msg)})", f"⏸ Kept back ({len(held)})",
-                                       f"⏭ Not messaged ({len(skipped)})"])
+with st.expander(f"Show the {len(to_msg)} messages, and who is left out", expanded=True):
+    tab_msg, tab_hold, tab_skip = st.tabs([f"📤 Getting a message ({len(to_msg)})", f"⏸ Kept back ({len(held)})",
+                                           f"⏭ Not messaged ({len(skipped)})"])
 
-with tab_msg:
-    st.caption("Written for each person from their own chat history. Read them - you are signing off on these.")
-    for _, r in to_msg.iterrows():
-        m = msgs.get(r.customer_id, {})
-        problems = llm.check_message(m, r.label) if m else ["no draft"]
-        with st.container(border=True):
-            st.markdown(f"**{r['name']}** &nbsp; {badge(r.label)} &nbsp; "
-                        f"<span style='color:#6B7280;font-size:0.85em'>{r.reason}</span>", unsafe_allow_html=True)
-            if m:
-                st.markdown(md(m["message"]))
-                st.caption(f"Why: {md(m.get('reason', ''))}")
-            if problems:
-                st.error("Rule check: " + "; ".join(problems))
-            if r.mantago_client_id:
-                st.caption("📱 Mapped to a real MantaGO test account: this one will really be sent.")
+    with tab_msg:
+        st.caption("Written for each person from their own chat history. Read them - you are signing off on these.")
+        for _, r in to_msg.iterrows():
+            m = msgs.get(r.customer_id, {})
+            problems = llm.check_message(m, r.label) if m else ["no draft"]
+            with st.container(border=True):
+                st.markdown(f"**{r['name']}** &nbsp; {badge(r.label)} &nbsp; "
+                            f"<span style='color:#6B7280;font-size:0.85em'>{r.reason}</span>", unsafe_allow_html=True)
+                if m:
+                    st.markdown(md(m["message"]))
+                    st.caption(f"Why: {md(m.get('reason', ''))}")
+                if problems:
+                    st.error("Rule check: " + "; ".join(problems))
+                if r.mantago_client_id:
+                    st.caption("📱 Mapped to a real MantaGO test account: this one will really be sent.")
 
-with tab_hold:
-    st.caption("These people would have been messaged, but are held back at random. "
-               "Comparing them with the messaged group is what proves the campaign worked.")
-    st.dataframe(held[["name", "label", "reason"]], hide_index=True, width="stretch")
+    with tab_hold:
+        st.caption("These people would have been messaged, but are held back at random. "
+                   "Comparing them with the messaged group is what proves the campaign worked.")
+        st.dataframe(held[["name", "label", "reason"]], hide_index=True, width="stretch")
 
-with tab_skip:
-    st.caption("Everyone the campaign leaves alone, and why.")
-    st.dataframe(skipped[["name", "label", "reason"]], hide_index=True, width="stretch")
+    with tab_skip:
+        st.caption("Everyone the campaign leaves alone, and why.")
+        st.dataframe(skipped[["name", "label", "reason"]], hide_index=True, width="stretch")
 
 st.divider()
 st.markdown('<div class="section-label">Step 3 &middot; Send it</div>', unsafe_allow_html=True)
