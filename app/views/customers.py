@@ -50,5 +50,5 @@ if event.selection.rows:
     st.session_state["customer_id"] = view.iloc[event.selection.rows[0]]["customer_id"]
     st.switch_page("views/customer_detail.py")
 
-if st.button("Build a campaign from these customers →", type="primary"):
+if st.button("Plan a campaign for these customers →", type="primary"):
     st.switch_page("views/campaign.py")

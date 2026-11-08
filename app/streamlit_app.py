@@ -16,7 +16,7 @@ require_access()
 pages = [
     st.Page("views/customers.py", title="Customers", icon="👥", default=True),
     st.Page("views/customer_detail.py", title="Customer detail", icon="💬"),
-    st.Page("views/campaign.py", title="Campaign", icon="📤"),
+    st.Page("views/campaign.py", title="Campaign plan", icon="📤"),
     st.Page("views/results.py", title="Results", icon="📈"),
 ]
 

@@ -142,15 +142,15 @@ def plan_campaign(customers, budget, holdout_pct):
         if r.customer_id in excluded:
             group, reason = "Skipped", "Opted out: " + consent[r.customer_id].get("reason", "Do not contact")
         elif r.customer_id in hold_ids:
-            group, reason = "Held out", "Random comparison group: not messaged, so we can measure the real lift"
+            group, reason = "Held out", "Comparison group: held back at random so we can measure what the messages really did"
         elif r.customer_id in chosen_ids:
-            group, reason = "Will message", f"Rank #{i + 1} by uplift (+{r.uplift:.1%} chance to return if messaged)"
+            group, reason = "Will message", f"#{i + 1} most movable: {r.uplift:+.1%} more likely to come back if messaged"
         elif r.label == "Sure Thing":
-            group, reason = "Skipped", f"Sure Thing: {r.p_no_msg:.0%} likely to come back anyway"
+            group, reason = "Skipped", f"Coming back anyway ({r.p_no_msg:.0%} likely), so a message is wasted on them"
         elif r.label == "Lost Cause":
-            group, reason = "Skipped", "Lost Cause: a message barely changes their chance to return"
+            group, reason = "Skipped", "A message barely changes whether they come back"
         else:
-            group, reason = "Skipped", "Outside budget: lower uplift than the chosen customers"
+            group, reason = "Skipped", "Less movable than the people you chose, so outside this campaign"
         rows.append({**r.to_dict(), "group": group, "reason": reason})
     return pd.DataFrame(rows)
 
