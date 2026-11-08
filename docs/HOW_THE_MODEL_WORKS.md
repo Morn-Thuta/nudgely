@@ -10,6 +10,37 @@ For each customer the model outputs a single number: **how much more likely
 they are to come back if you message them.** That number, and nothing else, is
 what the model contributes.
 
+## The version you say out loud
+
+You have 30 customers. You cannot message all of them - it costs money, and it
+annoys people.
+
+The model looks at each person's shopping history and asks one question: **if I
+text this person, does anything change?** It answers by guessing twice.
+
+| | Comes back if you say nothing | Comes back if you text them | Gap |
+|---|---|---|---|
+| **Aisha Rahman** | 28% | 39% | **+11** |
+| **Amirah Salleh** | 68% | 63% | **-5** |
+| **Ravi Kumar** | 2% | 3% | **+1** |
+
+Text Aisha. It moves her 11 points.
+
+Do not text Amirah. She is coming back anyway, and the message does not help -
+you would be spending money to annoy your best customer.
+
+Do not text Ravi either. Nothing is bringing Ravi back.
+
+So you message Aisha, and leave alone both the customer who looks best and the
+customer who looks worst. **It is not about who is likely to come back. It is
+about who you can change.** That is the whole model: one gap number per person.
+
+The *words* in the message - "sorry about your late delivery", "your green tea
+is back in" - are not the model. That is the LLM reading their old chats. The
+model only ever picks the names.
+
+(Those three are real rows from `data/customers.csv`, with fictional names.)
+
 ## In, and out
 
 **In** - ten numbers computed from a shop's own purchase history (phone, date,
