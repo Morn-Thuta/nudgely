@@ -11,23 +11,26 @@ apply_design()
 # someone has signed in or opened the demo.
 require_access()
 
+# One job per page. The pitch lives on the landing page, the model's evidence
+# lives on a tab of Results, and nothing appears in two places.
 pages = [
-    st.Page("views/overview.py", title="Overview", icon="🏠", default=True),
-    st.Page("views/customers.py", title="Customers", icon="👥"),
+    st.Page("views/customers.py", title="Customers", icon="👥", default=True),
     st.Page("views/customer_detail.py", title="Customer detail", icon="💬"),
     st.Page("views/campaign.py", title="Campaign", icon="📤"),
     st.Page("views/results.py", title="Results", icon="📈"),
 ]
 
 with st.sidebar:
-    st.markdown('<div class="brandmark">nudgely<span>↗</span></div>', unsafe_allow_html=True)
-    st.caption("A little nudge. A lasting connection.")
-    # Who you are and the way out live at the top, where you look for them,
-    # rather than under the fold of whichever page you happen to be on.
-    sidebar_account()
-    st.markdown('<div class="store-card"><small>YOUR WORKSPACE</small><br><strong>Kampung Fresh</strong><br><small>Singapore · Grocery · Demo</small></div>', unsafe_allow_html=True)
+    # Who you are and the way out live at the top, above the page links, where you
+    # look for them - rather than under the fold of whichever page you happen to be
+    # on. The top/bottom split is what design.py reorders around the nav.
+    with st.container(key="sidebartop"):
+        st.markdown('<div class="brandmark">nudgely<span>↗</span></div>', unsafe_allow_html=True)
+        st.caption("A little nudge. A lasting connection.")
+        sidebar_account()
+    with st.container(key="sidebarbottom"):
+        st.markdown('<div class="store-card"><small>YOUR WORKSPACE</small><br><strong>Kampung Fresh</strong><br><small>Singapore &middot; Grocery &middot; Demo</small></div>', unsafe_allow_html=True)
+        st.divider()
+        st.caption("Names and chats are fictional. Model results come from public datasets (Lenta, Hillstrom).")
 
 st.navigation(pages).run()
-
-st.sidebar.divider()
-st.sidebar.caption("Names and chats are fictional. Model results come from public datasets (Lenta, Hillstrom).")

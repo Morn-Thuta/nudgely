@@ -27,7 +27,7 @@ Every claim on this page was checked against the code. The "Where" column shows 
 
 | Principle | What Nudgely does | Where |
 |---|---|---|
-| **Disclosure** | The sidebar on every page says names and chats are fictional and results come from public datasets. The Results page lists the limitations. The Overview labels the chart "Historical evidence, not results from a live Kampung Fresh campaign" | `app/streamlit_app.py`, `app/views/results.py`, `app/views/overview.py` |
+| **Disclosure** | The sidebar on every page says names and chats are fictional and results come from public datasets. The Results page separates your own sends from the public-dataset evidence and lists the limitations on that tab | `app/streamlit_app.py`, `app/views/results.py` |
 | **Honest uncertainty** | The 53% targeting figure is shown with its 90% bootstrap interval (31–89%), and labelled "noisy" | Overview and Results pages; `notebooks/check_capture.py` |
 | **Consent and opt-out** | `data/consent.json` records opt-outs, and opted-out customers are skipped with the reason shown. The sender refuses a plan containing an opted-out customer. Every draft must end "Reply STOP to opt out", or Send is blocked | `app/lib.py` (`plan_campaign`, `send_campaign`); `nudgely/llm.py` (`check_message`) |
 | **Live sends limited to test phones** | Only customers mapped to the team's own MantaGO test accounts get a real message; all others are simulated. The phone mapping is git-ignored | `app/lib.py` `test_accounts()`; `.gitignore` |

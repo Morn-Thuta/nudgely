@@ -79,9 +79,18 @@ HIDE_CHROME = f"""
 [data-testid="stTextInput"] label p, [data-testid="stTab"] p{{color:#C7D9CD !important}}
 [data-testid="stTextInputRootElement"]{{
   background:#14241D !important; border-color:#2E4A3D !important}}
-[data-testid="stTextInputField"]{{
-  background:transparent !important; color:#EAF3ED !important; -webkit-text-fill-color:#EAF3ED}}
-[data-testid="stTextInputField"]::placeholder{{color:#6C8578 !important}}
+/* Streamlit 1.66 tags the inner input stTextInputField; 1.56, which main pins,
+   leaves it untagged and wraps it in a near-white div that hides the dark shell
+   above. Clear that wrapper and style the element itself, so what you type is
+   legible on both - otherwise the text vanishes into the field. */
+[data-testid="stTextInputRootElement"] > div{{background:transparent !important}}
+[data-testid="stTextInputField"],
+[data-testid="stTextInputRootElement"] input{{
+  background:transparent !important; color:#EAF3ED !important;
+  -webkit-text-fill-color:#EAF3ED !important; caret-color:#3FD79A !important}}
+[data-testid="stTextInputField"]::placeholder,
+[data-testid="stTextInputRootElement"] input::placeholder{{
+  color:#6C8578 !important; -webkit-text-fill-color:#6C8578 !important}}
 [data-testid="stTextInputRootElement"] svg{{fill:#8AA396}}
 [data-testid="stTabs"] [role="tablist"]{{border-bottom-color:#2A463A !important}}
 [data-testid="stTab"][aria-selected="true"] p{{color:#3FD79A !important}}
