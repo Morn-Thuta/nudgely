@@ -11,7 +11,7 @@ AI-GNITION 2026 · MVP due **Fri 23 Oct 2026**
 - Full spec: [docs/PRD.md](docs/PRD.md)
 - One-page brief: [docs/One_Page_Brief.md](docs/One_Page_Brief.md)
 - How the model works, in plain English: [docs/HOW_THE_MODEL_WORKS.md](docs/HOW_THE_MODEL_WORKS.md)
-  (slides: [docs/How_the_model_works.pptx](docs/How_the_model_works.pptx), rebuilt with `docs/How_the_model_works.build.js`)
+  (slides: [docs/How_the_model_works.pptx](docs/How_the_model_works.pptx), rebuilt with `node scripts/build_model_deck.js`)
 - Team plan, roles and checklist: [TEAM.md](TEAM.md)
 - MantaGO API notes: [docs/MANTAGO_API.md](docs/MANTAGO_API.md)
 

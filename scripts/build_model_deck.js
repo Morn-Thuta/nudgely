@@ -1,3 +1,17 @@
+/**
+ * Builds docs/How_the_model_works.pptx - the plain-English deck on how the
+ * uplift model works. Prose version: docs/HOW_THE_MODEL_WORKS.md.
+ *
+ * Edit the numbers here, not the slides: nothing is drawn by hand.
+ *
+ *   npm install pptxgenjs          # once, anywhere; then point NODE_PATH at it
+ *   node scripts/build_model_deck.js [out.pptx] [path/to/apply_theme.js]
+ *
+ * The second argument is Claude's pptx-skill helper that writes theme colours
+ * into the package - pptxgenjs cannot. Without it the deck still builds, but
+ * every scheme colour falls back to Office's stock palette, so the greens go.
+ */
+
 const pptxgen = require("pptxgenjs");
 
 const THEME = {
@@ -422,9 +436,14 @@ function circleNum(slide, o) {
 }
 
 (async function () {
-  const out = process.argv[2];
+  const out = process.argv[2] || "docs/How_the_model_works.pptx";
   await pres.writeFile({ fileName: out });
-  const { applyTheme } = require(process.argv[3]);
-  await applyTheme(out, THEME);
-  console.log("written " + out);
+  const themer = process.argv[3];
+  if (themer) {
+    const { applyTheme } = require(themer);
+    await applyTheme(out, THEME);
+    console.log("written " + out + " (themed)");
+  } else {
+    console.log("written " + out + " - NO THEME APPLIED, colours will be Office defaults");
+  }
 })();
