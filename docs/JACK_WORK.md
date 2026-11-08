@@ -48,6 +48,9 @@ writes a realistic fake one.
 
 ## 2. The model behind that
 
+Plain-English version for the pitch, including what the model does *not* do:
+[HOW_THE_MODEL_WORKS.md](HOW_THE_MODEL_WORKS.md).
+
 `notebooks/train_transferable.py` trains on ten numbers any shop can work out
 from phone, date and amount alone - how long they have been a customer, how
 irregular their visits are, how much their basket size jumps around, and whether
