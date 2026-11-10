@@ -33,3 +33,5 @@ data/users.json
 
 # WhatsApp Cloud API inbox: real customer messages
 data/wa_inbox.jsonl
+data/wa_customers.json
+data/wa_customers.json.tmp

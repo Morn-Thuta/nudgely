@@ -2,6 +2,8 @@
 
   python scripts/whatsapp_webhook.py              # log incoming messages to data/wa_inbox.jsonl
   python scripts/whatsapp_webhook.py --echo       # also reply "Got it: <text>" (end-to-end test)
+  python scripts/whatsapp_webhook.py --bot        # tag each message and answer with the reply bot
+                                                  # (customers kept in data/wa_customers.json, git-ignored)
 
 Listens on 127.0.0.1:8788. Expose it with a tunnel for Meta to reach it:
   cloudflared tunnel --url http://127.0.0.1:8788
@@ -9,13 +11,14 @@ then in Meta (WhatsApp -> Configuration -> Webhook) set:
   Callback URL  https://<tunnel>/whatsapp      Verify token  the WA_VERIFY_TOKEN from .env
 and subscribe to the "messages" field.
 
-Jack: plug the tagger and reply bot into on_message() below.
+--bot replies to STOP / START itself and never auto-answers someone who opted out.
 """
 
 import argparse
 import json
 import os
 import sys
+import threading
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
@@ -25,6 +28,7 @@ sys.path.insert(0, ROOT)
 
 from dotenv import load_dotenv  # noqa: E402
 
+from nudgely import conversations  # noqa: E402
 from nudgely.whatsapp import (WhatsApp, WhatsAppError, parse_webhook, valid_signature,  # noqa: E402
                               verify_subscription)
 
@@ -37,13 +41,79 @@ ARGS = None
 
 def on_message(wa, msg):
     """Called once per incoming message. msg = {id, from, name, timestamp, type, text}."""
-    if ARGS.echo and msg["text"]:
+    if ARGS.bot:
+        threading.Thread(target=bot_turn, args=(wa, msg), daemon=True).start()
+    elif ARGS.echo and msg["text"]:
         try:
             wa.send_text(msg["from"], f"Got it: {msg['text'][:200]}")
             print("  -> echoed", flush=True)
         except WhatsAppError as e:
             print(f"  -> echo failed: {e}", flush=True)
-    # TODO (Jack): llm.tag_message(...) and reply.answer(...) go here
+
+
+def _send(wa, to, text, rec):
+    try:
+        wa.send_text(to, text)
+        rec["chat"].append({"from": "store", "text": text, "date": conversations.today()})
+        return True
+    except WhatsAppError as e:
+        print(f"  -> send failed: {e}", flush=True)
+        return False
+
+
+def bot_turn(wa, msg):
+    """Remember the message, tag it, then reply or hand over. Runs off the request thread."""
+    from nudgely import reply as replybot
+    from nudgely.llm import merge_tags, tag_message
+
+    who, text = msg["from"], msg["text"]
+    rec = conversations.get_or_create(who, msg["name"])
+    if msg["id"] in rec["seen_ids"]:  # Meta retries deliveries; answer each message once
+        return
+    rec["seen_ids"].append(msg["id"])
+    if not text:  # photo, sticker, voice note: keep a note, hand to a person
+        rec["chat"].append({"from": "customer", "text": f"[{msg['type']}]", "date": conversations.today()})
+        rec["handover"] = True
+        conversations.update(who, rec)
+        print(f"  -> {rec['customer_id']}: {msg['type']} message, flagged for a person", flush=True)
+        return
+
+    rec["chat"].append({"from": "customer", "text": text, "date": conversations.today()})
+
+    if conversations.is_stop(text):
+        rec["opted_out"] = True
+        _send(wa, who, "You won't get any more messages from us. Reply START if you change your mind.", rec)
+        conversations.update(who, rec)
+        print(f"  -> {rec['customer_id']} opted out", flush=True)
+        return
+    if conversations.is_start(text):
+        rec["opted_out"] = False
+        _send(wa, who, "Welcome back! You'll hear from us again. Reply STOP anytime to opt out.", rec)
+        conversations.update(who, rec)
+        return
+    if rec.get("opted_out"):  # they said STOP: store what they sent, never answer automatically
+        conversations.update(who, rec)
+        return
+
+    first = rec["name"].split()[0] if rec.get("name") else ""
+    try:
+        new = tag_message(rec["customer_id"], text, date=conversations.today(),
+                          prior=rec.get("tags"), names=[rec.get("name", "")])
+        rec["tags"] = merge_tags(rec.get("tags"), new)
+        found = ", ".join(f"{t['type']}={t['value']}" for t in new.get("tags", [])) or "no new tags"
+    except Exception as e:  # noqa: BLE001 - tagging failing must not stop the reply
+        found = f"tagging failed: {str(e)[:80]}"
+    print(f"  -> {rec['customer_id']} tags: {found}", flush=True)
+
+    customer = {"customer_id": rec["customer_id"], "name": first, "label": rec.get("label", "New")}
+    out = replybot.answer(customer, rec["chat"][:-1], text, tags=rec.get("tags"),
+                          first_reply=not rec.get("replied"))
+    if _send(wa, who, out["reply"], rec):
+        rec["replied"] = True
+    if out.get("handover"):
+        rec["handover"] = True
+    conversations.update(who, rec)
+    print(f"  -> replied ({'HANDOVER: ' if out.get('handover') else ''}{out.get('reason', '')[:80]})", flush=True)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -91,6 +161,7 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--port", type=int, default=8788)
     p.add_argument("--echo", action="store_true", help="reply to each message (end-to-end test)")
+    p.add_argument("--bot", action="store_true", help="tag each message and answer with the reply bot")
     ARGS = p.parse_args()
     if not VERIFY_TOKEN:
         sys.exit("Set WA_VERIFY_TOKEN in .env first (any string you choose).")
