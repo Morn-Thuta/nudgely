@@ -1,143 +1,176 @@
-# Team plan
+# Team plan: Finals (Fri 14 Nov 2026)
 
-## Where we are (Wed 21 Oct)
+> Hackathon plan (21–23 Oct) is archived in [docs/archive/TEAM_hackathon.md](docs/archive/TEAM_hackathon.md).
+> Full reasoning is in the finals plan shared in the group chat (`Nudgely_Finals_Plan.md`).
 
-Already done: repo, uplift model (top 30% captures ~57% of extra visits, about 1.9x random; ranged 38–85% across 7 test splits), 30 demo customers + chats, LLM scripts, full 5-page app, MantaGO client + test script.
-Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for all 30, deploy, pitch.
+## Goal
 
-## Who does what
+Turn Nudgely from a demo on fake data into **a real product a shop can sign up for**: real chats in, real sales in, automatic WhatsApp sends that deliver, and a **real measured result from a pilot**.
 
-| Person | Role | Owns | Why it matters |
-|---|---|---|---|
-| **Thuta** | Lead + MantaGO | Live send (F5), tag write-back (F6), integration, final review | Riskiest part. Without a real message on a phone, the demo is only a simulation |
-| **Dythan** | Pitch + demo lead | Story, deck, 7-min video, presenting, Q&A | Creativity 30% + Presentation 25% = 55% of marks |
-| **Jack** | Message quality | Run LLM scripts, hand-check and fix all 30 messages | The messages are what judges read |
-| **Jayden** | App + deploy | Streamlit Cloud, signed-out test, UI polish, README | The judges' link has to just work |
-| **Shareef** | Numbers + docs | Update numbers everywhere, responsible AI, brief, submission form | Wrong or old numbers lose trust |
+## What "done" looks like on 14 Nov
+
+- [ ] A shop can **sign up, log in and connect its MantaGO bot** on our own web app (not Streamlit)
+- [ ] **New customer messages arrive live** through MantaGO's webhook and get tagged in seconds
+- [ ] The shop can **upload a sales CSV** and see customers scored
+- [ ] **Run campaign** picks customers, holds some back, fills approved templates, and the messages **arrive on real phones**
+- [ ] The **AI reply bot** answers customers or hands over to a person
+- [ ] **One real pilot** sent by Sun 9 Nov, with outcomes on the results page
+- [ ] **Live audience demo** (QR → chat → personal reply) plus a backup video
+- [ ] Business slides: customer interviews, pricing, competitors, go-to-market
+
+## Who owns what
+
+| Person | Owns |
+|---|---|
+| **Thuta** | Lead · MantaGO (webhook, WhatsApp Business number, templates, sending) · FastAPI backend |
+| **Jack** | LLM: live tagging, reply bot (`jack/next-phase`), template filling, rule checks, test set · outcome tracking |
+| **Jayden** | Next.js dashboard · Supabase (database + login) · deploys |
+| **Dythan** | Product design + UX of the new app · pitch, live demo, backup video |
+| **Shareef** | Pilot shop + owner interviews · business case · transferable model retrain |
+
+## Repo layout (new folders, so nobody edits the same files)
+
+| Folder | Owner | What |
+|---|---|---|
+| `api/` | Thuta | FastAPI backend: webhook, MantaGO, campaigns, jobs |
+| `web/` | Jayden (+ Dythan on design) | Next.js dashboard |
+| `nudgely/` | Jack (LLM), Thuta (MantaGO) | Shared Python library used by `api/` |
+| `notebooks/`, `models/` | Shareef | Model training and evaluation |
+| `app/` | — | Old Streamlit app: keep as the "lab" for model evidence; no new features |
+| `docs/` | Shareef, Dythan | Business case, pitch material |
+
+**Git rules:** work on a branch named `yourname/what` (for example `jayden/login-page`), open a pull request, and get one teammate to look before merging to `main`. Never commit keys, phone numbers or real customer data.
 
 ---
 
-## Thuta: MantaGO + lead
+## Thuta: MantaGO + backend
 
-**Wed**
-- [x] Get the API token + secret (Eslitec), put them in `.env`, run `python scripts/test_mantago.py members`
-- [x] Connect WhatsApp (fallback: Instagram) and publish the bot
-- [x] First real test message lands on a phone (via MantaGO live chat; API broadcasts wait for a Meta-approved template) (`test_mantago.py send ... --yes`)
+**Mon 3 Nov**
+- [ ] Email Eslitec the 7 questions (bottom of this page)
+- [ ] **Webhook test:** set MantaGO's callback URL to a test endpoint, message the bot, save what arrives in `docs/MANTAGO_API.md`. Done when we know if message text comes through
+- [ ] Start moving the bot to an **official WhatsApp Business number** (not personal)
 
-**Thu**
-- [x] (3 of 5: Dythan, Jayden, Jack) Teammates message the bot. Map them to Persuadable customers in `data/test_accounts.json` (C001-C010)
-- [x] Add the MantaGO token, secret and test accounts to Streamlit secrets (with Jayden)
-- [x] Tag write-back (F6) works: 3 tags on Dythan's MantaGO profile. Try tag write-back (F6): `test_mantago.py tag --to <clientId> --yes`. Skip it if the API fights back
-- [ ] 6pm: full flow works locally, from customers through to a real send
+**Tue 4 Nov**
+- [ ] `api/` FastAPI skeleton deployed (Render or Railway) with a health check
+- [ ] Write **6 WhatsApp templates** with blanks (one per tag type) with Jack, and **submit them to Meta**
+- [ ] Agree the database tables with Jayden
 
-**Fri**
-- [x] Live send rehearsal for the video. Test phones message the bot within 24h of recording
-- [ ] Final review of everything before submit
+**Wed 5 – Thu 6 Nov**
+- [ ] `POST /webhooks/mantago`: store each incoming message, link it to the customer, call Jack's tagger
+- [ ] Member import from MantaGO into the database
+- [ ] Shop connect: save bot ID, token, secret (encrypted) per shop
 
-## Dythan: pitch + demo lead
+**Fri 7 – Sat 8 Nov**
+- [ ] Campaign run: score → pick + holdout → fill template → send through MantaGO → log each send
+- [ ] Daily job: refresh scores, close outcome windows
+- [ ] **Sat night checkpoint:** the app sends a WhatsApp message that **arrives**, with no manual step
 
-**Wed**
-- [ ] Read `docs/One_Page_Brief.md` and click through the app (`streamlit run app/streamlit_app.py`)
-- [ ] Deck outline: problem → who/what/prove → live demo → evidence → responsible AI → impact → next steps
-- [ ] Write the demo script: the exact 2-minute click path a judge follows
+**Sun 9 Nov:** send the **pilot campaign**. **Mon 10 – Fri 14:** bug fixes, demo rehearsal, final review.
 
-**Thu**
-- [ ] Full slides with real numbers (from Shareef)
-- [ ] 7-min video script, timed. The demo section ends with the phone getting the message
-- [ ] Prepare Q&A answers: why uplift and not churn score? Why is the 57% noisy? What about the WhatsApp 24h rule? Cost?
+## Jack: LLM + replies + outcomes
 
-**Fri**
-- [ ] Record the video (by 1pm), final deck. 3pm: everything done
+**Mon 3 – Tue 4 Nov**
+- [ ] Finish and merge `jack/next-phase` (reply bot, provider fallback)
+- [ ] Move to a **paid LLM key** for real customer data (the team decides which); free tiers stay for testing only
+- [ ] Turn tag extraction into a function the API calls **per new message** (not a batch script)
 
-## Jack: message quality
+**Wed 5 – Thu 6 Nov**
+- [ ] Template filling: given a customer's tags, pick 1 of the 6 templates and fill its blanks; every result passes `check_message`
+- [ ] Reply bot connected to the webhook (answer, or hand to a person on HUMAN / complaint)
+- [ ] **Test set:** 30+ realistic chats with expected tags; report accuracy
 
-**Wed / Thu morning** (needs the OpenRouter key in `.env`)
-- [x] `python scripts/extract_tags.py` (rerun if it stops at the free daily limit)
-- [x] `python scripts/write_messages.py`
-- [x] Hand-check all 30 in the app's Customer detail page. Every message must:
-  - be under 300 characters, friendly, Singapore tone
-  - use a real tag from the chat, with nothing invented (stock, prices, offers)
-  - apologise first for complaints (C002, C009), with no sales push
-  - offer a discount only to Persuadables, max 10%
-  - end with "Reply STOP to opt out"
-- [x] Fix bad ones: rerun with `--only C00X --force`, or edit `data/messages.json` by hand
-- [x] Give Dythan the 3 best messages for the slides
+**Fri 7 – Sat 8 Nov**
+- [ ] Outcome tracking: a unique coupon code or tracked link per customer, redemptions recorded as returns
+- [ ] Results data for the new dashboard: messaged vs holdout, with a confidence range
 
-**Fri**
-- [x] Final read of all 30. Commit and push
+**Sun 9 – Wed 12 Nov:** watch pilot outcomes, fix bad messages, give Dythan 3 real example messages for the deck.
 
-## Jayden: app + deploy
+## Jayden: web app + database + deploy
 
-**Wed**
-- [x] Run the app locally: `pip install -r requirements.txt`, then `streamlit run app/streamlit_app.py`
-- [x] Deploy on share.streamlit.io: repo `Morn-Thuta/nudgely`, main file `app/streamlit_app.py`, Python 3.12
-- [ ] Paste secrets (see `.streamlit/secrets.toml.example`). Ask Thuta for the keys, and never commit them
+**Mon 3 – Tue 4 Nov**
+- [ ] Supabase project: tables `shops, customers, messages, purchases, tags, scores, campaigns, campaign_members, sends, outcomes` (agree with Thuta)
+- [ ] **Login + sign-up** (Supabase Auth); each shop sees only its own data (row-level security)
+- [ ] `web/` Next.js app deployed on Vercel. **Tue night checkpoint:** log in on the live site
 
-**Thu**
-- [x] Click through all 5 pages on the deployed link and list anything broken or ugly. Fix it
-- [ ] Check on a phone screen too
-- [x] 11pm: the deployed link works in an incognito/signed-out browser. Set app sharing to public
+**Wed 5 – Thu 6 Nov**
+- [ ] Onboarding: "Connect MantaGO" form (bot ID, token, secret) → calls the API
+- [ ] **Sales CSV upload** (`phone, date, amount`) with a preview and error messages
+- [ ] Customers page: list, label badge, last visit, top tag; customer page with live chat + tags
 
-**Fri**
-- [x] Final incognito test after the last push. Update README with the live link
+**Fri 7 – Sat 8 Nov**
+- [ ] Campaign page: audience size, holdout %, message previews, Run campaign, per-customer status
+- [ ] Results page: messaged vs holdout, lift with range, campaign history
 
-## Shareef: numbers + docs
+**Sun 9 – Wed 12 Nov:** polish, phone-screen check, incognito test, error states, demo data reset button.
 
-**Wed**
-- [x] Update the numbers in `docs/PRD.md` and `docs/One_Page_Brief.md`: targeting is now **top 30% captures ~53% of extra visits (about 1.8x random)**, not 45% / 1.5x. Source: `data/uplift_summary.json` (done by Jack, 21 Oct - all 5 places; superseded 10 Nov by 57% / 1.9x, see `docs/Numbers.md`)
-- [x] Find out: problem statement number, exact team name, deadline time on Fri, Lenta licence (PS1 · Nudgely · 11:59 PM SGT · see PRD open questions)
+## Dythan: product design + pitch
 
-**Thu**
-- [x] Responsible AI section for deck + form: fake data disclosure, opt-in + opt-out, no gender/age/children in the model, names and phones stripped before the LLM, owner previews every message, keys not in GitHub → `docs/Responsible_AI.md`
-- [x] 150-word summary + finished one-page brief → `docs/Submission_Draft.md`, `docs/One_Page_Brief.md` + `.pdf`
-- [x] Fill in the submission form as a draft → `docs/Submission_Draft.md`
-- [ ] Check every link opens without an access request. **Failing now:** the repo is private (Thuta: make it public; history checked, no keys) and the app isn't deployed (Jayden). See `docs/Submission_Draft.md` section 4
-- [x] Numbers sheet for deck and video → `docs/Numbers.md`. **Hillstrom corrected: +72% / 2.2x is the men's email group only; all email is +57% / about 1.9x**
+**Mon 3 – Tue 4 Nov**
+- [ ] Screens for the new app (Figma or sketches): sign-up, connect MantaGO, customers, customer detail, campaign, results. Hand them to Jayden by **Tue evening**
+- [ ] New pitch story outline: problem → product → **live demo** → pilot results → business → ask
 
-**Fri**
-- [ ] Final number check across deck, brief, video and app (they must all match)
-- [ ] Submit the form after all 5 have reviewed it, well before the deadline
+**Wed 5 – Sat 8 Nov**
+- [ ] Design the **live audience demo**: QR code, what people should type, what they'll receive, timing (about 2 min)
+- [ ] Deck v0 with placeholders for pilot numbers
+- [ ] Work with Jayden on UI polish
+
+**Sun 9 – Thu 13 Nov**
+- [ ] Deck v1 with real pilot results and Shareef's business slides (**Wed**)
+- [ ] **Record the backup demo video (Wed)**
+- [ ] Run 3 dress rehearsals on Thu, including one with no Wi-Fi
+
+## Shareef: pilot + business + model
+
+**Mon 3 – Tue 4 Nov**
+- [ ] **Find 1–2 real pilot shops** (family, friends, campus café; ask Eslitec too). Need: they use WhatsApp, agree to a 1-week test, can export sales
+- [ ] Book **5+ short owner interviews**; collect quotes (with permission) on how they do promotions today
+- [ ] Simple consent note for pilot customers (PDPA): what we collect, how to opt out
+
+**Wed 5 – Thu 6 Nov**
+- [ ] **Transferable model:** retrain uplift on features any shop has (recency, frequency, spend, tenure, chat signals) using Hillstrom + reduced Lenta; report lift and range honestly in `docs/Numbers.md`
+- [ ] Export the model so `api/` can load it
+
+**Fri 7 – Wed 12 Nov**
+- [ ] Business case: target customer, problem size (**cited sources only**), pricing (subscription vs pay-for-lift), unit economics (LLM + WhatsApp cost per message), competitors, go-to-market through MantaGO
+- [ ] Pilot report: what we sent, to whom (counts only), results with ranges
+- [ ] Update `docs/Numbers.md` so every finals number has one source
 
 ---
 
 ## Checkpoints
 
-- [ ] **Wed 11pm:** a MantaGO message lands on a phone (Thuta). App deployed (Jayden)
-- [ ] **Thu 6pm:** full flow works locally, from customers through to send. All 30 messages checked (Jack)
-- [ ] **Thu 11pm:** the deployed link works signed out (Jayden). Slides have real numbers (Dythan)
-- [ ] **Fri 3pm:** video, deck and brief done. All links open without access requests
-- [ ] **Fri, well before the deadline:** form submitted, all 5 reviewed it
+| When | Must be true | Owner |
+|---|---|---|
+| **Mon 3 Nov, night** | We know whether the webhook sends message text | Thuta |
+| **Tue 4 Nov, night** | Login works on the live web app · templates submitted · pilot shop contacted | Jayden · Thuta · Shareef |
+| **Thu 6 Nov, night** | Live chats arrive and get tagged · CSV upload works · new model trained | Thuta + Jack · Jayden · Shareef |
+| **Sat 8 Nov, night** | App sends a WhatsApp message that **arrives**, automatically | Thuta + Jack |
+| **Sun 9 Nov** | **Pilot campaign sent** | Everyone |
+| **Wed 12 Nov** | **Feature freeze** · deck v1 · backup video | Everyone · Dythan |
+| **Thu 13 Nov** | 3 dress rehearsals done | Everyone |
 
-## Agreed rules
+## Fallbacks
 
-- **Data formats** are fixed by `data/examples/`. Don't change columns or keys without telling the team.
-- **Holdout:** 10% held out at random (fixed seed) from the *chosen* top-N customers.
-- **Expected extra visits** = sum of `uplift` across messaged customers.
-- **Labels:** Persuadable = top 30% uplift. Sure Thing = not Persuadable and top 30% `p_no_msg`. Lost Cause = everyone else.
-- **No keys in GitHub.** `.env`, `.streamlit/secrets.toml` and `data/test_accounts.json` are git-ignored.
-- **Pull before you push.** Small commits, clear messages.
-
-## WhatsApp limits
-
-- Free text only within **24h of the customer's last message**. After that, Meta-approved templates only. Demo fix: test phones message the bot shortly before the demo.
-- Customers must opt in. Every message ends with an opt-out line.
-
-## Ask Eslitec
-
-- [ ] How do we get the Open API token? "API Integration Settings" isn't in Setting → Advanced (bot ID KQe1rqRaJ)
-- [ ] Does a free-trial bot support the Open API?
-- [ ] WhatsApp: does MantaGO give us a number, or do we bring our own?
-- [ ] What happens if we broadcast outside the 24h window?
-
-## Risks and fallbacks
-
-| Risk | Fallback |
+| If… | Then… |
 |---|---|
-| MantaGO token / WhatsApp blocked | Instagram. If that's blocked too, the app marks messages "ready to send" and we send one by hand in MantaGO for the video |
-| Free LLM daily limit | Scripts resume where they stopped. Use a second teammate's key |
-| LLM invents facts | Auto-check drops tags without real quotes. Jack hand-checks all 30 |
-| Tag API unclear | Skip F6. Show tags in the app only |
+| The webhook doesn't send message text | Eslitec conversation API → shop chat export → pilot on our own bot with real people |
+| Templates aren't approved by Sat | Utility templates, in-window free-text replies, or Instagram/Messenger |
+| No real shop by Wed | Pilot with real people on the Kampung Fresh bot (classmates/friends), real coupons, real outcomes |
+| New app isn't ready by Sat | Freeze scope; the Streamlit app stays as the fallback demo |
 
-## Judging (Top 10 shortlist)
+## Questions for Eslitec (Thuta, Mon 3 Nov)
 
-Creativity 30% · Technical 25% · Presentation 25% · Real-world impact 20%. Responsible AI, disclosure and safe data use are **mandatory**.
+1. Does the callback URL send incoming customer messages, with text? What does the payload look like?
+2. Is there an API or export for conversation history?
+3. How do we connect the official WhatsApp Business API (dedicated number) to our bot?
+4. Do message packs support WhatsApp template variables ({{1}}) filled through the API?
+5. Can the API send free-text replies inside the 24-hour window?
+6. Can coupons and short links be created and tracked through the API?
+7. Could Nudgely be listed in MantaGO's Applications, and can you introduce 1–2 shops for a pilot?
+
+## Decide in today's team call
+
+- [ ] Agree on the scope and stack above (Next.js + FastAPI + Supabase)
+- [ ] Who has a real shop contact for the pilot?
+- [ ] Paid LLM key: who pays, and the budget
+- [ ] Pricing direction: subscription or pay-for-lift

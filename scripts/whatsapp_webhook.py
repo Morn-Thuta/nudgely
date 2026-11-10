@@ -1,0 +1,101 @@
+"""Receive WhatsApp messages from Meta's webhook.
+
+  python scripts/whatsapp_webhook.py              # log incoming messages to data/wa_inbox.jsonl
+  python scripts/whatsapp_webhook.py --echo       # also reply "Got it: <text>" (end-to-end test)
+
+Listens on 127.0.0.1:8788. Expose it with a tunnel for Meta to reach it:
+  cloudflared tunnel --url http://127.0.0.1:8788
+then in Meta (WhatsApp -> Configuration -> Webhook) set:
+  Callback URL  https://<tunnel>/whatsapp      Verify token  the WA_VERIFY_TOKEN from .env
+and subscribe to the "messages" field.
+
+Jack: plug the tagger and reply bot into on_message() below.
+"""
+
+import argparse
+import json
+import os
+import sys
+from datetime import datetime
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import parse_qs, urlparse
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+
+from dotenv import load_dotenv  # noqa: E402
+
+from nudgely.whatsapp import (WhatsApp, WhatsAppError, parse_webhook, valid_signature,  # noqa: E402
+                              verify_subscription)
+
+load_dotenv(os.path.join(ROOT, ".env"))
+INBOX = os.path.join(ROOT, "data", "wa_inbox.jsonl")  # git-ignored: real customer messages
+VERIFY_TOKEN = os.getenv("WA_VERIFY_TOKEN", "")
+APP_SECRET = os.getenv("WA_APP_SECRET", "")
+ARGS = None
+
+
+def on_message(wa, msg):
+    """Called once per incoming message. msg = {id, from, name, timestamp, type, text}."""
+    if ARGS.echo and msg["text"]:
+        try:
+            wa.send_text(msg["from"], f"Got it: {msg['text'][:200]}")
+            print("  -> echoed", flush=True)
+        except WhatsAppError as e:
+            print(f"  -> echo failed: {e}", flush=True)
+    # TODO (Jack): llm.tag_message(...) and reply.answer(...) go here
+
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):  # Meta's subscription check
+        params = {k: v[0] for k, v in parse_qs(urlparse(self.path).query).items()}
+        challenge = verify_subscription(params, VERIFY_TOKEN)
+        self.send_response(200 if challenge else 403)
+        self.end_headers()
+        self.wfile.write((challenge or "forbidden").encode())
+        print(f"[{now()}] verification {'OK' if challenge else 'REJECTED'}", flush=True)
+
+    def do_POST(self):
+        raw = self.rfile.read(int(self.headers.get("Content-Length") or 0))
+        if APP_SECRET and not valid_signature(raw, self.headers.get("X-Hub-Signature-256"), APP_SECRET):
+            self.send_response(401)
+            self.end_headers()
+            print(f"[{now()}] rejected: bad signature", flush=True)
+            return
+        self.send_response(200)  # answer fast; Meta retries slow or failed deliveries
+        self.end_headers()
+        try:
+            data = parse_webhook(json.loads(raw or b"{}"))
+        except ValueError:
+            return
+        for s in data["statuses"]:
+            print(f"[{now()}] status {s['status']} for ...{str(s['recipient'])[-4:]}"
+                  + (f" ({s['error']})" if s["error"] else ""), flush=True)
+        for m in data["messages"]:
+            os.makedirs(os.path.dirname(INBOX), exist_ok=True)
+            with open(INBOX, "a", encoding="utf-8") as f:
+                f.write(json.dumps({**m, "received_at": now()}, ensure_ascii=False) + "\n")
+            print(f"[{now()}] message from {m['name'] or 'unknown'} (...{str(m['from'])[-4:]}): "
+                  f"{m['type']} {len(m['text'])} chars", flush=True)
+            on_message(WA, m)
+
+    def log_message(self, *a):
+        pass
+
+
+def now():
+    return datetime.now().isoformat(timespec="seconds")
+
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser()
+    p.add_argument("--port", type=int, default=8788)
+    p.add_argument("--echo", action="store_true", help="reply to each message (end-to-end test)")
+    ARGS = p.parse_args()
+    if not VERIFY_TOKEN:
+        sys.exit("Set WA_VERIFY_TOKEN in .env first (any string you choose).")
+    if not APP_SECRET:
+        print("WARNING: WA_APP_SECRET not set, so webhook signatures are not checked.", flush=True)
+    WA = WhatsApp.from_env()
+    print(f"listening on 127.0.0.1:{ARGS.port} (path /whatsapp), inbox -> {INBOX}", flush=True)
+    HTTPServer(("127.0.0.1", ARGS.port), Handler).serve_forever()

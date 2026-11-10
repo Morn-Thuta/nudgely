@@ -30,3 +30,6 @@ Thumbs.db
 data/tagging_results.json
 data/template_messages.json
 data/users.json
+
+# WhatsApp Cloud API inbox: real customer messages
+data/wa_inbox.jsonl

@@ -4,15 +4,18 @@ Message the right customers, say the right thing, prove it worked.
 
 Nudgely picks which customers to message (uplift model), writes each one a personal message from their own chat history (LLM), sends it through MantaGO, and proves the effect against a no-message group.
 
-AI-GNITION 2026 · MVP due **Fri 23 Oct 2026**
+AI-GNITION 2026 · Team Bongo Gang · **Top 10 finalist** · Finals **Fri 14 Nov 2026**
 
-**Live app:** https://nudgely.streamlit.app
+**Live app (hackathon MVP):** https://nudgely.streamlit.app
 
-- Full spec: [docs/PRD.md](docs/PRD.md)
+**Now building Nudgely v1:** a real web app (Next.js + FastAPI + Supabase) with live MantaGO chats, sales upload, automatic WhatsApp sends and a real pilot. See [TEAM.md](TEAM.md).
+
+- Finals plan, roles and checklist: [TEAM.md](TEAM.md)
+- Hackathon plan (archived): [docs/archive/TEAM_hackathon.md](docs/archive/TEAM_hackathon.md)
+- Full spec (hackathon MVP): [docs/PRD.md](docs/PRD.md)
 - One-page brief: [docs/One_Page_Brief.md](docs/One_Page_Brief.md)
 - How the model works, in plain English: [docs/HOW_THE_MODEL_WORKS.md](docs/HOW_THE_MODEL_WORKS.md)
   (slides: [docs/How_the_model_works.pptx](docs/How_the_model_works.pptx), rebuilt with `node scripts/build_model_deck.js`)
-- Team plan, roles and checklist: [TEAM.md](TEAM.md)
 - MantaGO API notes: [docs/MANTAGO_API.md](docs/MANTAGO_API.md)
 
 ## Setup (5 minutes)
