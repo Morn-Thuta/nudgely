@@ -43,25 +43,40 @@ python scripts/test_whatsapp.py text --to 65XXXXXXXX --message "Hi" --yes   # on
 
 Incoming messages are appended to `data/wa_inbox.jsonl` (git-ignored: real customer messages).
 
-## Jack: where the tagger and reply bot go
+## The bot: tagging and replies (done, Jack)
 
-`on_message(wa, msg)` in `scripts/whatsapp_webhook.py` runs once per incoming message.
-`msg = {"id", "from" (digits), "name", "timestamp", "type", "text"}`.
+`scripts/whatsapp_webhook.py` now tags every incoming message and answers it with the reply bot.
+The logic is in `nudgely/conversation.py` so the FastAPI backend can call the same `handle()`.
 
-```python
-from nudgely.llm import tag_message, merge_tags
-from nudgely import reply
-
-new = tag_message(customer_id, msg["text"], date=today, prior=stored_tags)
-stored_tags = merge_tags(stored_tags, new)
-out = reply.answer(customer, chat, msg["text"], tags=stored_tags)
-wa.send_text(msg["from"], out["reply"])          # always safe to send (see reply.py)
-if out.get("handover"):
-    ...  # flag the conversation for a person
+```bash
+python scripts/whatsapp_webhook.py              # tag + reply for real
+python scripts/whatsapp_webhook.py --dry-run    # tag + print the draft reply, send nothing (no WA keys needed)
+python scripts/whatsapp_webhook.py --echo       # old pipe test: "Got it: <text>", no AI
+python scripts/whatsapp_webhook.py --clear-handover 6591234567   # let the bot talk to them again
 ```
 
-Map `msg["from"]` (the WhatsApp number) to a customer record; for the demo, create the customer
-on first message.
+What happens to each message:
+
+1. **Meta gets its 200 straight away.** The AI takes seconds and Meta retries slow deliveries, so the
+   work happens on one background worker, and a message id already seen is ignored. No double replies.
+2. **STOP / UNSUBSCRIBE** is handled without the AI: one confirmation, then no tagging and no replies
+   until they send START.
+3. **Tagged** with `llm.tag_message`, merged into what we remember with `merge_tags`.
+4. **Answered** with `reply.answer`, which hands over to a person when it is unsure, asked for a
+   person (HUMAN), a refund or a complaint, or when the checker catches an invented price. On handover
+   the customer gets the holding line and **the bot stays quiet for 12 hours** so it does not repeat
+   "someone will follow up" on every message. Clear it early with `--clear-handover`.
+5. A voice note or photo hands over (the bot cannot read it) instead of being ignored.
+
+Each conversation (chat, tags, handover state) is kept in `data/wa_conversations.json`, git-ignored.
+A number not seen before becomes a new customer with **no label, so no discount is ever offered**.
+
+**Demo trick:** to make a teammate's phone start as a demo customer with their chat history and tags,
+put `{"65XXXXXXXX": "C001"}` in `data/wa_contacts.json` (git-ignored, it holds phone numbers).
+
+Not done yet, and needed before real customers: a **paid LLM key** (the bot sends their messages to
+the model; free tiers are for testing), and a place for the shop owner to see handovers. Today they
+are only printed in the console and saved in the conversations file.
 
 ## Before the finals (Thuta)
 
