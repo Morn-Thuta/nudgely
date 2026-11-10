@@ -20,7 +20,7 @@ import os
 import requests
 
 GRAPH = "https://graph.facebook.com"
-DEFAULT_VERSION = "v22.0"  # Meta forwards calls on a retired version to the oldest live one
+DEFAULT_VERSION = "v25.0"  # Meta forwards calls on a retired version to the oldest live one
 
 
 class WhatsAppError(Exception):
