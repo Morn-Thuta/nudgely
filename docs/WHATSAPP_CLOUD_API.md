@@ -11,6 +11,7 @@ MantaGO link broadcasts never deliver and no chat text is available (see `MANTAG
 | Receive a customer's message **with its text** on our webhook | ✅ |
 | Reply with free text inside the 24-hour window | ✅ (`--echo`) |
 | Delivery statuses (sent, delivered, read) on the webhook | ✅ |
+| AI bot: tag each message, answer or hand over, STOP/START (`--bot`) | ✅ about 6–10 s per reply |
 
 ## Setup (already done)
 
@@ -26,7 +27,8 @@ MantaGO link broadcasts never deliver and no chat text is available (see `MANTAG
 ## Run it
 
 ```bash
-python scripts/whatsapp_webhook.py --echo        # receiver on 127.0.0.1:8788, path /whatsapp
+python scripts/whatsapp_webhook.py --bot         # the real thing: AI tags + replies (customers in data/wa_customers.json)
+python scripts/whatsapp_webhook.py --echo        # simple test: replies "Got it: ..."
 cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8788   # gives https://xxx.trycloudflare.com
 ```
 
@@ -43,7 +45,15 @@ python scripts/test_whatsapp.py text --to 65XXXXXXXX --message "Hi" --yes   # on
 
 Incoming messages are appended to `data/wa_inbox.jsonl` (git-ignored: real customer messages).
 
-## Jack: where the tagger and reply bot go
+## AI model
+
+`LLM_PROVIDER=openrouter`, `LLM_MODEL=anthropic/claude-haiku-5.5` (paid credit, about $0.00025 per reply, 6 s).
+The free models stay as automatic fallbacks but take 1–2 minutes, too slow for a live demo.
+
+The bot only answers confidently about items in `STORE_INFO` (nudgely/llm.py). Anything else, such as
+"do you have Monster Energy?", is handed to a person on purpose: it must never invent stock.
+
+## Jack: how the bot is wired (done, for reference)
 
 `on_message(wa, msg)` in `scripts/whatsapp_webhook.py` runs once per incoming message.
 `msg = {"id", "from" (digits), "name", "timestamp", "type", "text"}`.
@@ -65,7 +75,7 @@ on first message.
 
 ## Before the finals (Thuta)
 
-- [ ] **Permanent token.** The current token expires after 24 hours. Business settings → System users → add a system user → assign the Nudgely app and the WhatsApp account → generate a token with `whatsapp_business_messaging` and `whatsapp_business_management`
-- [ ] **`WA_APP_SECRET`** from App settings → Basic, so the receiver checks Meta's signature
+- [x] **Permanent token.** System user `nudgely-bot` (Employee; Develop app + WhatsApp Messages only), token valid until **10 Jan 2027**
+- [x] **`WA_APP_SECRET`** set, so the receiver checks Meta's signature on every request
 - [ ] **Audience demo needs a real number.** The test number only reaches 5 registered phones. For the audience, add a real number in Step 2 (Production setup), which also needs a payment method on the WhatsApp account
 - [ ] Decide where the receiver runs on the day (demo laptop + tunnel is fine)
