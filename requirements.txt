@@ -4,6 +4,7 @@ numpy
 plotly
 requests
 python-dotenv
+openpyxl  # the Excel report on Results, and reading .xlsx uploads
 # only needed when LLM_PROVIDER=gemini:
 google-genai
 # offline only (notebooks/), not needed by the deployed app but harmless:

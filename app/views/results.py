@@ -1,10 +1,13 @@
+import os
+
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
 from field import customer_field
-from lib import (BRAND, campaign_results, example_campaign, header, headline, lift_range,
-                 load_customers, summary)
+from lib import (BRAND, EXAMPLES, campaign_results, example_campaign, header, headline, lift_range,
+                 load_customers, save_campaign_log, summary)
+from nudgely import returns
 
 header("Know what made the difference.",
        "What your own sends did, and how far the model can be trusted.")
@@ -81,6 +84,114 @@ def show_outcomes(done):
         st.plotly_chart(fig, width="stretch")
 
 
+SAMPLE = os.path.join(EXAMPLES, "returns_sample.csv")
+
+
+def record_returns(runs):
+    """Upload the shop's sales, mark who came back, hand back an Excel report to fix."""
+    st.markdown("#### Record who came back")
+    st.caption("Upload your sales from the day the campaign went out. Everyone in it, messaged or kept back, is checked "
+               f"the same way: did they buy anything within {returns.WINDOW} days of the send?")
+
+    pick, sample = st.columns([2.6, 1], vertical_alignment="bottom")
+    upload = pick.file_uploader("Sales file, CSV or Excel, one row per purchase", type=["csv", "xlsx"])
+    if sample.button("Use a sample", width="stretch",
+                     help="145 purchases from the example shop, with a few mistakes left in on purpose."):
+        st.session_state["returns_sample"] = True
+    if upload is not None:
+        data, name = upload.getvalue(), upload.name
+    elif st.session_state.get("returns_sample"):
+        with open(SAMPLE, "rb") as f:
+            data, name = f.read(), "returns_sample.csv"
+    else:
+        return
+
+    try:
+        sheets = returns.read_file(data, name)
+    except Exception as e:
+        st.error(f"Could not read {name}: {e}")
+        return
+    sheet = next(iter(sheets))
+    if len(sheets) > 1:
+        sheet = st.selectbox("Which sheet has the purchases?", list(sheets))
+    frame = sheets[sheet]
+    if frame.empty or len(frame.columns) < 2:
+        st.error("That sheet has no rows, or only one column. It needs at least who bought and when.")
+        return
+
+    cols = list(frame.columns)
+    who_guess = returns.guess_column(cols, returns.WHO_HINTS)
+    when_guess = returns.guess_column(cols, returns.WHEN_HINTS)
+    a, b = st.columns(2)
+    who = a.selectbox("Which column says who bought?", cols, index=cols.index(who_guess) if who_guess in cols else 0,
+                      help="Customer ID or phone number. Spaces, dashes and +65 are ignored.")
+    when = b.selectbox("Which column is the date?", cols,
+                       index=cols.index(when_guess) if when_guess in cols else min(1, len(cols) - 1),
+                       help="Read day first: 3/8/2026 is 3 August.")
+
+    if who == when:
+        st.error("Pick two different columns: one for who bought, one for the date.")
+        return
+    example = runs is None or (upload is None and st.session_state.get("returns_sample"))
+    target = example_campaign() if example else runs
+    if target is None:
+        st.info("There is no campaign to check yet. Send one from Campaign plan first.")
+        return
+    if example:
+        target = target.assign(returned="", returned_at="")
+    purchases, problems = returns.read_purchases(frame, who, when)
+    results, unmatched = returns.match_returns(target, purchases)
+    typos = unmatched[unmatched["check"] != ""]
+
+    decided = results[results.came_back.isin([0, 1])]
+    waiting = int(results.came_back.isna().sum())
+    st.markdown(
+        f"<div style='font-size:1.05em;margin:4px 0 8px'><b>{len(purchases)}</b> purchases read &nbsp;·&nbsp; "
+        f"<b>{len(problems) + len(typos)}</b> rows to fix &nbsp;·&nbsp; "
+        f"<b>{int(decided.came_back.sum())} of {len(results)}</b> customers came back &nbsp;·&nbsp; "
+        f"<b>{waiting}</b> not settled yet</div>", unsafe_allow_html=True)
+
+    if example:
+        st.caption("Checked against the example campaign above, so nothing is saved. "
+                   + ("" if runs is None else "Upload your own file to check your real campaigns."))
+    if len(problems) or len(typos):
+        st.warning(f"**{len(problems) + len(typos)} rows need a look.** "
+                   + (f"{len(problems)} could not be read. " if len(problems) else "")
+                   + (f"{len(typos)} {'looks' if len(typos) == 1 else 'look'} like a mistyped customer ID. "
+                      if len(typos) else "")
+                   + "Download the report, fix them on its 'Needs fixing' sheet, and upload it again "
+                     "(pick that sheet). A fix can turn a 'No' into a 'Yes', never the reverse.")
+        shown = problems[["row", "problem", who, when]].rename(
+            columns={"row": "Row", "problem": "What is wrong", who: "Who", when: "Date"})
+        if len(typos):
+            shown = pd.concat([shown, pd.DataFrame({"Row": typos["row"], "What is wrong": typos["check"],
+                                                    "Who": typos["who"],
+                                                    "Date": typos["when"].dt.strftime("%d %b %Y")})])
+        st.dataframe(shown, hide_index=True, width="stretch")
+
+    st.dataframe(
+        results.assign(came=results.came_back.map({1: "Yes", 0: "No"}).fillna("Not yet"),
+                       grp=results.group.map({"messaged": "Messaged", "holdout": "Kept back"}))
+        [["name", "grp", "came", "evidence"]],
+        hide_index=True, width="stretch",
+        column_config={"name": "Customer", "grp": "Group", "came": "Came back", "evidence": "How we know"})
+
+    left, right = st.columns(2)
+    left.download_button("Download the Excel report", returns.report(results, problems, unmatched, name, frame),
+                         f"nudgely-who-came-back-{pd.Timestamp.now():%Y%m%d}.xlsx",
+                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                         type="primary", width="stretch")
+    if not example and right.button("Save to the campaign log", width="stretch",
+                                    disabled=decided.empty):
+        updated, changed = returns.apply_to_log(runs, results)
+        save_campaign_log(updated)
+        st.session_state["returns_saved"] = changed
+        st.rerun()
+    saved = st.session_state.pop("returns_saved", None)
+    if saved is not None:
+        st.success(f"Saved. {saved} customers' outcomes updated in the campaign log.")
+
+
 tab_yours, tab_model = st.tabs(["Your campaigns", "Can the model be trusted?"])
 
 # ---------------------------------------------------------------- your sends
@@ -133,6 +244,9 @@ with tab_yours:
                        "movable customers, with outcomes simulated from the model's own estimates.",
                        icon="🧪")
             show_outcomes(example)
+
+    st.divider()
+    record_returns(runs)
 
 # ------------------------------------------------------------- the evidence
 with tab_model:

@@ -297,6 +297,10 @@ def campaign_results():
     return frame if len(frame) else None
 
 
+def save_campaign_log(frame):
+    frame[CAMPAIGN_COLS].to_csv(CAMPAIGN_LOG, index=False)
+
+
 def example_campaign():
     """A finished campaign with simulated outcomes (scripts/make_example_campaign.py).
 
