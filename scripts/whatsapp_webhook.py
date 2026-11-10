@@ -90,6 +90,7 @@ def bot_turn(wa, msg):
         rec["opted_out"] = False
         _send(wa, who, "Welcome back! You'll hear from us again. Reply STOP anytime to opt out.", rec)
         conversations.update(who, rec)
+        print(f"  -> {rec['customer_id']} opted back in", flush=True)
         return
     if rec.get("opted_out"):  # they said STOP: store what they sent, never answer automatically
         conversations.update(who, rec)
