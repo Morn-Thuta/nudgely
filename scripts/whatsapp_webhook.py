@@ -28,7 +28,7 @@ sys.path.insert(0, ROOT)
 
 from dotenv import load_dotenv  # noqa: E402
 
-from nudgely import conversations  # noqa: E402
+from nudgely import bot  # noqa: E402
 from nudgely.whatsapp import (WhatsApp, WhatsAppError, parse_webhook, valid_signature,  # noqa: E402
                               verify_subscription)
 
@@ -51,70 +51,20 @@ def on_message(wa, msg):
             print(f"  -> echo failed: {e}", flush=True)
 
 
-def _send(wa, to, text, rec):
-    try:
-        wa.send_text(to, text)
-        rec["chat"].append({"from": "store", "text": text, "date": conversations.today()})
-        return True
-    except WhatsAppError as e:
-        print(f"  -> send failed: {e}", flush=True)
-        return False
-
-
 def bot_turn(wa, msg):
-    """Remember the message, tag it, then reply or hand over. Runs off the request thread."""
-    from nudgely import reply as replybot
-    from nudgely.llm import merge_tags, tag_message
-
-    who, text = msg["from"], msg["text"]
-    rec = conversations.get_or_create(who, msg["name"])
-    if msg["id"] in rec["seen_ids"]:  # Meta retries deliveries; answer each message once
+    """One turn through the shared bot (nudgely/bot.py), then send the reply on WhatsApp."""
+    out = bot.handle(msg["from"], msg["name"], msg["text"], msg_id=msg["id"], prefix="WA",
+                     kind="text" if msg["text"] else (msg["type"] or "unknown"))
+    if out["duplicate"]:  # Meta retries deliveries; each message is answered once
         return
-    rec["seen_ids"].append(msg["id"])
-    if not text:  # photo, sticker, voice note: keep a note, hand to a person
-        rec["chat"].append({"from": "customer", "text": f"[{msg['type']}]", "date": conversations.today()})
-        rec["handover"] = True
-        conversations.update(who, rec)
-        print(f"  -> {rec['customer_id']}: {msg['type']} message, flagged for a person", flush=True)
-        return
-
-    rec["chat"].append({"from": "customer", "text": text, "date": conversations.today()})
-
-    if conversations.is_stop(text):
-        rec["opted_out"] = True
-        _send(wa, who, "You won't get any more messages from us. Reply START if you change your mind.", rec)
-        conversations.update(who, rec)
-        print(f"  -> {rec['customer_id']} opted out", flush=True)
-        return
-    if conversations.is_start(text):
-        rec["opted_out"] = False
-        _send(wa, who, "Welcome back! You'll hear from us again. Reply STOP anytime to opt out.", rec)
-        conversations.update(who, rec)
-        print(f"  -> {rec['customer_id']} opted back in", flush=True)
-        return
-    if rec.get("opted_out"):  # they said STOP: store what they sent, never answer automatically
-        conversations.update(who, rec)
-        return
-
-    first = rec["name"].split()[0] if rec.get("name") else ""
-    try:
-        new = tag_message(rec["customer_id"], text, date=conversations.today(),
-                          prior=rec.get("tags"), names=[rec.get("name", "")])
-        rec["tags"] = merge_tags(rec.get("tags"), new)
-        found = ", ".join(f"{t['type']}={t['value']}" for t in new.get("tags", [])) or "no new tags"
-    except Exception as e:  # noqa: BLE001 - tagging failing must not stop the reply
-        found = f"tagging failed: {str(e)[:80]}"
-    print(f"  -> {rec['customer_id']} tags: {found}", flush=True)
-
-    customer = {"customer_id": rec["customer_id"], "name": first, "label": rec.get("label", "New")}
-    out = replybot.answer(customer, rec["chat"][:-1], text, tags=rec.get("tags"),
-                          first_reply=not rec.get("replied"))
-    if _send(wa, who, out["reply"], rec):
-        rec["replied"] = True
-    if out.get("handover"):
-        rec["handover"] = True
-    conversations.update(who, rec)
-    print(f"  -> replied ({'HANDOVER: ' if out.get('handover') else ''}{out.get('reason', '')[:80]})", flush=True)
+    tags = ", ".join(f"{t['type']}={t['value']}" for t in out["new_tags"]) or "no new tags"
+    print(f"  -> {out['customer_id']} tags: {tags}", flush=True)
+    if out["reply"]:
+        try:
+            wa.send_text(msg["from"], out["reply"])
+        except WhatsAppError as e:
+            print(f"  -> send failed: {e}", flush=True)
+    print(f"  -> {'HANDOVER: ' if out['handover'] else ''}{out['reason'][:100]}", flush=True)
 
 
 class Handler(BaseHTTPRequestHandler):

@@ -35,16 +35,18 @@ def _save(data):
     os.replace(tmp, STORE)
 
 
-def get_or_create(wa_id, name=""):
-    """The record for a WhatsApp number, created on first message.
+def get_or_create(wa_id, name="", prefix="WA"):
+    """The record for a WhatsApp number (or a web chat session key), created on first message.
 
     New people get label "New": not Persuadable, so the reply bot never offers them a discount.
+    `prefix` sets the id style: "WA" for WhatsApp, "WEB" for the web chat.
     """
     with _lock:
         data = _load()
         rec = data.get(wa_id)
         if rec is None:
-            rec = {"customer_id": f"WA{len(data) + 1:03d}", "name": name or "", "label": "New",
+            n = sum(1 for r in data.values() if str(r.get("customer_id", "")).startswith(prefix)) + 1
+            rec = {"customer_id": f"{prefix}{n:03d}", "name": name or "", "label": "New",
                    "chat": [], "tags": {}, "replied": False, "opted_out": False,
                    "handover": False, "seen_ids": []}
             data[wa_id] = rec
