@@ -392,7 +392,7 @@ function circleNum(slide, o) {
     { text: " ", options: { breakLine: true, fontSize: 8 } },
     { text: "Dropping from 190 columns to ten a shop can actually compute did not cost accuracy — it gained." },
   ], { placeholder: "body" });
-  s.addNotes("57% is the mean over seven splits of the transferable model. Say the spread in the same breath. Note the Results tab in the app shows 52.9% - that is the 190-column model on a single split, a different measurement.");
+  s.addNotes("57% is the mean over seven splits of the transferable model. Say the spread in the same breath. The app's Results tab shows this same 57% and range. The older 52.9% (190-column model, one split) is only under 'For the technically curious' there.");
 }
 
 // ============================================================ 10. limitations

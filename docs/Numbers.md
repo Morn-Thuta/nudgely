@@ -1,6 +1,6 @@
 # Numbers sheet: the single source of truth
 
-Owner: Shareef · Checked 22 Oct 2026 against the repo data and the raw datasets.
+Owner: Shareef · Checked 22 Oct 2026 against the repo data and the raw datasets. Headline #1 and #2 changed 10 Nov 2026 by Jack after the retrain - **Shareef, please re-check** (see the 10 Nov note below).
 
 Every number in the deck, video, brief, app and submission form must come from this page, using the wording given here. If a number changes, change it here first, then everywhere else.
 
@@ -8,11 +8,30 @@ Every number in the deck, video, brief, app and submission form must come from t
 
 | # | Say this | Exact value | Source |
 |---|---|---|---|
-| 1 | **Our model's top 30% captures about half (53%) of all extra visits, about 1.8x better than picking 30% at random.** | 52.9% vs 30%; ratio 1.76x | `data/uplift_summary.json` → `top30_capture_share`, Lenta test set |
-| 2 | **This estimate is noisy: the 90% interval is 31% to 89%.** Always say this together with #1 in the brief and form; in the deck, put it as a footnote | 31.2% to 88.6% | `top30_capture_ci90`, `notebooks/check_capture.py` (300 bootstrap resamples) |
+| 1 | **Our model's top 30% captures 57% of all extra visits, about 1.9x better than picking 30% at random.** | 57.0% vs 30%; ratio 1.90x | `data/uplift_transferable.json` → `transferable.capture_mean`, mean of 7 Lenta train/test splits |
+| 2 | **This estimate is noisy: across seven test splits it ranged from 38% to 85%.** Always say this together with #1 in the brief and form; in the deck, put it as a footnote | 37.7% to 84.6%; sd 14.2 points | `transferable.capture_min` / `capture_max` / `capture_sd`, `notebooks/train_transferable.py` |
 | 3 | **SMS lifted grocery visits from 10.3% to 11.0% (+7%)** across 687k customers | 10.26% → 11.01%; +7.4% | `visit_rate_no_msg`, `visit_rate_msg` (full Lenta dataset) |
 | 4 | **Email lifted visits from 10.6% to 16.7% (+57%) and purchases from 0.57% to 1.07% (about 1.9x)** across 64k online shoppers | 10.62% → 16.70%; 0.573% → 1.068%; ratio 1.87x | Hillstrom dataset, both email groups vs no email. Recomputed from raw data |
 | 5 | (optional) **The best email (men's merchandise) lifted visits +72% and purchases 2.2x** | 10.62% → 18.28%; 0.573% → 1.253%; ratio 2.19x | Hillstrom, men's email group vs no email only |
+
+### Change made on 10 Nov (please read, everyone)
+
+The headline moved from **53% / 1.8x / 31-89%** to **57% / 1.9x / 38-85%**. It is a different model and a different way of measuring, not a better day:
+
+| | Old headline | New headline |
+|---|---|---|
+| Model | All 190 Lenta columns | The 10 features a shop can compute from its own receipts |
+| Why | It was the only model we had | It is the one `nudgely/scoring.py` uses to score a real shop, so it is the one we are selling |
+| Measured on | One train/test split | Mean of 7 splits (seeds 1-7), because one split alone moved the figure by 30 points |
+| Top 30% captures | 52.9% | **57.0%** |
+| Spread | 90% bootstrap interval 31-89% | Range across the 7 splits 38-85% |
+
+Two things to keep straight:
+
+- **Never put 53% and 57% in the same deliverable.** The app's landing page and Results page now both show 57% with the 38-85% range. The 52.9% survives in one place only: Results → "For the technically curious", labelled as the earlier model on one split.
+- **Do not say the small model "beats" the big one as a headline.** On the same 7-split test the 190-column model averages 44.8% (range 31-63%). The honest line is "dropping to ten shop-computable features did not cost us accuracy". The 12-point gap is inside the noise.
+
+Everything else on this page (visit rates, Hillstrom, dataset sizes) is unchanged.
 
 ### Correction made on 22 Oct (please read, Dythan)
 
@@ -32,9 +51,9 @@ Use #4 as the headline. Use +72% / 2.2x only with the label "best email" or "men
 | Topic | Value | Source |
 |---|---|---|
 | Lenta dataset size | 687,029 customers (say "687k") | scikit-uplift `fetch_lenta` docs |
-| Lenta test set | 103,055 customers the model never saw | `n_test` |
+| Lenta test set | 30% of the training sample held out, redrawn for each of the 7 splits (about 103k customers each) | `train_transferable.py`; `n_test` = 103,055 for the single split in `uplift_summary.json` |
 | Training sample | 50% of Lenta, 70/30 train/test split | `notebooks/train_uplift.py` |
-| Model | Two-model uplift, HistGradientBoosting (scikit-learn), scikit-uplift `TwoModels` | `train_uplift.py` |
+| Model | Two-model uplift, HistGradientBoosting (scikit-learn), scikit-uplift `TwoModels`, on 10 shop-computable features | `train_transferable.py` (headline); `train_uplift.py` (190-column version behind the demo customers' scores) |
 | Features removed for fairness | gender, age, children | `features_dropped` |
 | Uplift in the top 30% | messaged customers in the top 30% visited 1.3 points more than unmessaged ones | `uplift_at_30` = 0.0131 |
 | Hillstrom size | 64,000 customers, 3 randomised groups, 2-week tracking | Hillstrom challenge description |
@@ -51,7 +70,7 @@ Use #4 as the headline. Use +72% / 2.2x only with the label "best email" or "men
 | Item | As of Thu 22 Oct, 11:40pm | Check |
 |---|---|---|
 | Chats with tags | 30 / 30 | `data/tags.json` |
-| Message drafts | 15 / 30 (all 10 Persuadables + 5 Lost Causes) | `data/messages.json` |
+| Message drafts | 29 / 30 as of 10 Nov (every customer except C014, who opted out) | `data/messages.json` |
 | Real MantaGO message sent to a phone | Not yet confirmed | Thuta |
 
 The deck and video should never claim "30 personalised messages" unless `messages.json` has all 30 and Jack has checked them.
@@ -61,19 +80,31 @@ The deck and video should never claim "30 personalised messages" unless `message
 | Don't say | Why | Say instead |
 |---|---|---|
 | "Email increased visits by 72%" (no label) | Only true for the men's email group | "+57% visits" (#4), or "+72% for the best email" |
-| "Our model is 1.8x better", with no caveat | The 90% interval runs from 31% to 89% | "about 1.8x on a public test set; noisy, so a pilot is next" |
+| "Our model is 1.9x better", with no caveat | Across seven splits it ranged from 38% to 85% | "about 1.9x on a public test set; noisy, so a pilot is next" |
+| "53%" or "1.8x" anywhere | Superseded on 10 Nov; a judge who sees 57% on screen and hears 53% has a question | "57%, about 1.9x, ranging 38-85% across seven splits" |
 | "Kampung Fresh saw X% more visits" | No live test has run. Kampung Fresh is fictional | "On public grocery data…" |
 | "Proven in Singapore" | Lenta is Russian grocery SMS (2020); Hillstrom is US online retail email (2008) | "Proven on public randomised tests overseas; a Singapore pilot is the next step" |
 | "Names never reach the AI" | The chat scrubber removes names and phone numbers, but the message writer receives a first name to greet the customer | "Chats are scrubbed of names and phone numbers; the writer sees only a first name" |
 | "Uses a paid LLM API" | Tags and drafts were made on free tiers (OpenRouter free models, Google Gemini) | "free-tier LLMs (Gemini, OpenRouter), fictional data only" |
 | "Every tag quotes the customer" | The filter accepts any word-for-word quote from the chat, including store lines (3 of 46 tags) | "every tag quotes the chat word for word" |
 | "Complaints get no sales pitch" | Not hard-checked; C002, C006 and C009 drafts offer a discount after the apology | "complaints get an apology first" (until Jack fixes those drafts) |
-| "Each campaign measures its lift" | The app creates the holdout but doesn't record returns yet | "each campaign *can* measure its own lift" |
+| "Each campaign has measured its lift" | The app now logs every real campaign with its kept-back group and `scripts/record_returns.py` records who came back, but no real campaign has finished its 30 days. The Results page shows a labelled **example** with simulated outcomes | "each campaign measures its own lift; the one on screen is an example" |
 | "Sends through MantaGO and writes tags back" | Only the broadcast is wired into the app, and only to test phones. Tag write-back is in the client, not the app. No live send confirmed yet | "sends to our test phones; others simulated; tag write-back supported in the client" |
 | "Deployed on Streamlit Cloud" (before it is) | Not deployed as of Thu night | "built for Streamlit Community Cloud", then add the link once live |
 | "Only messages opted-in customers" (as a fact about the demo) | `consent.json` records opt-outs only. Live sends go only to the team's own opted-in phones | "Live sends go only to our own opted-in test phones; opt-outs like C014 are blocked automatically" |
 
 ## Stale copies to fix (not Shareef's files)
+
+Still saying 53% / 1.8x / 31-89% as of 10 Nov. The app is fixed; these are not:
+
+- `docs/One_Page_Brief.md` lines 13 and 53, plus the `.html` and the `.pdf` built from it (Shareef)
+- `docs/Submission_Draft.md` lines 29, 57 and 73 (Shareef)
+- `docs/PRD.md` lines 21, 172, 187 and 230 (Thuta)
+- `docs/Responsible_AI.md` lines 11, 22, 31, 86, 103 and 105 (whoever owns it)
+- `TEAM.md` lines 5 and 47
+- The pitch deck and the video script and captions (Dythan)
+
+Older items:
 
 - `app/lib.py` lines 33–35: `HILLSTROM` still holds the men's-only figures (18.3%, 1.25%, +72%, 2.2x), labelled as plain "email". Nothing in the app uses it today, but whoever owns `app/` should update it to the combined figures or delete it, so it never reaches a slide. (Jayden / Thuta)
 - `README.md`: still says there is "only one example message draft" and a partial extraction cache. There are now 15 drafts and 30 of 30 tags. (Jayden)
@@ -81,7 +112,7 @@ The deck and video should never claim "30 personalised messages" unless `message
 
 ## Spoken version for the video (about 20 seconds)
 
-> "We tested the targeting on 103,000 real grocery customers the model had never seen. Messaging our top 30% would have captured about half of all the extra visits, roughly 1.8 times better than picking at random. The range is wide, so we treat it as an early signal, and the product itself keeps a no-message group so every campaign can prove its own result."
+> "We tested the targeting on real grocery customers the model had never seen, seven times over. Messaging our top 30% would have captured 57% of all the extra visits, roughly 1.9 times better than picking at random. It ranged from 38 to 85 depending on the test, so we treat it as an early signal, and the product itself keeps a no-message group so every campaign can prove its own result."
 
 ## Friday final check
 
@@ -90,14 +121,15 @@ Tick each place once every number matches this page.
 - [ ] Deck (Dythan)
 - [ ] Video script and captions (Dythan)
 - [ ] One-page brief: `docs/One_Page_Brief.md` and the PDF (Shareef, ✅ done 22 Oct)
-- [ ] App: Overview shows 53% and the 31–89% interval. Results shows 10.3%, 11.0%, +7%, 53%, 1.8x (✅ checked in code 22 Oct; re-check on the live link)
+- [ ] App: landing page ("Explore more") shows 57% and the 38–85% range. Results → "Can the model be trusted?" shows 10.3%, 11.0%, +7%, 57%, 1.9x (✅ checked in code 10 Nov on `jack/next-phase`; re-check on the live link once merged)
 - [ ] Submission form (Shareef)
 - [ ] PRD (✅ Hillstrom row corrected 22 Oct)
 
 ## How to reproduce
 
 ```bash
-python notebooks/check_capture.py     # prints the 53% and the 31%-89% interval from data/lenta_scored_test.csv
+python notebooks/train_transferable.py   # the 57% and its 38%-85% range (7 splits); writes data/uplift_transferable.json
+python notebooks/check_capture.py        # the older 53% and 31%-89% interval, from data/lenta_scored_test.csv
 ```
 
 Hillstrom figures were recomputed from the raw 64,000-row file (`Kevin_Hillstrom_MineThatData_E-MailAnalytics_DataMiningChallenge_2008.03.20.csv`) by grouping `visit` and `conversion` by `segment`. They match the published challenge write-up exactly.

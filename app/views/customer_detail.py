@@ -21,8 +21,9 @@ st.markdown(f"## {c['name']} &nbsp; <span style='font-size:0.6em;opacity:0.55'>{
             unsafe_allow_html=True)
 
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("Uplift if messaged", f"+{c.uplift:.1%}")
-m2.metric("Return anyway", f"{c.p_no_msg:.0%}")
+m1.metric("Change if messaged", f"{c.uplift * 100:+.1f} points",
+          help="How much more likely they are to come back if you message them.")
+m2.metric("Coming back anyway", f"{c.p_no_msg:.0%}", help="Their chance of coming back if you send nothing.")
 m3.metric("Visits / month", c.get("visits_per_month", "-"))
 m4.metric("Days since last visit", c.get("days_since_last_visit", "-"))
 

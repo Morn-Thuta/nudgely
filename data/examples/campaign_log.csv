@@ -1,0 +1,37 @@
+campaign_id,sent_at,customer_id,name,group,platform,status,returned,returned_at
+example_202608,2026-08-03T10:00:00,C001,Aisha Rahman,holdout,,not messaged,1,2026-08-23
+example_202608,2026-08-03T10:00:00,C002,Marcus Lim,messaged,whatsapp,example,0,
+example_202608,2026-08-03T10:00:00,C003,Priya Nair,messaged,whatsapp,example,1,2026-08-24
+example_202608,2026-08-03T10:00:00,C004,Daniel Tan,messaged,whatsapp,example,1,2026-08-26
+example_202608,2026-08-03T10:00:00,C005,Siti Nurhaliza Osman,messaged,whatsapp,example,0,
+example_202608,2026-08-03T10:00:00,C006,Kelvin Ong,holdout,,not messaged,0,
+example_202608,2026-08-03T10:00:00,C007,Meera Pillai,messaged,whatsapp,example,0,
+example_202608,2026-08-03T10:00:00,C008,Jason Goh,holdout,,not messaged,0,
+example_202608,2026-08-03T10:00:00,C009,Nurul Huda,messaged,whatsapp,example,0,
+example_202608,2026-08-03T10:00:00,C010,Cheryl Teo,messaged,whatsapp,example,0,
+example_202608,2026-08-03T10:00:00,C011,Ravi Kumar,holdout,,not messaged,0,
+example_202608,2026-08-03T10:00:00,C012,Grace Chua,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C001,Aisha Rahman,holdout,,not messaged,0,
+example_202609,2026-09-01T10:00:00,C002,Marcus Lim,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C003,Priya Nair,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C004,Daniel Tan,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C005,Siti Nurhaliza Osman,messaged,whatsapp,example,1,2026-09-23
+example_202609,2026-09-01T10:00:00,C006,Kelvin Ong,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C007,Meera Pillai,messaged,whatsapp,example,1,2026-09-17
+example_202609,2026-09-01T10:00:00,C008,Jason Goh,holdout,,not messaged,0,
+example_202609,2026-09-01T10:00:00,C009,Nurul Huda,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C010,Cheryl Teo,holdout,,not messaged,0,
+example_202609,2026-09-01T10:00:00,C011,Ravi Kumar,messaged,whatsapp,example,0,
+example_202609,2026-09-01T10:00:00,C012,Grace Chua,holdout,,not messaged,0,
+example_202610,2026-10-01T10:00:00,C001,Aisha Rahman,holdout,,not messaged,0,
+example_202610,2026-10-01T10:00:00,C002,Marcus Lim,holdout,,not messaged,1,2026-10-18
+example_202610,2026-10-01T10:00:00,C003,Priya Nair,messaged,whatsapp,example,1,2026-10-21
+example_202610,2026-10-01T10:00:00,C004,Daniel Tan,messaged,whatsapp,example,0,
+example_202610,2026-10-01T10:00:00,C005,Siti Nurhaliza Osman,messaged,whatsapp,example,0,
+example_202610,2026-10-01T10:00:00,C006,Kelvin Ong,holdout,,not messaged,0,
+example_202610,2026-10-01T10:00:00,C007,Meera Pillai,messaged,whatsapp,example,0,
+example_202610,2026-10-01T10:00:00,C008,Jason Goh,messaged,whatsapp,example,0,
+example_202610,2026-10-01T10:00:00,C009,Nurul Huda,messaged,whatsapp,example,0,
+example_202610,2026-10-01T10:00:00,C010,Cheryl Teo,holdout,,not messaged,0,
+example_202610,2026-10-01T10:00:00,C011,Ravi Kumar,messaged,whatsapp,example,0,
+example_202610,2026-10-01T10:00:00,C012,Grace Chua,messaged,whatsapp,example,0,

@@ -131,9 +131,11 @@ are not.
   honest sentence. The direction is solid; the exact number is noisy.
 - The older 190-feature model manages 44.8% on the same seven-split test, so
   dropping to ten shop-computable features did not cost accuracy - it gained.
-- The Results tab's own figure (52.9%, 90% interval 31%-89%) is the 190-feature
-  model on a single split. Different model, different method, so do not mix it
-  with the 57%.
+- The app shows the same 57% and the same 38-85% range, on the landing page and
+  on Results. The older 52.9% (190-feature model, one split, 90% interval
+  31%-89%) now sits only under Results -> "For the technically curious", labelled
+  as the earlier model. Different model, different method: never quote it beside
+  the 57%.
 
 ## Limitations, say them before a judge does
 

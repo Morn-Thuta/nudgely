@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 
 import streamlit as st
 from hero import render_hero
-from lib import DATA, load_customers, summary
+from lib import DATA, headline, load_customers
 
 USERS = os.path.join(DATA, "users.json")
 ITERATIONS = 240_000
@@ -264,14 +264,12 @@ def _more():
         for n, t, b in steps)
     st.markdown(f'<div class="more-grid">{cards}</div>', unsafe_allow_html=True)
 
-    s = summary()
-    capture = s["top30_capture_share"] if s else None
-    ci = s.get("top30_capture_ci90") if s else None
+    h = headline()
     facts = [
-        (f"{capture:.0%}" if capture else "—",
+        (f"{h['capture']:.0%}" if h else "—",
          "of the extra visits captured by messaging the top 30%, against 30% for picking at random",
-         f"90% interval {ci[0]:.0%}–{ci[1]:.0%} · the spread is as much the finding as the number"
-         if ci else "historical Lenta experiment"),
+         f"{h['spread']} · the spread is as much the finding as the number"
+         if h else "historical Lenta experiment"),
         ("97%",
          "of tags found across 32 hand-written chats — recall, the number that matters when a "
          "missed complaint becomes a promotion",

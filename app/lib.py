@@ -111,6 +111,27 @@ def summary():
     return load_json("uplift_summary.json", default=None) or None
 
 
+def headline():
+    """The one targeting figure the app quotes, so every page says the same thing.
+
+    It is the transferable model (the ten features a shop can compute, the one that
+    scores real shops), averaged over several train/test splits. Falls back to the
+    single-split figure from the full Lenta model if that file is missing.
+    """
+    t = (load_json("uplift_transferable.json", default=None) or {}).get("transferable")
+    if t:
+        return {"capture": t["capture_mean"], "low": t["capture_min"], "high": t["capture_max"],
+                "spread": f"ranged from {t['capture_min']:.0%} to {t['capture_max']:.0%} "
+                          f"across {len(t['seeds'])} different test splits",
+                "features": t["features"]}
+    s = summary()
+    if not s:
+        return None
+    ci = s.get("top30_capture_ci90") or [s["top30_capture_share"]] * 2
+    return {"capture": s["top30_capture_share"], "low": ci[0], "high": ci[1],
+            "spread": f"90% interval {ci[0]:.0%} to {ci[1]:.0%}", "features": None}
+
+
 @st.cache_data
 def load_scored_test():
     p = os.path.join(DATA, "lenta_scored_test.csv")
@@ -274,6 +295,42 @@ def campaign_results():
     except (OSError, pd.errors.EmptyDataError):
         return None
     return frame if len(frame) else None
+
+
+def example_campaign():
+    """A finished campaign with simulated outcomes (scripts/make_example_campaign.py).
+
+    Shown on Results only while the shop has no measured outcomes of its own, and
+    always labelled as an example: it is what the page looks like, not a result.
+    """
+    p = os.path.join(EXAMPLES, "campaign_log.csv")
+    try:
+        frame = pd.read_csv(p)
+    except (OSError, pd.errors.EmptyDataError):
+        return None
+    return frame if len(frame) else None
+
+
+def lift_range(back_m, n_m, back_h, n_h, z=1.645):
+    """90% range for (messaged return rate - kept-back return rate).
+
+    Newcombe's method on two Wilson intervals: it behaves on the tiny groups a
+    small shop has, where the textbook formula gives nonsense such as 0 +/- 0.
+    """
+    if not n_m or not n_h:
+        return None
+
+    def wilson(x, n):
+        p = x / n
+        mid = (p + z * z / (2 * n)) / (1 + z * z / n)
+        half = z * np.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
+        return p, mid - half, mid + half
+
+    pm, lm, um = wilson(back_m, n_m)
+    ph, lh, uh = wilson(back_h, n_h)
+    d = pm - ph
+    return (float(d - np.sqrt((pm - lm) ** 2 + (uh - ph) ** 2)),
+            float(d + np.sqrt((um - pm) ** 2 + (ph - lh) ** 2)))
 
 
 # ---- ui bits ---------------------------------------------------------------

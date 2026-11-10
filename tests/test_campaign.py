@@ -42,7 +42,9 @@ class CampaignTests(unittest.TestCase):
         ids = plan.loc[plan.group == 'Will message', 'customer_id'].tolist()
         plan['mantago_client_id'] = 'test-account'
         msgs = lib.load_json('messages.json')
+        # A live send also appends to the campaign log; keep the test's rows out of the real one.
         with tempfile.TemporaryDirectory() as temp, patch.object(lib, 'SEND_LOG', str(Path(temp) / 'log.csv')), \
+                patch.object(lib, 'CAMPAIGN_LOG', str(Path(temp) / 'campaigns.csv')), \
                 patch.object(lib, 'mantago_client') as client, patch.object(lib, 'mantago_platform', return_value='whatsapp'), \
                 patch.object(lib, 'whatsapp_templates', return_value={ids[0]: 'pack-1'}):
             client.return_value.send.return_value = {'success': True}
