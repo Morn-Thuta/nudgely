@@ -81,6 +81,9 @@ on first message.
   **Don't use a system-user token on the test number**: every send fails with
   `(#10) Viewer cannot access the provided Paid Message Account`, even with full access. Once a system user exists,
   the API Setup page's *Generate token* also gives system-user tokens, so use Graph API Explorer instead.
+  Likely cause: the system user had **Finance role: None**, and template/paid sends need billing access.
+  For a production number, a system user would need a finance role. Our test system user `nudgely-bot`
+  has its tokens revoked and no assets (Meta's settings page has no delete option).
 - [x] **`WA_APP_SECRET`** set, so the receiver checks Meta's signature on every request
 - [ ] **Audience demo needs a real number.** The test number only reaches 5 registered phones. For the audience, add a real number in Step 2 (Production setup), which also needs a payment method on the WhatsApp account
 - [ ] Decide where the receiver runs on the day (demo laptop + tunnel is fine)
