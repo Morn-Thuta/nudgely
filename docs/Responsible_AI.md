@@ -8,7 +8,7 @@ Every claim on this page was checked against the code. The "Where" column shows 
 
 **Responsible by design**
 
-- **Honest about the data.** All names and chats are fictional. Model results come from public randomised datasets, not a live Kampung Fresh test. We show the uncertainty (90% interval 31–89%), not just the headline.
+- **Honest about the data.** All names and chats are fictional. Model results come from public randomised datasets, not a live Kampung Fresh test. We show the uncertainty (38–85% across seven test splits), not just the headline.
 - **Consent first.** Live sends go only to our own opted-in test phones. Opt-outs are blocked automatically, and every message ends "Reply STOP to opt out".
 - **Private by default.** Chats are scrubbed of names and phone numbers before the AI reads them; the message writer sees only a first name. No API keys in GitHub.
 - **Fair targeting.** The model uses shopping behaviour only. Gender, age and children are removed.
@@ -19,16 +19,16 @@ Every claim on this page was checked against the code. The "Where" column shows 
 
 ## 2. Form version (about 150 words)
 
-> All customer names and chats are fictional, and model results come from public randomised datasets (Lenta, Hillstrom); we report the uncertainty (90% interval 31–89%) alongside the headline. Live messages go only to our team's own opted-in test phones; opt-outs are blocked automatically, and every message ends with "Reply STOP to opt out". Chats are scrubbed of names and phone numbers before the LLM reads them (the message writer sees only a first name), and API keys stay out of GitHub. The targeting model uses behaviour only: gender, age and children are removed. Every AI tag must quote the chat word for word, the writer is instructed not to invent stock or prices, and discounts are hard-capped at 10%. The owner previews every message and must confirm before anything is sent; rehearsal mode is the default. Production adds DNC Register checks under Singapore's PDPA.
+> All customer names and chats are fictional, and model results come from public randomised datasets (Lenta, Hillstrom); we report the uncertainty (38–85% across seven test splits) alongside the headline. Live messages go only to our team's own opted-in test phones; opt-outs are blocked automatically, and every message ends with "Reply STOP to opt out". Chats are scrubbed of names and phone numbers before the LLM reads them (the message writer sees only a first name), and API keys stay out of GitHub. The targeting model uses behaviour only: gender, age and children are removed. Every AI tag must quote the chat word for word, the writer is instructed not to invent stock or prices, and discounts are hard-capped at 10%. The owner previews every message and must confirm before anything is sent; rehearsal mode is the default. Production adds DNC Register checks under Singapore's PDPA.
 
-(143 words.)
+(145 words.)
 
 ## 3. What we do, and where to see it
 
 | Principle | What Nudgely does | Where |
 |---|---|---|
 | **Disclosure** | The sidebar on every page says names and chats are fictional and results come from public datasets. The Results page separates your own sends from the public-dataset evidence and lists the limitations on that tab | `app/streamlit_app.py`, `app/views/results.py` |
-| **Honest uncertainty** | The 53% targeting figure is shown with its 90% bootstrap interval (31–89%), and labelled "noisy" | Overview and Results pages; `notebooks/check_capture.py` |
+| **Honest uncertainty** | The 57% targeting figure is shown with its range across seven test splits (38–85%), and labelled "noisy" | Landing page and Results page; `notebooks/train_transferable.py` |
 | **Consent and opt-out** | `data/consent.json` records opt-outs, and opted-out customers are skipped with the reason shown. The sender refuses a plan containing an opted-out customer. Every draft must end "Reply STOP to opt out", or Send is blocked | `app/lib.py` (`plan_campaign`, `send_campaign`); `nudgely/llm.py` (`check_message`) |
 | **Live sends limited to test phones** | Only customers mapped to the team's own MantaGO test accounts get a real message; all others are simulated. The phone mapping is git-ignored | `app/lib.py` `test_accounts()`; `.gitignore` |
 | **Privacy** | Phone numbers and the customer's name are replaced with `[phone]` and `[name]` before chat text is sent for tag extraction | `nudgely/llm.py` `scrub()` |
@@ -83,7 +83,7 @@ The message must also identify the sender and give contact details. In the demo,
 | Some complaint drafts (C002, C006, C009) apologise but then offer a discount | The prompt says to apologise first and not push a sale, but this is not hard-checked | Jack is fixing these drafts; add a hard check that complaint drafts contain no % offer |
 | Tags can quote the store's lines as well as the customer's (3 of 46 do) | The evidence filter checks the whole chat | Restrict evidence to customer messages |
 | Evidence comes from overseas datasets | Effects in Singapore may differ | 2–4 week pilot with one MantaGO business, with a holdout group |
-| The 53% figure is noisy (31–89%) | The true targeting gain could be much smaller | Retrain monthly on the business's own campaign results |
+| The 57% figure is noisy (38–85%) | The true targeting gain could be much smaller | Retrain monthly on the business's own campaign results |
 
 ## 7. Likely judge questions
 
@@ -100,9 +100,9 @@ Three layers:
 For the demo, only our own consenting phones receive messages. A real deployment needs recorded consent or a DNC Register check under the PDPA, plus sender identification. Those are on our production list.
 
 **"Why remove gender and age? Wouldn't the model be more accurate?"**
-Maybe slightly. But targeting offers by gender or age risks unfair treatment, and behaviour is what actually predicts response. We removed them and retrained; the 53% we report is the model without them.
+Maybe slightly. But targeting offers by gender or age risks unfair treatment, and behaviour is what actually predicts response. We removed them and retrained; the 57% we report comes from a model that sees only ten purchase-behaviour features.
 
-**"Your 53% has a huge interval. Why should we trust it?"**
+**"Your 57% swings from 38% to 85%. Why should we trust it?"**
 We don't ask you to. That's why the product holds out a random 10% in every campaign, so each business can measure its own lift instead of trusting our number.
 
 Sources: [PDPC Advisory Guidelines on the Do Not Call Provisions (1 Feb 2021)](https://www.pdpc.gov.sg/-/media/Files/PDPC/PDF-Files/Advisory-Guidelines/Advisory-Guidelines-on-the-DNC-Provisions-1-Feb-2021.pdf) · [PDPC Model AI Governance Framework, 2nd edition](https://www.pdpc.gov.sg/help-and-resources/2020/01/model-ai-governance-framework) · [Gemini API Additional Terms of Service](https://ai.google.dev/terms) · [scikit-uplift fetch_lenta](https://www.uplift-modeling.com/en/latest/api/datasets/fetch_lenta.html) · [Hillstrom challenge write-up](https://www.stochasticsolutions.com/pdf/HillstromChallenge.pdf)

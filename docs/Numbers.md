@@ -95,14 +95,13 @@ The deck and video should never claim "30 personalised messages" unless `message
 
 ## Stale copies to fix (not Shareef's files)
 
-Still saying 53% / 1.8x / 31-89% as of 10 Nov. The app is fixed; these are not:
+Updated to 57% / 1.9x / 38-85% by Jack on 10 Nov (please re-check, Shareef):
 
-- `docs/One_Page_Brief.md` lines 13 and 53, plus the `.html` and the `.pdf` built from it (Shareef)
-- `docs/Submission_Draft.md` lines 29, 57 and 73 (Shareef)
-- `docs/PRD.md` lines 21, 172, 187 and 230 (Thuta)
-- `docs/Responsible_AI.md` lines 11, 22, 31, 86, 103 and 105 (whoever owns it)
-- `TEAM.md` lines 5 and 47
-- The pitch deck and the video script and captions (Dythan)
+- `docs/One_Page_Brief.md`, `.html`, and the `.pdf` (re-printed from the HTML with Chrome; same layout, one A4 page)
+- `docs/Submission_Draft.md`: the summary is now 146 words (limit 150); Responsible AI field 145 words
+- `docs/PRD.md`, `docs/Responsible_AI.md`, `TEAM.md`
+
+**Still not done, because they are not in the repo:** the pitch deck, and the video script and captions (Dythan). Swap 53% → 57%, 1.8x → 1.9x, and "90% interval 31–89%" → "ranged 38–85% across seven test splits".
 
 Older items:
 
@@ -120,10 +119,10 @@ Tick each place once every number matches this page.
 
 - [ ] Deck (Dythan)
 - [ ] Video script and captions (Dythan)
-- [ ] One-page brief: `docs/One_Page_Brief.md` and the PDF (Shareef, ✅ done 22 Oct)
+- [ ] One-page brief: `docs/One_Page_Brief.md` and the PDF (Shareef, ✅ done 22 Oct; ✅ updated to 57% by Jack 10 Nov)
 - [ ] App: landing page ("Explore more") shows 57% and the 38–85% range. Results → "Can the model be trusted?" shows 10.3%, 11.0%, +7%, 57%, 1.9x (✅ checked in code 10 Nov on `jack/next-phase`; re-check on the live link once merged)
 - [ ] Submission form (Shareef)
-- [ ] PRD (✅ Hillstrom row corrected 22 Oct)
+- [ ] PRD (✅ Hillstrom row corrected 22 Oct; ✅ 57% 10 Nov)
 
 ## How to reproduce
 

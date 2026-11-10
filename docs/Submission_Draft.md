@@ -24,9 +24,9 @@ These are ready-to-paste answers for the usual hackathon form fields. The real f
 
 Fill in full names exactly as registered.
 
-## 2. Project summary (145 words, limit 150)
+## 2. Project summary (146 words, limit 150)
 
-> Small shops send the same "We miss you, 10% off" to every customer and never learn whether it worked. Nudgely fixes this in three steps on top of MantaGO. First, an uplift model picks the customers a message will bring back, skipping those who would return anyway. Second, an LLM reads each customer's past chats and drafts a short personal message grounded in what they said, such as a birthday party or a late delivery, with capped discounts and an opt-out line. The owner approves every message, and MantaGO delivers it on WhatsApp. Third, a random 10% is held out, so each campaign can measure its own lift. On 103,000 unseen grocery customers, our top 30% captured 53% of extra visits (90% interval 31–89%), about 1.8x random. Names and chats are fictional, gender and age are excluded, and live tests reach only our opted-in phones.
+> Small shops send the same "We miss you, 10% off" to every customer and never learn whether it worked. Nudgely fixes this in three steps on top of MantaGO. First, an uplift model picks the customers a message will bring back, skipping those who would return anyway. Second, an LLM reads each customer's past chats and drafts a short personal message grounded in what they said, such as a birthday party or a late delivery, with capped discounts and an opt-out line. The owner approves every message, and MantaGO delivers it on WhatsApp. Third, a random 10% is held out, so each campaign can measure its own lift. On unseen grocery customers, across seven tests, our top 30% captured 57% of extra visits (range 38–85%), about 1.9x random. Names and chats are fictional, gender and age are excluded, and live tests reach only our opted-in phones.
 
 ## 3. Longer fields
 
@@ -54,7 +54,7 @@ Fill in full names exactly as registered.
 
 > - **Email vs no email (Hillstrom, 64k online shoppers):** visits 10.6% → 16.7% (+57%); purchases 0.57% → 1.07% (about 1.9x).
 > - **SMS vs no SMS (Lenta, 687k grocery customers):** visits 10.3% → 11.0% (+7%).
-> - **Our model on 103k unseen Lenta customers:** the top 30% captured 53% of all extra visits vs 30% for random (about 1.8x), with a 90% interval of 31–89%.
+> - **Our model on Lenta customers it never saw, seven test splits:** the top 30% captured 57% of all extra visits on average vs 30% for random (about 1.9x), ranging from 38% to 85%.
 >
 > For a business, this means more returns per message, fewer wasted discounts, fewer paid WhatsApp messages, and a retention-lift number it can measure against its own holdout group.
 
@@ -68,9 +68,9 @@ Fill in full names exactly as registered.
 > - **Hillstrom:** 64,000 customers, randomised email test, released publicly by Kevin Hillstrom (MineThatData, 2008), distributed through scikit-uplift.
 > - **Customer names and chats:** fictional, written by the team.
 
-**Responsible AI** (143 words, from [Responsible_AI.md](Responsible_AI.md))
+**Responsible AI** (145 words, from [Responsible_AI.md](Responsible_AI.md))
 
-> All customer names and chats are fictional, and model results come from public randomised datasets (Lenta, Hillstrom); we report the uncertainty (90% interval 31–89%) alongside the headline. Live messages go only to our team's own opted-in test phones; opt-outs are blocked automatically, and every message ends with "Reply STOP to opt out". Chats are scrubbed of names and phone numbers before the LLM reads them (the message writer sees only a first name), and API keys stay out of GitHub. The targeting model uses behaviour only: gender, age and children are removed. Every AI tag must quote the chat word for word, the writer is instructed not to invent stock or prices, and discounts are hard-capped at 10%. The owner previews every message and must confirm before anything is sent; rehearsal mode is the default. Production adds DNC Register checks under Singapore's PDPA.
+> All customer names and chats are fictional, and model results come from public randomised datasets (Lenta, Hillstrom); we report the uncertainty (38–85% across seven test splits) alongside the headline. Live messages go only to our team's own opted-in test phones; opt-outs are blocked automatically, and every message ends with "Reply STOP to opt out". Chats are scrubbed of names and phone numbers before the LLM reads them (the message writer sees only a first name), and API keys stay out of GitHub. The targeting model uses behaviour only: gender, age and children are removed. Every AI tag must quote the chat word for word, the writer is instructed not to invent stock or prices, and discounts are hard-capped at 10%. The owner previews every message and must confirm before anything is sent; rehearsal mode is the default. Production adds DNC Register checks under Singapore's PDPA.
 
 **AI use disclosure**
 

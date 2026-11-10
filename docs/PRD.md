@@ -18,7 +18,7 @@ Ship a deployed web app that judges can try in a signed-out browser, showing one
 | --- | --- | --- | --- |
 | Hillstrom, 64k shoppers, email (both email groups) | 10.6% visited, 0.57% bought | 16.7% visited, 1.07% bought | +57% visits, about 1.9x purchases (best email, men's: +72% visits, 2.2x purchases) |
 | Lenta, 687k grocery customers, SMS | 10.3% visited | 11.0% visited | +7% visits |
-| Lenta, our uplift model (test set) | Random 30% of customers | Model's top 30% | 53% of extra visits vs 30%, about 1.8x (noisy: 90% interval 31–89%) |
+| Lenta, our uplift model (7 test splits) | Random 30% of customers | Model's top 30% | 57% of extra visits vs 30%, about 1.9x (noisy: ranged 38–85%) |
 
 All figures: [docs/Numbers.md](Numbers.md).
 
@@ -169,7 +169,7 @@ Five Streamlit pages in a sidebar, one per journey step group.
 
 | Page | Shows | Main controls |
 | --- | --- | --- |
-| 1. Overview | One-line problem, 3 headline numbers (+57% visits, 1.9x purchases, 1.8x targeting), proof chart (spec; the current app shows the 53% chart and its interval) | None |
+| 1. Overview | One-line problem, 3 headline numbers (+57% visits, 1.9x purchases, 1.9x targeting), proof chart (spec; the current app shows the 57% chart and its 38–85% range) | None |
 | 2. Customers | Table of 30 customers: name, label badge, uplift, days since last visit, top tag | Filter by label; click row to open detail |
 | 3. Customer detail | Chat history (bubbles), extracted tags with evidence quotes, draft message + reason | Regenerate message (rate-limited) |
 | 4. Campaign | Budget slider, holdout % slider; three lists: Will message, Held out, Skipped (with reason); message previews | Send button; per-customer status after send |
@@ -184,7 +184,7 @@ The core metric is retention lift: repeat-visit rate of messaged customers minus
 | Metric | How measured | MVP source |
 | --- | --- | --- |
 | Retention lift | Visit rate (messaged) minus visit rate (held out) | Lenta test set |
-| Targeting efficiency | Share of extra visits captured by top 30% vs 30% random | Lenta test set (53% vs 30%) |
+| Targeting efficiency | Share of extra visits captured by top 30% vs 30% random | Lenta, mean of 7 test splits (57% vs 30%) |
 | Messages saved | Customers skipped vs "message everyone" | App campaign |
 | Message quality | Every message uses a real tag with evidence; no invented facts | Manual check of 30 messages |
 
@@ -227,7 +227,7 @@ The biggest risk is MantaGO API access; every risk has a fallback that keeps the
 | LLM writes invented facts | Strict rules in prompt 2; hand-check all 30 cached messages |
 | Judges' clicks burn API credits | Cached outputs; live regenerate max 3 per session |
 | Lenta too big for laptop or cloud | Train offline on 50% sample; deploy only small CSVs |
-| Numbers shift after dropping gender | Re-run done: the figure is now 53% (`data/uplift_summary.json`), updated everywhere |
+| Numbers shift after dropping gender | Re-run done (53%, `data/uplift_summary.json`). Superseded 10 Nov by the 10-feature model: 57%, range 38–85% (`data/uplift_transferable.json`), updated everywhere |
 
 **Open questions:**
 

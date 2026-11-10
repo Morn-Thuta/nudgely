@@ -2,7 +2,7 @@
 
 ## Where we are (Wed 21 Oct)
 
-Already done: repo, uplift model (top 30% captures ~53% of extra visits, about 1.8x random), 30 demo customers + chats, LLM scripts, full 5-page app, MantaGO client + test script.
+Already done: repo, uplift model (top 30% captures ~57% of extra visits, about 1.9x random; ranged 38–85% across 7 test splits), 30 demo customers + chats, LLM scripts, full 5-page app, MantaGO client + test script.
 Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for all 30, deploy, pitch.
 
 ## Who does what
@@ -44,7 +44,7 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 **Thu**
 - [ ] Full slides with real numbers (from Shareef)
 - [ ] 7-min video script, timed. The demo section ends with the phone getting the message
-- [ ] Prepare Q&A answers: why uplift and not churn score? Why is the 53% noisy? What about the WhatsApp 24h rule? Cost?
+- [ ] Prepare Q&A answers: why uplift and not churn score? Why is the 57% noisy? What about the WhatsApp 24h rule? Cost?
 
 **Fri**
 - [ ] Record the video (by 1pm), final deck. 3pm: everything done
@@ -84,7 +84,7 @@ Still open: MantaGO token (waiting on Eslitec), WhatsApp connection, LLM run for
 ## Shareef: numbers + docs
 
 **Wed**
-- [x] Update the numbers in `docs/PRD.md` and `docs/One_Page_Brief.md`: targeting is now **top 30% captures ~53% of extra visits (about 1.8x random)**, not 45% / 1.5x. Source: `data/uplift_summary.json` (done by Jack, 21 Oct - all 5 places)
+- [x] Update the numbers in `docs/PRD.md` and `docs/One_Page_Brief.md`: targeting is now **top 30% captures ~53% of extra visits (about 1.8x random)**, not 45% / 1.5x. Source: `data/uplift_summary.json` (done by Jack, 21 Oct - all 5 places; superseded 10 Nov by 57% / 1.9x, see `docs/Numbers.md`)
 - [x] Find out: problem statement number, exact team name, deadline time on Fri, Lenta licence (PS1 · Nudgely · 11:59 PM SGT · see PRD open questions)
 
 **Thu**

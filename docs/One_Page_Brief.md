@@ -10,7 +10,7 @@ Nudgely picks who to message, writes what to say from each customer's own chats,
 | --- | --- | --- |
 | **Email vs no email** | +57% visits (10.6% → 16.7%), purchases about 1.9x | Hillstrom, 64k online shoppers, randomised |
 | **SMS vs no SMS** | +7% visits (10.3% → 11.0%) | Lenta, 687k grocery customers, randomised |
-| **Our top 30% vs random 30%** | Catches 53% of extra visits vs 30% (about 1.8x). Noisy: 90% interval 31–89% | Lenta test set, 103k customers |
+| **Our top 30% vs random 30%** | Catches 57% of extra visits vs 30% (about 1.9x). Noisy: ranged 38–85% across seven test splits | Lenta, customers the model never saw |
 
 ## The problem
 
@@ -50,7 +50,7 @@ MantaGO Open API · scikit-uplift · scikit-learn · Gemini and OpenRouter (free
 ## Limitations and next steps
 
 - Names and chats are fictional; evidence comes from overseas public datasets.
-- The 53% is noisy, so a 2–4 week pilot with a holdout group is next.
+- The 57% is noisy (38–85%), so a 2–4 week pilot with a holdout group is next.
 - The model needs one past message vs no-message test to learn from.
 - **Next:** pilot with one Singapore MantaGO business and retrain monthly.
 
