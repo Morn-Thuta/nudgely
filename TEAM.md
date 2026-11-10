@@ -1,64 +1,78 @@
-# Team plan: Finals (updated Tue 11 Nov 2026)
+# Team plan: Finals (updated Tue 11 Nov 2026, evening)
 
 > Earlier plans: [3 Nov finals plan](docs/archive/TEAM_finals_plan_3nov.md) · [hackathon plan](docs/archive/TEAM_hackathon.md)
+> How the pieces fit: **[docs/V1_ARCHITECTURE.md](docs/V1_ARCHITECTURE.md)** (database tables + API contract)
 
-**Deadline: Saturday 15 Nov.** Feature freeze **Thu 13 Nov night**.
+**Deadline: Saturday 15 Nov.** Feature freeze **Fri 14 Nov, noon**. (The landing page says "Finals 14 Nov". Check the real date and fix it.)
 
-## What changed since 3 Nov
+## The goal
 
-- **WhatsApp works for real, both ways** (Meta's WhatsApp Cloud API, not MantaGO). Customers message the Kampung Fresh test number, the AI tags each message and replies in about 6 s, or hands over to a person. STOP/START work. Details: [docs/WHATSAPP_CLOUD_API.md](docs/WHATSAPP_CLOUD_API.md)
-- **MantaGO** can't give us chat text or deliver broadcasts on our link. We keep it for members and tags (both work) and say so honestly in the pitch. See [docs/MANTAGO_API.md](docs/MANTAGO_API.md)
-- **Jayden is on another project.** His frontend work moves to **Dythan**.
-- **Scope cut: no Next.js / Supabase rebuild.** Nobody started it, and it can't land by Saturday. The **Streamlit app is the product**. Login, multi-shop and a database go on the roadmap slide.
+Impress the judges with **a commercial-grade product**: a landing page, a dashboard, and something they can **try on their own phones by scanning a QR code**.
 
-## Who owns what now
+## What changed
+
+- **WhatsApp works for real, both ways** (Meta Cloud API). AI tags each message and replies in about 6 s, or hands over to a person. See [docs/WHATSAPP_CLOUD_API.md](docs/WHATSAPP_CLOUD_API.md)
+- **Live WhatsApp page** added to the Streamlit app (the fallback demo screen)
+- **Jayden is on another project.** His work is split between **Thuta (backend)** and **Dythan (frontend)**
+- **The Next.js + Supabase rebuild is back on**, with Dythan building the frontend using Codex
+- **New: judges try it themselves.** A QR code opens a web chat with the same AI. Their chat shows up live on the dashboard
+
+## Who owns what
 
 | Person | Owns |
 |---|---|
-| **Thuta** | Lead · WhatsApp + MantaGO · running the bot on demo day · final review |
-| **Jack** | AI: tagger, reply bot, templates · outcome tracking |
-| **Dythan** | **Frontend (from Jayden)** · pitch · live demo · backup video |
-| **Shareef** | Pilot shop + owner interviews · business case · numbers |
+| **Thuta** | Lead · **backend** (`api/`, FastAPI, from Jayden) · Supabase setup + seed · WhatsApp · real number (stretch) |
+| **Dythan** | **Frontend** (`web/`, Next.js, from Jayden) · landing page · `/try` web chat · dashboard · pitch + video |
+| **Jack** | AI quality (tagger, reply bot) · outcome tracking · help with `/api/chat` |
+| **Shareef** | Pilot + owner interviews · business case · numbers |
 | ~~Jayden~~ | On another project |
 
 ---
 
-## Dythan: frontend + pitch (frontend taken over from Jayden)
+## Thuta: backend + data (Jayden's backend half)
 
-**Frontend, by Thu 13 Nov**
-- [ ] **New page: "Live WhatsApp"** (`app/views/live.py`). This is the screen for the live demo. It reads `data/wa_customers.json` (written by the bot) and shows, per customer: the chat bubbles, the AI's tags (with evidence), whether it was handed to a person, and opted-out status. Refresh every few seconds (`st.fragment(run_every=3)`) so new messages appear on stage without clicking. Add it to `app/streamlit_app.py`
-- [ ] **Demo reset button** on that page: clears the test conversations so each rehearsal starts clean. Back up the file first, and ask Thuta before running it on demo day
-- [ ] Polish the existing pages (Customers, Customer detail, Campaign, Results): wording, spacing, empty states
-- [ ] **Deploy** the latest `main` to Streamlit Cloud (nudgely.streamlit.app). Check every page in incognito **and** on a phone
-- [ ] Note: the Live WhatsApp page only has data on the laptop running the bot. On stage, show the **local** app (`streamlit run app/streamlit_app.py`), not the cloud link
+**Wed 12 Nov**
+- [ ] **Supabase project**: create the tables from `docs/V1_ARCHITECTURE.md`, turn on Realtime, share the URL + anon key with Dythan **privately**
+- [ ] Seed the 30 Kampung Fresh demo customers from `data/customers.csv`
+- [ ] **`api/` FastAPI**: `/health`, `/api/chat` (web chat → tagger + reply bot → Supabase), move the WhatsApp webhook in (writes to Supabase too)
+- [ ] Rate limit `/api/chat` per session
 
-**Pitch, by Fri 14 Nov**
-- [ ] Live demo script (about 2 min): someone messages the test number → the Live WhatsApp page shows it, tagged → the reply lands on the phone → HUMAN → handed over
-- [ ] Deck v1 with Shareef's business slides and real pilot numbers (if any)
-- [ ] **Record the backup demo video** (in case Wi-Fi or WhatsApp fails on stage)
-- [ ] Dress rehearsal with the team
+**Thu 13 Nov**
+- [ ] **Deploy the backend publicly** (Render or Railway), with secrets in the host's settings. Point Meta's webhook at it, so the **laptop tunnel is no longer needed**
+- [ ] End-to-end: web chat and WhatsApp messages both appear in Supabase within seconds
+- [ ] **Stretch, start today:** real WhatsApp number (spare SIM + payment method + Meta display name approval, which can take days) for a `wa.me` QR code
 
-## Thuta: WhatsApp + lead
+**Fri 14 Nov:** load test (10 people chatting at once), demo-day checklist, fix bugs.
 
-- [x] Two-way WhatsApp, AI bot, long-lived token (until 9 Jan 2027), app secret, privacy policy, Meta app published
-- [ ] Add Shareef (and anyone else demoing) as test recipients. 2 of 5 slots left
-- [ ] Decide: audience messages live (needs a real number + payment method) **or** team phones on stage (works today)
-- [ ] Demo-day checklist: start bot + tunnel, update the Meta callback URL, send one test message, open the Live WhatsApp page
-- [ ] Rotate keys after the finals (OpenRouter, MantaGO)
+## Dythan: frontend (Jayden's frontend half) + pitch
+
+**Wed 12 Nov**
+- [ ] `web/` Next.js app on **Vercel**, Tailwind, the same look as the current landing page (dark green, Nudgely brand)
+- [ ] **Landing page**: what Nudgely does, the evidence (53% / 1.8x, with the caveat), the live demo QR code, team
+- [ ] **`/try` web chat** (mobile first): name field (optional), chat bubbles, typing indicator, calls `POST /api/chat`. Until Thuta's API is live, mock it with the response shape from the contract
+
+**Thu 13 Nov**
+- [ ] **Dashboard** (behind Supabase login): Live conversations (realtime, the star screen), Customers (labels, uplift, tags), Campaign, Results. The existing Streamlit pages are the reference for content
+- [ ] QR code on the landing page and a big-screen "Scan to try" view
+- [ ] Check on phone + desktop, incognito
+
+**Fri 14 Nov**
+- [ ] Polish, then **record the backup video** (in case Wi-Fi fails on stage)
+- [ ] Deck v1 with Shareef's business slides; live demo script (judges scan → chat → dashboard updates)
 
 ## Jack: AI
 
-- [x] Reply bot, provider fallback, per-message tagging, template filling, tagging test set
-- [ ] Reply to the Jasper's Market chat from +1 555-164-9508 to test the bot yourself (nothing has arrived from your number yet)
-- [ ] Coupon or tracked-link outcome tracking, so the pilot has a measurable "came back"
-- [ ] Give Dythan 3 good real bot conversations for the deck
+- [ ] Test the bot from your phone (reply in the Jasper's Market chat; nothing from your number has arrived yet)
+- [ ] Help Thuta wire `/api/chat` to `tag_message` + `reply.answer` (same rules as WhatsApp)
+- [ ] Outcome tracking (coupon or tracked link) for the pilot
+- [ ] 3 good real conversations for the deck
 
 ## Shareef: pilot + business
 
-- [ ] **1 pilot shop**, or a "real people, demo shop" pilot with classmates on the test number
-- [ ] 5 owner interviews, with quotes we're allowed to use
-- [ ] Business case slides: customer, problem size (cited sources only), pricing, unit economics (LLM about $0.00025 per reply + WhatsApp fees), competitors, go-to-market
-- [ ] Keep `docs/Numbers.md` as the one source for every number
+- [ ] Pilot: 1 real shop, or classmates using the `/try` page and WhatsApp test number as "customers"
+- [ ] 5 owner interviews with quotes we're allowed to use
+- [ ] Business slides: customer, problem size (cited sources), pricing, unit economics (about $0.00025 per AI reply + WhatsApp fees), competitors, go-to-market
+- [ ] `docs/Numbers.md` stays the single source for every number
 
 ---
 
@@ -66,17 +80,21 @@
 
 | When | Must be true | Owner |
 |---|---|---|
-| **Wed 12 Nov, night** | Live WhatsApp page shows real messages · business slides drafted | Dythan · Shareef |
-| **Thu 13 Nov, night** | **Feature freeze** · app deployed and checked on a phone · deck v1 | Dythan · everyone |
-| **Fri 14 Nov** | Backup video recorded · full dress rehearsal | Dythan · everyone |
+| **Wed 12 Nov, night** | Supabase live + seeded · `/api/chat` works locally · landing + `/try` deployed on Vercel (mocked is fine) | Thuta · Dythan |
+| **Thu 13 Nov, night** | Backend deployed publicly · `/try` talks to the real AI · dashboard shows live chats · business slides drafted | Thuta · Dythan · Shareef |
+| **Fri 14 Nov, noon** | **Feature freeze** · 10-person test · backup video recorded | Everyone |
 | **Sat 15 Nov** | Finals | Everyone |
+
+## Fallback
+
+If the Next.js dashboard or the public backend isn't solid by **Fri noon**, the demo uses the **Streamlit app + its Live WhatsApp page** on the laptop (works today), with team phones on the WhatsApp test number.
 
 ## Demo rules
 
-- Ask about items the shop stocks: oat milk, durian, kai lan, eggs, rice, Gardenia bread, Pokka green tea, frozen dumplings, party snack packs. Anything else is handed to a person **on purpose** (it never invents stock).
-- Only numbers on the test-recipient list can receive messages (Thuta, Dythan, Jack, plus 2 free slots).
-- Never show phone numbers on screen. The Live WhatsApp page should show names only.
+- The bot answers about items the shop stocks (oat milk, durian, kai lan, eggs, rice, Gardenia bread, Pokka green tea, frozen dumplings, party snack packs). Anything else is handed to a person **on purpose**.
+- Never show phone numbers on screen.
+- Keys go in host settings and `.env`, never in git or chat.
 
 ## Git rules
 
-Work on a branch named `yourname/what`, open a pull request, and get one teammate to look before merging. Never commit keys, phone numbers or real chats (`data/wa_*.json*` is git-ignored).
+Branches `yourname/what`, pull request, one teammate looks before merge. Frontend lives in `web/`, backend in `api/`, so you won't edit the same files.
