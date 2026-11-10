@@ -75,7 +75,12 @@ on first message.
 
 ## Before the finals (Thuta)
 
-- [x] **Permanent token.** System user `nudgely-bot` (Employee; Develop app + WhatsApp Messages only), token valid until **10 Jan 2027**
+- [x] **Long-lived token.** A 60-day **user** token, valid until **9 Jan 2027**: Graph API Explorer → app Nudgely → User Token →
+  `whatsapp_business_messaging` + `whatsapp_business_management` → Generate, then exchanged with the app secret
+  (`GET /oauth/access_token?grant_type=fb_exchange_token`).
+  **Don't use a system-user token on the test number**: every send fails with
+  `(#10) Viewer cannot access the provided Paid Message Account`, even with full access. Once a system user exists,
+  the API Setup page's *Generate token* also gives system-user tokens, so use Graph API Explorer instead.
 - [x] **`WA_APP_SECRET`** set, so the receiver checks Meta's signature on every request
 - [ ] **Audience demo needs a real number.** The test number only reaches 5 registered phones. For the audience, add a real number in Step 2 (Production setup), which also needs a payment method on the WhatsApp account
 - [ ] Decide where the receiver runs on the day (demo laptop + tunnel is fine)
