@@ -69,6 +69,18 @@ def all_customers():
         return _load()
 
 
+def reset():
+    """Start the demo clean. Moves the current store to a timestamped backup; returns its path (or None)."""
+    with _lock:
+        if not os.path.exists(STORE):
+            return None
+        from datetime import datetime
+
+        backup = STORE.replace(".json", f".backup-{datetime.now():%Y%m%d-%H%M%S}.json")
+        os.replace(STORE, backup)
+        return backup
+
+
 def is_stop(text):
     return str(text).strip().lower() in STOP_WORDS
 
