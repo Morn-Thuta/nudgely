@@ -15,6 +15,7 @@ flowchart LR
 
 - **Backend (Thuta, with Claude):** FastAPI in `api/`. Wraps the existing Python (`nudgely/`), receives the WhatsApp webhook and the web chat, writes everything to Supabase. Deployed publicly, so there's **no laptop tunnel on demo day**.
 - **Frontend (Dythan, with Codex):** Next.js in `web/`. Landing page, `/try` web chat, dashboard. Reads Supabase directly (with realtime for the live view) and calls the backend only for chat.
+  **Dythan: start from Jack's pages before designing from scratch.** `docs/pages/landing.html` (product landing page with a 3D customer field, how it works, the numbers) and `docs/pages/customer-explorer.html` (click a customer for their scores, run a campaign on the top 30%). Both are self-contained HTML: open by double-clicking. Their 48 customers are real model output from `data/examples/sales_sample.csv`; reuse the copy, numbers and the 3D field (`app/field.py` has the Streamlit version). Figures must match `docs/TAGGING_ACCURACY.md` and `docs/JACK_WORK.md`.
 
 ## Supabase tables
 
