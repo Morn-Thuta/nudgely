@@ -24,17 +24,28 @@ MantaGO link broadcasts never deliver and no chat text is available (see `MANTAG
 
 `.env` needs: `WA_TOKEN`, `WA_PHONE_NUMBER_ID`, `WA_GRAPH_VERSION=v25.0`, `WA_VERIFY_TOKEN`, `WA_APP_SECRET`. Ask Thuta for the values privately. Never commit them.
 
-## Run it
+## Where it runs
+
+**Live: on Render, no laptop or tunnel needed.** Meta's **Callback URL** is
+`https://nudgely-api.onrender.com/whatsapp` (field `messages` subscribed). The FastAPI backend
+(`api/main.py`) checks Meta's signature, answers 200 at once, and runs the shared `bot.handle()`.
+The same keys as `.env` are set in Render's Environment tab.
+
+- Check it: https://nudgely-api.onrender.com/health should show `"ai": true, "whatsapp": true`.
+- Render's free plan sleeps after ~15 min idle; the first message after that takes ~30-50 s.
+  **Open /health a minute before any demo** to wake it.
+
+### Running it locally instead (testing only)
 
 ```bash
-python scripts/whatsapp_webhook.py --bot         # the real thing: AI tags + replies (customers in data/wa_customers.json)
+python scripts/whatsapp_webhook.py --bot         # AI tags + replies (customers in data/wa_customers.json)
 python scripts/whatsapp_webhook.py --echo        # simple test: replies "Got it: ..."
 cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8788   # gives https://xxx.trycloudflare.com
 ```
 
-The quick-tunnel address changes every time. After restarting it, update **Callback URL** in
-Meta (Use cases → WhatsApp → Step 2 → Configure Webhooks) to `https://<new>.trycloudflare.com/whatsapp`
-with the same verify token, then **Verify and save**.
+Pointing Meta's Callback URL at a tunnel takes WhatsApp away from Render for everyone, so put it
+back to the Render URL afterwards (Use cases → WhatsApp → Step 2 → Configure Webhooks, same verify
+token, **Verify and save**).
 
 Send tests:
 
@@ -95,4 +106,4 @@ Those would need adding to `nudgely/bot.py`.
   has its tokens revoked and no assets (Meta's settings page has no delete option).
 - [x] **`WA_APP_SECRET`** set, so the receiver checks Meta's signature on every request
 - [ ] **Audience demo needs a real number.** The test number only reaches 5 registered phones. For the audience, add a real number in Step 2 (Production setup), which also needs a payment method on the WhatsApp account
-- [ ] Decide where the receiver runs on the day (demo laptop + tunnel is fine)
+- [x] Receiver runs on Render (https://nudgely-api.onrender.com/whatsapp); wake it via /health before the demo
