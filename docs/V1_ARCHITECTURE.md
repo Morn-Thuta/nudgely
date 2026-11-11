@@ -18,6 +18,8 @@ flowchart LR
 
 ## Supabase tables
 
+**Ready to run:** paste [`supabase/migrations/001_init.sql`](../supabase/migrations/001_init.sql) into the Supabase SQL editor (tables, row level security, realtime), then `python scripts/seed_supabase.py --yes` for the 30 demo customers. The migration adds `channel = 'demo'` and a `p_no_msg` column for the seeded customers. The summary below is the shape.
+
 ```sql
 create table customers (
   id           text primary key,          -- 'WA001' for WhatsApp, 'WEB001' for web chat
@@ -75,3 +77,11 @@ create table tags (
 2. The judge types a name (optional) and chats with Kampung Fresh
 3. The big-screen dashboard shows the new customer, their tags and the bot's replies live
 4. Stretch: a second QR code, `https://wa.me/<real number>?text=Hi%20Kampung%20Fresh`, opens real WhatsApp, once a real number is approved
+
+## Deploying the backend (Render)
+
+1. render.com → sign in with GitHub → **New → Blueprint** → repo `Morn-Thuta/nudgely` (uses `render.yaml`)
+2. Fill the secrets Render asks for (`LLM_API_KEY`, `WA_*`, `SUPABASE_*`, `ALLOWED_ORIGINS`), the same values as `.env`
+3. Open `https://<service>.onrender.com/health`. It should say `"ai": true, "whatsapp": true`
+4. Meta → WhatsApp → Configuration → Callback URL `https://<service>.onrender.com/whatsapp`, same verify token → **Verify and save**
+5. Free plan sleeps after about 15 min idle: open `/health` a few minutes before the demo
