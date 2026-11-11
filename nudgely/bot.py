@@ -17,18 +17,26 @@ STOP_REPLY = "You won't get any more messages from us. Reply START if you change
 START_REPLY = "Welcome back! You'll hear from us again. Reply STOP anytime to opt out."
 
 
-def handle(key, name, text, msg_id=None, prefix="WA", kind="text"):
+def handle(key, name, text, msg_id=None, prefix="WA", kind="text", max_messages=None):
     """Process one incoming message. Returns a dict:
 
     {"customer_id", "reply" (str or None = send nothing), "handover", "opted_out",
-     "new_tags" [{"type", "value", "evidence"}], "duplicate", "reason"}
+     "new_tags" [{"type", "value", "evidence"}], "duplicate", "limited", "reason"}
+
+    `max_messages` caps how many messages one visitor can send (the judges' web chat);
+    over the cap nothing is stored or answered and "limited" is True.
     """
     from nudgely import reply as replybot
     from nudgely.llm import merge_tags, tag_message
 
     rec = conversations.get_or_create(key, name, prefix=prefix)
     out = {"customer_id": rec["customer_id"], "reply": None, "handover": False,
-           "opted_out": rec.get("opted_out", False), "new_tags": [], "duplicate": False, "reason": ""}
+           "opted_out": rec.get("opted_out", False), "new_tags": [], "duplicate": False,
+           "limited": False, "reason": ""}
+    if max_messages is not None and rec.get("msg_count", 0) >= max_messages:
+        out["limited"] = True
+        return out
+    rec["msg_count"] = rec.get("msg_count", 0) + 1
     if msg_id:
         if msg_id in rec["seen_ids"]:
             out["duplicate"] = True
@@ -41,7 +49,9 @@ def handle(key, name, text, msg_id=None, prefix="WA", kind="text"):
         if out["reply"]:
             rec["chat"].append({"from": "store", "text": out["reply"], "date": today})
         conversations.update(key, rec)
-        supabase_sync.sync(rec, rec["chat"][before:], out["new_tags"], handover_reply=out["handover"])
+        # In Supabase mode the database *is* the history, so write before the next message can arrive.
+        supabase_sync.sync(rec, rec["chat"][before:], out["new_tags"], handover_reply=out["handover"],
+                           wait=conversations.remote())
         out["opted_out"] = rec.get("opted_out", False)
         return out
 

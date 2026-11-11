@@ -18,7 +18,7 @@ flowchart LR
 
 ## Supabase tables
 
-**Ready to run:** paste [`supabase/migrations/001_init.sql`](../supabase/migrations/001_init.sql) into the Supabase SQL editor (tables, row level security, realtime), then `python scripts/seed_supabase.py --yes` for the 30 demo customers. The migration adds `channel = 'demo'` and a `p_no_msg` column for the seeded customers. The summary below is the shape.
+**Ready to run:** paste [`supabase/migrations/001_init.sql`](../supabase/migrations/001_init.sql) into the Supabase SQL editor (tables, row level security, realtime), then [`002_backend_state.sql`](../supabase/migrations/002_backend_state.sql) (backend state + hides `key_hash` from the dashboard), then `python scripts/seed_supabase.py --yes` for the 30 demo customers. The migration adds `channel = 'demo'` and a `p_no_msg` column for the seeded customers. The summary below is the shape.
 
 ```sql
 create table customers (
@@ -85,3 +85,14 @@ create table tags (
 3. Open `https://<service>.onrender.com/health`. It should say `"ai": true, "whatsapp": true`
 4. Meta → WhatsApp → Configuration → Callback URL `https://<service>.onrender.com/whatsapp`, same verify token → **Verify and save**
 5. Free plan sleeps after about 15 min idle: open `/health` a few minutes before the demo
+
+## Where conversation state lives
+
+| Setting | Store | Use |
+|---|---|---|
+| `NUDGELY_STORE` unset | `data/wa_customers.json` on disk | laptop: Streamlit Live page, local bot |
+| `NUDGELY_STORE=supabase` + `KEY_SALT` | Supabase (`customers.memory`, `messages`, `tags`) | hosted backend (Render, Vercel): survives restarts |
+
+Customers are found by `key_hash = HMAC(KEY_SALT, WhatsApp number or web session)`. Numbers are never stored, and the
+dashboard can't read `key_hash`. **Keep `KEY_SALT` the same forever**: changing it makes everyone a new customer.
+On Vercel also set `WHATSAPP_INLINE=1`, so WhatsApp replies finish before the function returns.

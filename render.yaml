@@ -32,5 +32,9 @@ services:
         sync: false
       - key: SUPABASE_SERVICE_KEY
         sync: false
+      - key: NUDGELY_STORE
+        value: supabase              # conversations live in Supabase; nothing on Render's disk
+      - key: KEY_SALT
+        generateValue: true          # secret for hashing customer numbers; Render makes one
       - key: ALLOWED_ORIGINS
         sync: false                 # e.g. https://nudgely.vercel.app,http://localhost:3000

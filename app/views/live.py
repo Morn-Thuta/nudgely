@@ -77,10 +77,7 @@ def live_board():
             st.markdown("<div style='background:#EFEAE2;padding:8px;border-radius:10px'>"
                         + "".join(bubble(m, first) for m in chat) + "</div>", unsafe_allow_html=True)
             if rec.get("handover") and st.button("Mark resolved", key=f"resolve_{rec['customer_id']}"):
-                wa = numbers[rec["customer_id"]]
-                fresh = conversations.all_customers()[wa]
-                fresh["handover"] = False
-                conversations.update(wa, fresh)
+                conversations.set_handover(numbers[rec["customer_id"]], False)
                 st.rerun(scope="fragment")
 
 
@@ -92,4 +89,4 @@ with st.expander("Demo controls"):
     sure = st.checkbox("I want to clear the live conversations")
     if st.button("Reset demo", disabled=not sure):
         backup = conversations.reset()
-        st.success(f"Cleared. Backup saved as `{backup}`." if backup else "Nothing to clear.")
+        st.success(f"Cleared. Backup: {backup}" if backup else "Nothing to clear.")

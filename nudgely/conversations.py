@@ -1,9 +1,10 @@
 """Who each WhatsApp number is, what they said, and what we remember about them.
 
-Real customer data, so it lives in data/wa_customers.json, which is git-ignored.
-One record per WhatsApp number:
+Real customer data, so it lives in data/wa_customers.json, which is git-ignored, or in Supabase
+when NUDGELY_STORE=supabase (hosted backend: nothing kept on disk; see nudgely/remote_store.py).
+One record per WhatsApp number / web session:
   {"customer_id", "name", "label", "chat": [{"from", "text", "date"}], "tags", "replied",
-   "opted_out", "handover", "seen_ids"}
+   "opted_out", "handover", "seen_ids", "msg_count"}
 """
 
 import json
@@ -18,6 +19,11 @@ START_WORDS = {"start", "unstop"}
 MAX_CHAT = 30  # keep the prompt small; older turns add cost, not much context
 
 _lock = threading.Lock()
+
+
+def remote():
+    """True when conversations live in Supabase instead of the local file."""
+    return os.getenv("NUDGELY_STORE", "local").lower() == "supabase"
 
 
 def _load():
@@ -41,6 +47,10 @@ def get_or_create(wa_id, name="", prefix="WA"):
     New people get label "New": not Persuadable, so the reply bot never offers them a discount.
     `prefix` sets the id style: "WA" for WhatsApp, "WEB" for the web chat.
     """
+    if remote():
+        from nudgely import remote_store
+
+        return remote_store.get_or_create(wa_id, name, prefix=prefix, max_chat=MAX_CHAT)
     with _lock:
         data = _load()
         rec = data.get(wa_id)
@@ -48,7 +58,7 @@ def get_or_create(wa_id, name="", prefix="WA"):
             n = sum(1 for r in data.values() if str(r.get("customer_id", "")).startswith(prefix)) + 1
             rec = {"customer_id": f"{prefix}{n:03d}", "name": name or "", "label": "New",
                    "chat": [], "tags": {}, "replied": False, "opted_out": False,
-                   "handover": False, "seen_ids": []}
+                   "handover": False, "seen_ids": [], "msg_count": 0}
             data[wa_id] = rec
             _save(data)
         elif name and not rec.get("name"):
@@ -58,6 +68,10 @@ def get_or_create(wa_id, name="", prefix="WA"):
 
 
 def update(wa_id, rec):
+    if remote():
+        from nudgely import remote_store
+
+        return remote_store.update(rec)
     with _lock:
         data = _load()
         rec["chat"] = rec.get("chat", [])[-MAX_CHAT:]
@@ -67,12 +81,33 @@ def update(wa_id, rec):
 
 
 def all_customers():
+    if remote():
+        from nudgely import remote_store
+
+        return remote_store.all_customers()
     with _lock:
         return _load()
 
 
+def set_handover(key, value):
+    """Mark a handover resolved (False) or open (True). `key` is the store key from all_customers()."""
+    if remote():
+        from nudgely import remote_store
+
+        return remote_store.set_handover(key, value)
+    with _lock:
+        data = _load()
+        if key in data:
+            data[key]["handover"] = bool(value)
+            _save(data)
+
+
 def reset():
     """Start the demo clean. Moves the current store to a timestamped backup; returns its path (or None)."""
+    if remote():
+        from nudgely import remote_store
+
+        return remote_store.reset()
     with _lock:
         if not os.path.exists(STORE):
             return None

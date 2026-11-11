@@ -64,12 +64,16 @@ class ChatOut(BaseModel):
     customer_id: str
 
 
+LIMIT_MSG = "This demo chat has reached its message limit. Thanks for trying Nudgely!"
+
+
 def _rate_limit(session_id):
+    """Best-effort gap per instance; the hard cap is counted in the store (works across instances)."""
     with _session_lock:
         last, count = _sessions.get(session_id, (0.0, 0))
         now = time.monotonic()
         if count >= MAX_PER_SESSION:
-            raise HTTPException(429, "This demo chat has reached its message limit. Thanks for trying Nudgely!")
+            raise HTTPException(429, LIMIT_MSG)
         if now - last < MIN_GAP_S:
             raise HTTPException(429, "Slow down a little: one message every 2 seconds.")
         _sessions[session_id] = (now, count + 1)
@@ -81,7 +85,10 @@ def chat(body: ChatIn):
         raise HTTPException(400, "session_id must be 8-64 letters, digits or dashes (a UUID works)")
     _rate_limit(body.session_id)
     name = re.sub(r"[^\w .'-]", "", body.name).strip()[:40]
-    out = bot.handle(f"web:{body.session_id}", name, body.text.strip(), prefix="WEB")
+    out = bot.handle(f"web:{body.session_id}", name, body.text.strip(), prefix="WEB",
+                     max_messages=MAX_PER_SESSION)
+    if out["limited"]:
+        raise HTTPException(429, LIMIT_MSG)
     return ChatOut(reply=out["reply"], handover=out["handover"], customer_id=out["customer_id"],
                    tags=[Tag(**{k: str(t.get(k) or "") for k in ("type", "value", "evidence")})
                          for t in out["new_tags"]])
@@ -132,8 +139,12 @@ async def whatsapp_webhook(request: Request, background: BackgroundTasks):
     for s in data["statuses"]:
         if s["status"] == "failed":
             print(f"[whatsapp] delivery failed: {s['error']}", flush=True)
+    inline = os.getenv("WHATSAPP_INLINE", "") == "1"  # serverless (Vercel): finish before responding
     for m in data["messages"]:
-        background.add_task(_whatsapp_turn, m)  # answer Meta at once, reply in the background
+        if inline:
+            _whatsapp_turn(m)
+        else:
+            background.add_task(_whatsapp_turn, m)  # answer Meta at once, reply in the background
     return {"ok": True}
 
 
