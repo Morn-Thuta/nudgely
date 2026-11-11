@@ -24,7 +24,7 @@ Impress the judges with **a commercial-grade product**: a landing page, a dashbo
 | **Thuta** | Lead · **backend** (`api/`, FastAPI, from Jayden) · Supabase setup + seed · WhatsApp · real number (stretch) |
 | **Dythan** | **Frontend** (`web/`, Next.js, from Jayden) · landing page · `/try` web chat · dashboard · pitch + video |
 | **Jack** | AI quality (tagger, reply bot) · outcome tracking · help with `/api/chat` |
-| **Shareef** | Pilot + owner interviews · business case · numbers |
+| **Shareef** | Evidence (cited research, public quotes, classmate test) · business case · numbers |
 | ~~Jayden~~ | On another project |
 
 ---
@@ -69,12 +69,24 @@ Impress the judges with **a commercial-grade product**: a landing page, a dashbo
 - [ ] Outcome tracking (coupon or tracked link) for the pilot
 - [ ] 3 good real conversations for the deck
 
-## Shareef: pilot + business
+## Shareef: evidence + business
 
-- [ ] Pilot: 1 real shop, or classmates using the `/try` page and WhatsApp test number as "customers"
-- [ ] 5 owner interviews with quotes we're allowed to use
-- [ ] Business slides: customer, problem size (cited sources), pricing, unit economics (about $0.00025 per AI reply + WhatsApp fees), competitors, go-to-market
+No real-shop pilot or owner interviews: not enough time before Sat. Use public data and our own live test instead.
+**Never present mock data or made-up quotes as real.** Label anything simulated as "simulated".
+
+**Wed 11 Nov (today)**
+- [ ] **3-4 cited sources** on the problem: Singapore SME numbers, customer retention / repeat purchase studies, WhatsApp Business use in SEA. Each with a link, for "research shows..." slides
+- [ ] **Real owners' public words**: 3-5 quotes from forums, Reddit or Google reviews about slow replies or customers not coming back, with the source shown
+
+**Thu 12 Nov**
+- [ ] **Business slides** (draft by Thu night): customer, problem size (from the sources above), pricing, cost per shop (about $0.00025 per AI reply + WhatsApp fees), competitors (incl. "why not just MantaGO broadcasts?"), go-to-market
+- [ ] **Classmate test, evening** (doubles as the load test): 10-15 classmates chat with the live bot on WhatsApp or `/try` for 10 min. Thuta pulls the real numbers after: chats, % tagged right, % handed to a person, average reply time
+
+**Fri 13 Nov (before noon)**
+- [ ] Hand slides + classmate test numbers to Dythan for the deck
 - [ ] `docs/Numbers.md` stays the single source for every number
+
+**Finals day:** play Mei Ling (shop owner) on the dashboard, and run the Demo POS if we build it.
 
 ---
 
@@ -92,7 +104,7 @@ Impress the judges with **a commercial-grade product**: a landing page, a dashbo
 | Question judges may ask | Honest answer today | Work before finals | Owner |
 |---|---|---|---|
 | "How do you know it brought people back?" | Holdout group + Jack's `returns.py` matches the sales file to who was messaged | Show one worked example; coupon code or tracked link for the pilot | Jack |
-| "Your evidence is Russian grocery data (Lenta)" | True. Model retrained on 10 features any shop has; 53% of extra visits from top 30% (90% CI 31-89%) | A real pilot result, even small | Shareef |
+| "Your evidence is Russian grocery data (Lenta)" | True. Model retrained on 10 features any shop has; 53% of extra visits from top 30% (90% CI 31-89%) | Classmate test numbers + "a paid pilot is our next step" | Shareef |
 | "300 customers and a 30-person holdout proves nothing" | Right for one campaign; results add up over several campaigns | Say it before they do | Shareef |
 | "How does the bot know what's in stock?" | Fixed list in `nudgely/llm.py`; anything else goes to a person on purpose | Mock POS (Thu, if time) | Thuta |
 | "What if it makes up a price?" | `review_reply` checks every reply; invented price → handed to a person | Show the durian $3 example | Jack |
