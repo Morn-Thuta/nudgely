@@ -4,7 +4,7 @@ Message the right customers, say the right thing, prove it worked.
 
 Nudgely picks which customers to message (uplift model), writes each one a personal message from their own chat history (LLM), sends it through MantaGO, and proves the effect against a no-message group.
 
-AI-GNITION 2026 · Team Bongo Gang · **Top 10 finalist** · Finals **Fri 14 Nov 2026**
+AI-GNITION 2026 · Team Bongo Gang · **Top 10 finalist** · Finals **Sat 14 Nov 2026**
 
 **Live app (hackathon MVP):** https://nudgely.streamlit.app
 
