@@ -36,7 +36,8 @@ Impress the judges with **a commercial-grade product**: a landing page, a dashbo
 - [x] Rate limit `/api/chat` per session (2 s gap, 30 messages per session)
 - [x] **Backend deployed on Render**: https://nudgely-api.onrender.com. Meta's webhook points at it, so **no laptop tunnel**
 - [x] Supabase migrations (`supabase/migrations/`) + seed script (`scripts/seed_supabase.py`) written
-- [ ] **Supabase project** (Dythan creates it, invites Thuta): run the migrations, seed the 30 demo customers, put the keys in Render, share URL + publishable key with Dythan **privately**
+- [x] **Supabase project** (Dythan's): tables + 30 demo customers in, keys on Render. Live chats now save to Supabase (`/health` shows `"store": "supabase"`)
+- [ ] Share URL + publishable key with Dythan **privately**; check RLS with the publishable key
 - [ ] Backup judge chat page served by the backend itself (in case `web/` isn't ready)
 
 **Thu 12 Nov**
