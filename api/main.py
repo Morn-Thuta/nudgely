@@ -154,4 +154,7 @@ async def whatsapp_webhook(request: Request, background: BackgroundTasks):
 def health():
     from nudgely.llm import available
 
-    return {"ok": True, "ai": available(), "whatsapp": _wa() is not None, "supabase": supabase_sync.enabled()}
+    from nudgely.conversations import remote
+
+    return {"ok": True, "ai": available(), "whatsapp": _wa() is not None, "supabase": supabase_sync.enabled(),
+            "store": "supabase" if remote() else "local"}

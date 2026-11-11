@@ -22,8 +22,16 @@ _lock = threading.Lock()
 
 
 def remote():
-    """True when conversations live in Supabase instead of the local file."""
-    return os.getenv("NUDGELY_STORE", "local").lower() == "supabase"
+    """True when conversations live in Supabase instead of the local file.
+
+    Asked for with NUDGELY_STORE=supabase, but only used once SUPABASE_URL and SUPABASE_SERVICE_KEY
+    are set; until then the local file is used, so a host deployed before the database still works.
+    """
+    if os.getenv("NUDGELY_STORE", "local").lower() != "supabase":
+        return False
+    from nudgely import supabase_sync
+
+    return supabase_sync.enabled()
 
 
 def _load():
