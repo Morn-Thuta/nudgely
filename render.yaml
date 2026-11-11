@@ -1,0 +1,40 @@
+# Render blueprint for the Nudgely backend (api/). In Render: New → Blueprint → pick this repo.
+# Secrets marked sync: false are typed into Render's dashboard once; they are never in git.
+services:
+  - type: web
+    name: nudgely-api
+    runtime: python
+    region: singapore
+    plan: free                      # sleeps after ~15 min idle; open /health a few minutes before the demo
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: LLM_PROVIDER
+        value: openrouter
+      - key: LLM_MODEL
+        value: anthropic/claude-haiku-5.5
+      - key: LLM_API_KEY
+        sync: false
+      - key: WA_TOKEN
+        sync: false
+      - key: WA_PHONE_NUMBER_ID
+        sync: false
+      - key: WA_VERIFY_TOKEN
+        sync: false
+      - key: WA_APP_SECRET
+        sync: false
+      - key: WA_GRAPH_VERSION
+        value: v25.0
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: NUDGELY_STORE
+        value: supabase              # conversations live in Supabase; nothing on Render's disk
+      - key: KEY_SALT
+        generateValue: true          # secret for hashing customer numbers; Render makes one
+      - key: ALLOWED_ORIGINS
+        sync: false                 # e.g. https://nudgely.vercel.app,http://localhost:3000

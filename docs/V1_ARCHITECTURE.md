@@ -1,0 +1,98 @@
+# Nudgely v1: architecture and contract (frontend ↔ backend)
+
+The contract lets Dythan (frontend) and Thuta (backend) build at the same time. Change it only by agreement.
+
+```mermaid
+flowchart LR
+  J[Judge's phone<br/>scans QR] --> T[/try web chat<br/>Next.js on Vercel/]
+  W[WhatsApp customer] --> M[Meta Cloud API]
+  T -- POST /api/chat --> API[FastAPI backend<br/>Render or Railway]
+  M -- webhook --> API
+  API --> AI[Tagger + reply bot<br/>nudgely/llm.py, reply.py]
+  API --> DB[(Supabase Postgres)]
+  D[Dashboard<br/>Next.js on Vercel] -- reads + realtime --> DB
+```
+
+- **Backend (Thuta, with Claude):** FastAPI in `api/`. Wraps the existing Python (`nudgely/`), receives the WhatsApp webhook and the web chat, writes everything to Supabase. Deployed publicly, so there's **no laptop tunnel on demo day**.
+- **Frontend (Dythan, with Codex):** Next.js in `web/`. Landing page, `/try` web chat, dashboard. Reads Supabase directly (with realtime for the live view) and calls the backend only for chat.
+
+## Supabase tables
+
+**Ready to run:** paste [`supabase/migrations/001_init.sql`](../supabase/migrations/001_init.sql) into the Supabase SQL editor (tables, row level security, realtime), then [`002_backend_state.sql`](../supabase/migrations/002_backend_state.sql) (backend state + hides `key_hash` from the dashboard), then `python scripts/seed_supabase.py --yes` for the 30 demo customers. The migration adds `channel = 'demo'` and a `p_no_msg` column for the seeded customers. The summary below is the shape.
+
+```sql
+create table customers (
+  id           text primary key,          -- 'WA001' for WhatsApp, 'WEB001' for web chat
+  channel      text not null,             -- 'whatsapp' | 'web'
+  name         text,                      -- display name only; never store phone numbers here
+  label        text default 'New',        -- Persuadable | Sure Thing | Lost Cause | New
+  uplift       real,
+  handover     boolean default false,     -- needs a person
+  opted_out    boolean default false,
+  created_at   timestamptz default now(),
+  last_seen_at timestamptz default now()
+);
+
+create table messages (
+  id           bigint generated always as identity primary key,
+  customer_id  text references customers(id) on delete cascade,
+  sender       text not null,             -- 'customer' | 'store'
+  text         text not null,
+  handover     boolean default false,     -- this store reply was a handover
+  created_at   timestamptz default now()
+);
+
+create table tags (
+  id           bigint generated always as identity primary key,
+  customer_id  text references customers(id) on delete cascade,
+  type         text not null,             -- restock_request | complaint_delivery | complaint_price | upcoming_event | product_interest | loyal_regular
+  value        text not null,
+  evidence     text not null,             -- the customer's own words
+  created_at   timestamptz default now(),
+  unique (customer_id, type, value)
+);
+```
+
+- Turn on **Realtime** for `messages`, `customers` and `tags` (the live dashboard listens to inserts).
+- The 30 Kampung Fresh demo customers (scores, labels) are seeded from `data/customers.csv`.
+- **RLS:** the backend writes with the service key. The dashboard reads with the anon key behind login. The `/try` page never reads the database directly: it only calls `/api/chat`.
+- WhatsApp numbers stay in the backend only (hashed if stored at all). The dashboard shows names and ids.
+
+## Backend API
+
+| Method | Path | Body | Returns |
+|---|---|---|---|
+| `POST` | `/api/chat` | `{"session_id": "<random uuid from the browser>", "name": "Judge 1", "text": "Do you have durian?"}` | `{"reply": "...", "handover": false, "tags": [{"type", "value", "evidence"}], "customer_id": "WEB003"}` |
+| `GET` | `/whatsapp` | Meta's verification check | the challenge |
+| `POST` | `/whatsapp` | Meta's webhook | `200` |
+| `GET` | `/health` | | `{"ok": true}` |
+
+- `/api/chat` is rate-limited per session (about 1 message every 2 s, 30 per session) so a judge can't run up the AI bill.
+- The same STOP / START / HUMAN rules apply on the web chat as on WhatsApp.
+- Reply time is about 3–6 s (Claude Haiku 5.5 via OpenRouter), so the UI should show a typing indicator.
+
+## Judge QR flow
+
+1. The QR code on screen and on the deck goes to `https://<site>/try`
+2. The judge types a name (optional) and chats with Kampung Fresh
+3. The big-screen dashboard shows the new customer, their tags and the bot's replies live
+4. Stretch: a second QR code, `https://wa.me/<real number>?text=Hi%20Kampung%20Fresh`, opens real WhatsApp, once a real number is approved
+
+## Deploying the backend (Render)
+
+1. render.com → sign in with GitHub → **New → Blueprint** → repo `Morn-Thuta/nudgely` (uses `render.yaml`)
+2. Fill the secrets Render asks for (`LLM_API_KEY`, `WA_*`, `SUPABASE_*`, `ALLOWED_ORIGINS`), the same values as `.env`
+3. Open `https://<service>.onrender.com/health`. It should say `"ai": true, "whatsapp": true`
+4. Meta → WhatsApp → Configuration → Callback URL `https://<service>.onrender.com/whatsapp`, same verify token → **Verify and save**
+5. Free plan sleeps after about 15 min idle: open `/health` a few minutes before the demo
+
+## Where conversation state lives
+
+| Setting | Store | Use |
+|---|---|---|
+| `NUDGELY_STORE` unset | `data/wa_customers.json` on disk | laptop: Streamlit Live page, local bot |
+| `NUDGELY_STORE=supabase` + `KEY_SALT` | Supabase (`customers.memory`, `messages`, `tags`) | hosted backend (Render, Vercel): survives restarts |
+
+Customers are found by `key_hash = HMAC(KEY_SALT, WhatsApp number or web session)`. Numbers are never stored, and the
+dashboard can't read `key_hash`. **Keep `KEY_SALT` the same forever**: changing it makes everyone a new customer.
+On Vercel also set `WHATSAPP_INLINE=1`, so WhatsApp replies finish before the function returns.

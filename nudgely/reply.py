@@ -22,6 +22,7 @@ so a caller that forgets to check `handover` cannot leak an invented price.
 
 import json
 import re
+from difflib import SequenceMatcher
 
 from nudgely.llm import STORE_INFO, complete_json, scrub
 from nudgely.verify import verify_message
@@ -50,6 +51,9 @@ WHAT YOU MAY USE
 - The customer's chat history, given below.
 - The shop information given below: stock, delivery terms, current offers.
 - Nothing else. If you do not know, do not guess.
+- Customers often misspell or run words together ("durain", "oakmilk", "instock"). If a word
+  clearly means an item in the stock list, treat it as that item and use the correct name.
+- If asked what is in stock, list items from the stock list.
 
 NEVER
 - Name a product, price, offer or delivery term that is not in the shop information.
@@ -177,11 +181,26 @@ def _invents(reply, chat, tags):
 
 
 def _engages_with(reply, incoming):
-    """A reply that shares no meaningful word with the question is usually drift."""
+    """A reply that shares no meaningful word with the question is usually drift.
+
+    Customers misspell and run words together ("durain", "oakmilk", "instock"), so a word
+    counts as shared when it is the same, a near spelling, or contains / is contained in a
+    word of 4+ letters from the other side.
+    """
     stop = {"the", "and", "you", "your", "for", "are", "can", "have", "this", "that", "with",
             "what", "when", "how", "any", "got", "will", "our", "please", "thanks", "hello"}
     asked = {w for w in re.findall(r"[a-z]{3,}", str(incoming).lower())} - stop
     said = {w for w in re.findall(r"[a-z]{3,}", reply.lower())} - stop
     if not asked:
         return True
-    return bool(asked & said) or bool({w[:-1] for w in asked if w.endswith("s")} & said)
+    asked |= {w[:-1] for w in asked if w.endswith("s")}
+    said |= {w[:-1] for w in said if w.endswith("s")}
+    return any(_same_word(a, s) for a in asked for s in said)
+
+
+def _same_word(a, b):
+    if a == b:
+        return True
+    if min(len(a), len(b)) >= 4 and (a in b or b in a):  # "instock" ~ "stock", "oakmilk" ~ "milk"
+        return True
+    return min(len(a), len(b)) >= 5 and SequenceMatcher(None, a, b).ratio() >= 0.8  # "durain" ~ "durian"

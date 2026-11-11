@@ -11,6 +11,7 @@ MantaGO link broadcasts never deliver and no chat text is available (see `MANTAG
 | Receive a customer's message **with its text** on our webhook | ✅ |
 | Reply with free text inside the 24-hour window | ✅ (`--echo`) |
 | Delivery statuses (sent, delivered, read) on the webhook | ✅ |
+| AI bot: tag each message, answer or hand over, STOP/START (`--bot`) | ✅ about 6–10 s per reply |
 
 ## Setup (already done)
 
@@ -26,7 +27,8 @@ MantaGO link broadcasts never deliver and no chat text is available (see `MANTAG
 ## Run it
 
 ```bash
-python scripts/whatsapp_webhook.py --echo        # receiver on 127.0.0.1:8788, path /whatsapp
+python scripts/whatsapp_webhook.py --bot         # the real thing: AI tags + replies (customers in data/wa_customers.json)
+python scripts/whatsapp_webhook.py --echo        # simple test: replies "Got it: ..."
 cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8788   # gives https://xxx.trycloudflare.com
 ```
 
@@ -43,44 +45,54 @@ python scripts/test_whatsapp.py text --to 65XXXXXXXX --message "Hi" --yes   # on
 
 Incoming messages are appended to `data/wa_inbox.jsonl` (git-ignored: real customer messages).
 
+## AI model
+
+`LLM_PROVIDER=openrouter`, `LLM_MODEL=anthropic/claude-haiku-5.5` (paid credit, about $0.00025 per reply, 6 s).
+The free models stay as automatic fallbacks but take 1–2 minutes, too slow for a live demo.
+
+The bot only answers confidently about items in `STORE_INFO` (nudgely/llm.py). Anything else, such as
+"do you have Monster Energy?", is handed to a person on purpose: it must never invent stock.
+
 ## The bot: tagging and replies (done, Jack)
 
-`scripts/whatsapp_webhook.py` now tags every incoming message and answers it with the reply bot.
-The logic is in `nudgely/conversation.py` so the FastAPI backend can call the same `handle()`.
+`scripts/whatsapp_webhook.py --bot` tags every incoming message and answers it with the reply bot.
+The logic is the shared `bot.handle()` in `nudgely/bot.py`, the same one the FastAPI backend and the
+web chat use, so a WhatsApp customer shows up on the Live page and in Supabase like any other.
 
 ```bash
-python scripts/whatsapp_webhook.py              # tag + reply for real
+python scripts/whatsapp_webhook.py --bot        # tag + reply for real
 python scripts/whatsapp_webhook.py --dry-run    # tag + print the draft reply, send nothing (no WA keys needed)
 python scripts/whatsapp_webhook.py --echo       # old pipe test: "Got it: <text>", no AI
-python scripts/whatsapp_webhook.py --clear-handover 6591234567   # let the bot talk to them again
 ```
 
 What happens to each message:
 
 1. **Meta gets its 200 straight away.** The AI takes seconds and Meta retries slow deliveries, so the
    work happens on one background worker, and a message id already seen is ignored. No double replies.
-2. **STOP / UNSUBSCRIBE** is handled without the AI: one confirmation, then no tagging and no replies
-   until they send START.
+2. **STOP / START** is handled without the AI: one confirmation, then no replies until they send START.
 3. **Tagged** with `llm.tag_message`, merged into what we remember with `merge_tags`.
 4. **Answered** with `reply.answer`, which hands over to a person when it is unsure, asked for a
-   person (HUMAN), a refund or a complaint, or when the checker catches an invented price. On handover
-   the customer gets the holding line and **the bot stays quiet for 12 hours** so it does not repeat
-   "someone will follow up" on every message. Clear it early with `--clear-handover`.
+   person (HUMAN), a refund or a complaint, or when the checker catches an invented price.
 5. A voice note or photo hands over (the bot cannot read it) instead of being ignored.
 
-Each conversation (chat, tags, handover state) is kept in `data/wa_conversations.json`, git-ignored.
+Customers are kept in `data/wa_customers.json` (git-ignored), or in Supabase when its keys are set.
 A number not seen before becomes a new customer with **no label, so no discount is ever offered**.
 
-**Demo trick:** to make a teammate's phone start as a demo customer with their chat history and tags,
-put `{"65XXXXXXXX": "C001"}` in `data/wa_contacts.json` (git-ignored, it holds phone numbers).
-
-Not done yet, and needed before real customers: a **paid LLM key** (the bot sends their messages to
-the model; free tiers are for testing), and a place for the shop owner to see handovers. Today they
-are only printed in the console and saved in the conversations file.
+Not merged yet from Jack's `nudgely/conversation.py`: the 12-hour quiet period after a handover,
+`--clear-handover`, and mapping a teammate's phone to a demo customer via `data/wa_contacts.json`.
+Those would need adding to `nudgely/bot.py`.
 
 ## Before the finals (Thuta)
 
-- [ ] **Permanent token.** The current token expires after 24 hours. Business settings → System users → add a system user → assign the Nudgely app and the WhatsApp account → generate a token with `whatsapp_business_messaging` and `whatsapp_business_management`
-- [ ] **`WA_APP_SECRET`** from App settings → Basic, so the receiver checks Meta's signature
+- [x] **Long-lived token.** A 60-day **user** token, valid until **9 Jan 2027**: Graph API Explorer → app Nudgely → User Token →
+  `whatsapp_business_messaging` + `whatsapp_business_management` → Generate, then exchanged with the app secret
+  (`GET /oauth/access_token?grant_type=fb_exchange_token`).
+  **Don't use a system-user token on the test number**: every send fails with
+  `(#10) Viewer cannot access the provided Paid Message Account`, even with full access. Once a system user exists,
+  the API Setup page's *Generate token* also gives system-user tokens, so use Graph API Explorer instead.
+  Likely cause: the system user had **Finance role: None**, and template/paid sends need billing access.
+  For a production number, a system user would need a finance role. Our test system user `nudgely-bot`
+  has its tokens revoked and no assets (Meta's settings page has no delete option).
+- [x] **`WA_APP_SECRET`** set, so the receiver checks Meta's signature on every request
 - [ ] **Audience demo needs a real number.** The test number only reaches 5 registered phones. For the audience, add a real number in Step 2 (Production setup), which also needs a payment method on the WhatsApp account
 - [ ] Decide where the receiver runs on the day (demo laptop + tunnel is fine)

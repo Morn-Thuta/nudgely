@@ -14,6 +14,7 @@ require_access()
 # One job per page. The pitch lives on the landing page, the model's evidence
 # lives on a tab of Results, and nothing appears in two places.
 pages = [
+    st.Page("views/live.py", title="Live WhatsApp", icon="🟢"),
     st.Page("views/customers.py", title="Customers", icon="👥", default=True),
     st.Page("views/customer_detail.py", title="Customer detail", icon="💬"),
     st.Page("views/campaign.py", title="Campaign plan", icon="📤"),

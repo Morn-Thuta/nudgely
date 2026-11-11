@@ -10,10 +10,12 @@ from http.server import HTTPServer
 from pathlib import Path
 
 import requests
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from nudgely import conversation as C  # noqa: E402
+from nudgely import conversations  # noqa: E402
 from nudgely.reply import HOLDING  # noqa: E402
 
 NOW = datetime(2026, 11, 11, 10, 0, 0)
@@ -187,19 +189,19 @@ class WebhookServerTests(unittest.TestCase):
     def test_meta_is_answered_at_once_and_a_retry_gets_no_second_reply(self):
         hook = load_webhook()
         with tempfile.TemporaryDirectory() as temp:
-            hook.ARGS = type("A", (), {"echo": False, "dry_run": False})()
-            hook.STORE = C.Store(str(Path(temp) / "conv.json"))
+            hook.ARGS = type("A", (), {"echo": False, "bot": True, "dry_run": False})()
             hook.INBOX = str(Path(temp) / "inbox.jsonl")
             hook.APP_SECRET = ""
             hook.WA = FakeWhatsApp()
-            hook.known_customer = lambda number: None
 
             def slow_answer(customer, chat, incoming, tags=None, first_reply=True):
                 time.sleep(1.5)
                 return {"reply": "Yes, oat milk is back!", "handover": False, "reason": ""}
-            hook.reply.answer, original_answer = slow_answer, hook.reply.answer
-            hook.llm.tag_message, original_tag = (lambda cid, text, date="", prior=None, names=():
-                                                  {"customer_id": cid, "tags": []}), hook.llm.tag_message
+            store = patch.object(conversations, "STORE", str(Path(temp) / "wa.json"))
+            answer = patch("nudgely.reply.answer", slow_answer)
+            tag = patch("nudgely.llm.tag_message",
+                        lambda cid, text, date="", prior=None, names=(): {"customer_id": cid, "tags": []})
+            store.start(), answer.start(), tag.start()
             try:
                 server = HTTPServer(("127.0.0.1", 0), hook.Handler)
                 threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -220,7 +222,7 @@ class WebhookServerTests(unittest.TestCase):
                 self.assertEqual(len(Path(hook.INBOX).read_text(encoding="utf-8").splitlines()), 2)
                 server.shutdown()
             finally:
-                hook.reply.answer, hook.llm.tag_message = original_answer, original_tag
+                tag.stop(), answer.stop(), store.stop()
 
 
 if __name__ == "__main__":

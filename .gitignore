@@ -35,3 +35,5 @@ data/users.json
 data/wa_inbox.jsonl
 data/wa_conversations.json
 data/wa_contacts.json
+data/wa_customers*.json
+data/wa_customers.json.tmp
