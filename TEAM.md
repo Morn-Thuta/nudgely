@@ -51,7 +51,7 @@ Impress the judges with **a commercial-grade product**: a landing page, a dashbo
 
 **Wed 11 Nov (today)**
 - [ ] `web/` Next.js app on **Vercel**, Tailwind, the same look as the current landing page (dark green, Nudgely brand)
-- [ ] **Landing page**: what Nudgely does, the evidence (53% / 1.8x, with the caveat), the live demo QR code, team
+- [ ] **Landing page**: what Nudgely does, the evidence (57% / about 1.9x, ranged 38–85% across 7 test splits; see docs/Numbers.md), the live demo QR code, team
 - [ ] **`/try` web chat** (mobile first): name field (optional), chat bubbles, typing indicator, calls `POST /api/chat`. Until Thuta's API is live, mock it with the response shape from the contract
 
 **Thu 12 Nov**
@@ -105,7 +105,7 @@ No real-shop pilot or owner interviews: not enough time before Sat. Use public d
 | Question judges may ask | Honest answer today | Work before finals | Owner |
 |---|---|---|---|
 | "How do you know it brought people back?" | Holdout group + Jack's `returns.py` matches the sales file to who was messaged | Show one worked example; coupon code or tracked link for the pilot | Jack |
-| "Your evidence is Russian grocery data (Lenta)" | True. Model retrained on 10 features any shop has; 53% of extra visits from top 30% (90% CI 31-89%) | Classmate test numbers + "a paid pilot is our next step" | Shareef |
+| "Your evidence is Russian grocery data (Lenta)" | True. Model retrained on 10 features any shop has; 57% of extra visits from top 30% (about 1.9x random; ranged 38–85% across 7 test splits) | Classmate test numbers + "a paid pilot is our next step" | Shareef |
 | "300 customers and a 30-person holdout proves nothing" | Right for one campaign; results add up over several campaigns | Say it before they do | Shareef |
 | "How does the bot know what's in stock?" | Fixed list in `nudgely/llm.py`; anything else goes to a person on purpose | Mock POS (Thu, if time) | Thuta |
 | "What if it makes up a price?" | `review_reply` checks every reply; invented price → handed to a person | Show the durian $3 example | Jack |
