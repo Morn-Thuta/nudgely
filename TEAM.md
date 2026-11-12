@@ -31,9 +31,9 @@ Format (organisers' advisory): **7 minutes, hard stop**, of which **4:00 is the 
 | Task | Owner |
 |---|---|
 | Add `LIVE_RECIPIENTS` = `{"C001": "<Aisha phone, 65...>"}` in Render → Environment | Thuta |
-| First real live send from the dashboard to the Aisha phone; check the reply shows her history | Thuta + Dythan |
+| First real live send from the dashboard to the Aisha phone; check the reply shows her history | Thuta + Shareef |
 | `gh auth refresh -h github.com -s workflow`, then Claude pushes the keep-awake job | Thuta |
-| Slides 1–8 and rehearse the demo from docs/Pitch_Plan.md (Dythan demo, Jack the rest) | Dythan + Jack |
+| Slides 1–8 and rehearse the demo from docs/Pitch_Plan.md (Shareef demo, Jack the rest; Dythan builds the slides) | Dythan + Shareef + Jack |
 | **Record the backup video** of the full Aisha journey, save it on the presenting laptop | Dythan |
 | Business slide: problem size, pricing, cost per shop, competitors (sourced) | Shareef |
 | Jailbreak / Singlish / fake product checks on the live bot | Jack |
@@ -53,7 +53,7 @@ Format (organisers' advisory): **7 minutes, hard stop**, of which **4:00 is the 
 |---|---|---|
 | "What is working now, and what is proposed?" | Working: web + WhatsApp AI chat, tags with evidence, handover, STOP, dashboard, live send to a demo phone, uplift model on public data. Proposed: real business number, sales upload, pilot | Thuta |
 | "Why not MantaGO?" | We started on it. Its API doesn't share incoming chat text and its WhatsApp delivery didn't work on our account, so we built on WhatsApp's official API, which makes the AI conversation possible | Thuta |
-| "What starts and ends the conversation?" | Starts: the owner approves a nudge for a customer the uplift model picked, or the customer messages first. Ends: the customer's question is answered, a person takes over, or STOP | Dythan |
+| "What starts and ends the conversation?" | Starts: the owner approves a nudge for a customer the uplift model picked, or the customer messages first. Ends: the customer's question is answered, a person takes over, or STOP | Shareef |
 | "When does it hand over to a person?" | HUMAN, complaints/refunds, photos and voice notes, anything it can't verify (prices, stock not in the list), and when the daily AI cap is hit | Jack |
 | "How do you know it brought people back?" | No-message comparison group + `returns.py` matches sales to who was messaged | Jack |
 | "Your evidence is overseas data" | True: 57% of extra visits from the top 30%, about 1.9x random, 38–85% over seven splits. Next step is a local pilot | Shareef |
