@@ -49,6 +49,17 @@ class BotTests(unittest.TestCase):
         self.assertEqual([m["from"] for m in rec["chat"]], ["customer", "store"])
         self.assertEqual(self.answer_mock.call_args.args[0]["name"], "Aisha")  # first name only
 
+    def test_daily_ai_cap_hands_over_without_ai(self):
+        from nudgely import bot
+        bot._ai_day.update(date=None, count=0)
+        with patch.dict("os.environ", {"DAILY_AI_CAP": "1"}):
+            hook.bot_turn(self.wa, msg("is oat milk back?", "a"))
+            hook.bot_turn(self.wa, msg("and durian?", "b"))
+        self.assertEqual(self.sent(), ["Hi Aisha! Let me check.", bot.BUSY_REPLY])
+        self.assertEqual(self.answer_mock.call_count, 1)
+        self.assertTrue(conversations.all_customers()["6591234567"]["handover"])
+        bot._ai_day.update(date=None, count=0)
+
     def test_duplicate_delivery_answered_once(self):
         hook.bot_turn(self.wa, msg("hi", "same"))
         hook.bot_turn(self.wa, msg("hi", "same"))

@@ -26,9 +26,23 @@ def _channel(customer_id):
     return "web" if str(customer_id).startswith("WEB") else "whatsapp"
 
 
+_local = threading.local()
+
+
+def http(method, url, json=None, timeout=10, headers=None):
+    """One HTTP call to Supabase on a kept-alive connection (one session per thread).
+
+    A fresh TLS handshake per call was the main cost under load on Render's small CPU.
+    """
+    s = getattr(_local, "session", None)
+    if s is None:
+        s = _local.session = requests.Session()
+    return s.request(method, url, json=json, timeout=timeout, headers=headers)
+
+
 def _post(path, rows, prefer):
     url, key = _config()
-    r = requests.post(f"{url}/rest/v1/{path}", json=rows, timeout=10, headers={
+    r = http("POST", f"{url}/rest/v1/{path}", json=rows, timeout=10, headers={
         "apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json",
         "Prefer": prefer})
     if r.status_code >= 300:

@@ -8,6 +8,8 @@ Environment (.env locally, host settings in production):
   WA_TOKEN, WA_PHONE_NUMBER_ID, WA_VERIFY_TOKEN, WA_APP_SECRET, WA_GRAPH_VERSION   WhatsApp
   SUPABASE_URL, SUPABASE_SERVICE_KEY           optional: mirror turns to Supabase for the dashboard
   ALLOWED_ORIGINS                               comma-separated, e.g. https://nudgely.vercel.app
+  DAILY_AI_CAP                                  answered messages per day before a person takes over (2000)
+  TRY_URL                                       where the /qr code points (default: this server's /try)
 """
 
 import html
