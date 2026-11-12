@@ -259,7 +259,7 @@ export function ShopScore() {
                     </td>
                     <td className="tabular-nums">{c.purchases}</td>
                     <td className="tabular-nums">
-                      {c.days_since_last === 0 ? "today" : `${c.days_since_last} days ago`}
+                      {c.days_since_last === 0 ? "today" : c.days_since_last === 1 ? "yesterday" : `${c.days_since_last} days ago`}
                     </td>
                     <td className="tabular-nums">${c.avg_spend.toFixed(2)}</td>
                   </tr>

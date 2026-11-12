@@ -22,6 +22,7 @@ import os
 import random
 import re
 import threading
+import time
 import uuid
 from datetime import date, datetime, timezone
 from urllib.parse import quote
@@ -36,7 +37,8 @@ LOCAL_PATH = os.path.join(ROOT, "data", "shops.json")   # git-ignored: real shop
 OPT_OUT = "Reply STOP to opt out"
 MAX_CHARS = 300
 BLANK_MAX = 140
-MAX_AI_ROWS = 150      # messages written per click; a big shop clicks again
+WRITE_BATCH = 6        # messages written per request, in parallel; the page asks again for the rest
+AI_DEADLINE_S = 25     # one AI call slower than this gets the plain sentence instead
 HOLD_DEFAULT = 10
 
 # The win-back template a shop submits to Meta. Fixed words, two blanks:
@@ -77,7 +79,15 @@ class LocalStore:
         tmp = self.path + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.data, f, ensure_ascii=False)
-        os.replace(tmp, self.path)
+        # Windows briefly refuses the swap while a virus scanner or the indexer has the file open.
+        for attempt in range(20):
+            try:
+                os.replace(tmp, self.path)
+                return
+            except PermissionError:
+                if attempt == 19:
+                    raise
+                time.sleep(0.05)
 
     def select(self, table, **eq):
         with self.lock:
@@ -425,15 +435,22 @@ def _ai_blank(shop, row, offer_allowed):
                        "offer_allowed": offer_allowed, "weeks_since_last_visit_text": row["since"],
                        "customer_type": row["label"]})
     try:
-        out = llm.complete_json(BLANK_SYSTEM.format(template=WIN_BACK.format(shop=shop["name"])), user)
-    except Exception:  # noqa: BLE001 - a failed call falls back to the safe sentence
+        out = llm.complete_json(BLANK_SYSTEM.format(template=WIN_BACK.format(shop=shop["name"])), user,
+                                deadline=AI_DEADLINE_S)
+    except Exception:  # noqa: BLE001 - a failed or slow call falls back to the safe sentence
         return None
     return " ".join(str(out.get("blank", "")).split()) or None
 
 
-def write_messages(owner, cid, db=None, ai=None):
-    """Fill {{2}} for every messaged customer without a message yet. AI first; if what it writes
-    breaks a rule it is thrown away and the plain sentence is used, never patched."""
+def write_messages(owner, cid, db=None, ai=None, batch=None):
+    """Fill {{2}} for the next batch of messaged customers without a message. AI first, several at once;
+    if what it writes breaks a rule, or it's too slow, the plain sentence is used, never patched.
+
+    One batch per call keeps every request well inside the website's time limit, however big the shop:
+    the page calls again until nothing is left to write.
+    """
+    from concurrent.futures import ThreadPoolExecutor, wait
+
     db = db or store()
     ai = ai or _ai_blank
     shop = require_shop(owner, db)
@@ -441,13 +458,31 @@ def write_messages(owner, cid, db=None, ai=None):
     if camp["status"] != "draft":
         raise ShopError("This campaign has been sent; its messages can't change.", 409)
     todo = [r for r in db.select("campaign_rows", campaign_id=cid) if r["group"] == "messaged" and not r["message"]]
+    todo = todo[:batch or WRITE_BATCH]
     offer, note = shop.get("offer") or "", shop.get("note") or ""
-    for r in todo[:MAX_AI_ROWS]:
+
+    def one(r):
         allowed = r["label"] == "Persuadable" and bool(offer)
-        blank, source = ai(shop, r, allowed), "ai"
+        try:
+            blank = ai(shop, r, allowed)
+        except Exception:  # noqa: BLE001 - never lose a row to one bad call
+            blank = None
         if not blank or check_blank(blank, r["label"], offer if allowed else "", note):
-            blank, source = fallback_blank(r["label"], offer if allowed else ""), "template"
-        _set_blank(db, shop, r, blank, source)
+            return r, fallback_blank(r["label"], offer if allowed else ""), "template"
+        return r, blank, "ai"
+
+    # A hard time limit: whatever hasn't come back gets the plain sentence, and the slow call is
+    # abandoned (its answer is never used). One provider call can otherwise hang for a minute.
+    pool = ThreadPoolExecutor(max_workers=max(1, len(todo)))
+    futures = {pool.submit(one, r): r for r in todo}
+    finished, late = wait(futures, timeout=AI_DEADLINE_S + 3)
+    for f in finished:
+        _set_blank(db, shop, *f.result())
+    for f in late:
+        r = futures[f]
+        allowed = r["label"] == "Persuadable" and bool(offer)
+        _set_blank(db, shop, r, fallback_blank(r["label"], offer if allowed else ""), "template")
+    pool.shutdown(wait=False, cancel_futures=True)
     return campaign_view(owner, cid, db)
 
 

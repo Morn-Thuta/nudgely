@@ -65,6 +65,14 @@ class OwnerFlowTests(unittest.TestCase):
         self.assertLess(r.status_code, 300, f"{path}: {r.status_code} {r.text[:300]}")
         return r.json()
 
+    def write_all(self, cid):
+        """The page asks again until every message is written; so do the tests."""
+        for _ in range(50):
+            camp = self.ok("post", f"/api/owner/campaigns/{cid}/write")
+            if all(r["message"] for r in camp["rows"] if r["group"] == "messaged"):
+                return camp
+        self.fail("messages never finished writing")
+
     def make_shop(self):
         self.ok("post", "/api/owner/shop", json={"name": "Ah Seng Provision"})
         self.ok("post", "/api/owner/settings", json={"offer": "10% off your next basket",
@@ -110,6 +118,14 @@ class OwnerFlowTests(unittest.TestCase):
         self.assertEqual(self.c.post(f"/api/owner/campaigns/{camp['id']}/send", headers=B,
                                      json={"live": False}).status_code, 404)
 
+    def test_writing_goes_in_batches_so_no_request_runs_long(self):
+        self.make_shop()
+        camp = self.ok("post", "/api/owner/campaigns", json={"holdout_pct": 0})
+        first = self.ok("post", f"/api/owner/campaigns/{camp['id']}/write")
+        written = [r for r in first["rows"] if r["message"]]
+        self.assertEqual(len(written), shops.WRITE_BATCH)
+        self.assertEqual(len(self.write_all(camp["id"])["rows"]), 17)
+
     def test_plan_write_edit_approve_rehearse(self):
         self.make_shop()
         camp = self.ok("post", "/api/owner/campaigns", json={"size": 10, "holdout_pct": 20})
@@ -117,7 +133,7 @@ class OwnerFlowTests(unittest.TestCase):
         self.assertEqual((groups.count("messaged"), groups.count("holdout")), (8, 2))
         self.assertTrue(all(r["label"] == "Persuadable" for r in camp["rows"]))
 
-        camp = self.ok("post", f"/api/owner/campaigns/{camp['id']}/write")
+        camp = self.write_all(camp["id"])
         written = [r for r in camp["rows"] if r["group"] == "messaged"]
         self.assertTrue(all(r["message"].endswith("Reply STOP to opt out") for r in written))
         self.assertTrue(all("Ah Seng Provision" in r["message"] and r["since"] in r["message"] for r in written))
@@ -149,7 +165,7 @@ class OwnerFlowTests(unittest.TestCase):
     def test_live_send_uses_the_shops_own_number_and_template(self):
         self.make_shop()
         camp = self.ok("post", "/api/owner/campaigns", json={"size": 4, "holdout_pct": 25})
-        self.ok("post", f"/api/owner/campaigns/{camp['id']}/write")
+        self.write_all(camp["id"])
         self.ok("post", f"/api/owner/campaigns/{camp['id']}/approve-all")
         r = self.c.post(f"/api/owner/campaigns/{camp['id']}/send", headers=A, json={"live": True})
         self.assertEqual(r.status_code, 400)
@@ -175,7 +191,7 @@ class OwnerFlowTests(unittest.TestCase):
         self.make_shop()
         camp = self.ok("post", "/api/owner/campaigns", json={"holdout_pct": 30})
         cid = camp["id"]
-        self.ok("post", f"/api/owner/campaigns/{cid}/write")
+        self.write_all(cid)
         self.ok("post", f"/api/owner/campaigns/{cid}/approve-all")
         self.ok("post", f"/api/owner/campaigns/{cid}/send", json={"live": False})
         sent_at = datetime.now(timezone.utc) - timedelta(days=40)

@@ -30,14 +30,10 @@ export default function Login() {
         );
       else {
         const { data } = await client.auth.getUser();
+        // Team accounts see the demo shop's live dashboard; everyone else is a shop owner.
         if (data.user?.app_metadata?.nudgely_team === true)
           router.replace("/dashboard");
-        else {
-          await client.auth.signOut();
-          setError(
-            "This account has not been granted team workspace access. Ask the project owner.",
-          );
-        }
+        else router.replace("/shop");
       }
     } catch {
       setError("Could not reach sign-in. Please try again.");
@@ -133,8 +129,11 @@ export default function Login() {
           <Link href="/demo" className="text-link">
             Explore the demo workspace <ArrowUpRight size={16} />
           </Link>
+          <Link href="/signup" className="text-link">
+            Running a shop? Create your account <ArrowUpRight size={16} />
+          </Link>
           <p className="fine">
-            Team access only. Ask the project owner for an account.
+            Shop owners go to their own workspace. Team accounts open the demo shop’s dashboard.
           </p>
         </main>
       </div>

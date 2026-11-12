@@ -2129,3 +2129,21 @@ input[type="range"] {
   color: var(--ui-warm-ink);
   font-weight: 600;
 }
+
+/* Shop owner workspace (/shop) */
+.owner-narrow { max-width: 560px; }
+.owner-form { display: grid; gap: 10px; max-width: 520px; }
+.owner-form input { min-height: 42px; border: 1px solid var(--line); border-radius: 8px; padding: 0 12px; background: var(--ui-white); color: var(--ink); }
+.owner-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 20px; }
+.owner-row label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
+.owner-row input, .owner-row select { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; background: var(--ui-white); color: var(--ink); }
+.owner-row .button { display: inline-flex; align-items: center; gap: 8px; }
+.owner-history { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.owner-live { display: grid; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.owner-cards { display: grid; gap: 12px; }
+.owner-cards .draft-card { display: grid; gap: 8px; }
+.owner-blank { min-width: 0; flex: 1 1 280px; }
+.owner-held { margin-top: 14px; }
+.owner-ok { color: var(--green); }
+.owner-template { margin: 12px 0; padding: 14px 16px; border-left: 3px solid var(--green); background: var(--ui-sage); border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.6; }
+.owner-verdict.good h2 { color: var(--green); }
