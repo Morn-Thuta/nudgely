@@ -1,0 +1,24 @@
+# Keeps the free Render backend from sleeping around the AI-GNITION finals (Sat 14 Nov 2026),
+# so the first judge to scan the QR code doesn't wait ~30 s for the server to wake up.
+# Pings /health every 10 minutes; stops by itself after Sun 15 Nov 2026 (Singapore time).
+# Run it by hand from the Actions tab ("Run workflow") to wake the server right before a demo.
+name: keep-awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping the backend (until 15 Nov 2026, SGT)
+        run: |
+          if [ "$(TZ=Asia/Singapore date +%Y%m%d)" -gt 20261115 ]; then
+            echo "Finals are over; not pinging. Delete this workflow."
+            exit 0
+          fi
+          curl -sS --retry 3 --retry-delay 10 -m 90 https://nudgely-api.onrender.com/health
+          curl -sS -o /dev/null -m 60 -w "frontend %{http_code}\n" https://nudgely-navy.vercel.app/try
