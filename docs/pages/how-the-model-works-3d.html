@@ -109,12 +109,12 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
       <button id="next" aria-label="Next step">Next</button>
       <div class="progress" aria-hidden="true"><i id="bar"></i></div>
     </div>
-    <div class="note">Illustration: the dots stand in for customers. Aisha, Amirah and Ravi use their real demo scores. Drag to turn the view.</div>
+    <div class="note">Illustration: the dots stand in for customers. Aisha, Hafiz and Ravi use their real demo scores. Drag to turn the view.</div>
   </section>
 </div>
 
 <div class="tag" id="tag-aisha" hidden></div>
-<div class="tag" id="tag-amirah" hidden></div>
+<div class="tag" id="tag-hafiz" hidden></div>
 <div class="tag" id="tag-ravi" hidden></div>
 <div class="tag model" id="tag-coreA" hidden></div>
 <div class="tag model" id="tag-coreB" hidden></div>
@@ -142,14 +142,17 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
       body: "The model that learned from texted shoppers says she has a 39% chance of coming back. The other says 28% if we send nothing.",
       chips: [["If texted: 39%", "mint"], ["If not: 28%", "stone"]] },
     { eyebrow: "The trick", title: "Subtract. That gap is uplift.",
-      body: "39 minus 28 is +11 points, so a text really moves Aisha. Amirah drops 5 points: she's coming back anyway and the text slightly puts her off. Ravi barely moves.",
-      chips: [["Aisha +11", "mint"], ["Amirah −5", "sky"], ["Ravi +1", "stone"]] },
+      body: "39 minus 28 is +11 points, so a text really moves Aisha. Hafiz comes every Saturday anyway: 34% with no text, 33% with one, so the text changes nothing (and a discount would be wasted). Ravi barely moves either way.",
+      chips: [["Aisha +11", "mint"], ["Hafiz −1", "sky"], ["Ravi +1", "stone"]] },
     { eyebrow: "Every customer", title: "Each customer gets a height.",
       body: "Height is how much a text changes them. Tall green ones are Persuadable: message these. Blue are Sure Things, coming back anyway. Grey are Lost Causes. A shop messages only the tall ones.",
       chips: [["Persuadable", "mint"], ["Sure Thing", "sky"], ["Lost Cause", "stone"]] },
     { eyebrow: "Model 2", title: "The same idea, from a shop's receipts.",
       body: "A real shop only has phone, date and amount. Model 2 learns from ten numbers worked out from those: how long they've been a customer, how regular their visits are, how much their basket varies, and whether they've replied before.",
       chips: [["Top 30% caught 57% of extra visits", ""], ["about 1.9x random", "mint"], ["range 38–85%", "stone"]] },
+    { eyebrow: "Then it learns your shop", title: "Your campaigns train your own models.",
+      body: "Every campaign texts some customers and keeps some back on purpose. Who came back in each group is exactly what the two models learn from. After a few hundred customers, the shop's own pair replaces the one learned from Lenta.",
+      chips: [["Model A: your texted customers", "mint"], ["Model B: your kept-back customers", "stone"]] },
   ];
   const DWELL_MS = 8000;
 
@@ -157,7 +160,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
   let seed = 20261114;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const N = 384, TREATED = 288; // 75% texted
-  const AISHA = 0, AMIRAH = 1, RAVI = 2;
+  const AISHA = 0, HAFIZ = 1, RAVI = 2;
 
   const order = Array.from({ length: N }, (_, i) => i);
   for (let i = N - 1; i > 3; i--) { const j = 3 + Math.floor(rnd() * (i - 2)); [order[i], order[j]] = [order[j], order[i]]; }
@@ -176,14 +179,15 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
     p.p0 = rnd() * 0.7;
   });
   Object.assign(people[AISHA], { u: 0.11, p0: 0.28 });
-  Object.assign(people[AMIRAH], { u: -0.05, p0: 0.68 });
+  Object.assign(people[HAFIZ], { u: -0.0107, p0: 0.34 });
   Object.assign(people[RAVI], { u: 0.01, p0: 0.02 });
   const byU = people.map((p, i) => i).sort((a, b) => people[b].u - people[a].u);
   const pers = new Set(byU.slice(0, Math.round(N * 0.3)));
   const rest = byU.filter((i) => !pers.has(i)).sort((a, b) => people[b].p0 - people[a].p0);
   const sure = new Set(rest.slice(0, Math.round(rest.length * 0.3)));
   people.forEach((p, i) => { p.label = pers.has(i) ? "P" : sure.has(i) ? "S" : "L"; });
-  people[AISHA].label = "P"; people[AMIRAH].label = "S"; people[RAVI].label = "L";
+  people[AISHA].label = "P"; people[HAFIZ].label = "S"; people[RAVI].label = "L";
+  people.forEach((p, i) => { if (p.label === "P") { p.kept = i !== AISHA && rnd() < 0.2; p.shopBack = rnd() < (p.kept ? 0.1 : 0.2); } });
 
   // positions
   const S = 0.5;
@@ -194,14 +198,14 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
   });
   // keep the three named customers easy to find in the full grid: front row, near the middle.
   // Swap places with whoever sits there, so the grid stays whole.
-  [[AISHA, 12], [AMIRAH, 8], [RAVI, 16]].forEach(([who, col]) => {
+  [[AISHA, 12], [HAFIZ, 8], [RAVI, 16]].forEach(([who, col]) => {
     const occupant = 15 * 24 + col; // last row is the front row
     [base[who], base[occupant]] = [base[occupant], base[who]];
   });
 
   const CORE_A = { x: -5, y: 5.6, z: 0 };
   const CORE_B = { x: 5.25, y: 5.6, z: 0 };
-  const FRONT = { [AMIRAH]: [-2.6, 4.4], [AISHA]: [0, 4.4], [RAVI]: [2.6, 4.4] };
+  const FRONT = { [HAFIZ]: [-2.6, 4.4], [AISHA]: [0, 4.4], [RAVI]: [2.6, 4.4] };
 
   // ---- colours -----------------------------------------------------------------------------
   const hex = (h) => { const c = parseInt(h.slice(1), 16); return [(c >> 16 & 255) / 255, (c >> 8 & 255) / 255, (c & 255) / 255]; };
@@ -228,6 +232,8 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
       case 5: return named ? [FRONT[i][0], 0, FRONT[i][1], H(p.u), 0.62, ...labelColour(p.label)]
                            : [b[0], 0, b[1], 0.1, 0.3, ...mix(C.neutral, C.dim, 0.82)];
       case 6: return [b[0], 0, b[1], H(p.u), named ? 0.42 : 0.3, ...labelColour(p.label)];
+      case 8: return p.label !== "P" ? [b[0], 0, b[1], 0.1, 0.3, ...mix(C.neutral, C.dim, 0.85)]
+                                        : [b[0], p.shopBack ? 0.7 : 0, b[1], 0.14, 0.32, ...(p.kept ? C.stone : C.mint)];
       default: return [b[0], 0, b[1], H(p.u), named ? 0.42 : 0.3, ...(p.label === "P" ? C.mint : mix(labelColour(p.label), C.dim, 0.5))];
     }
   }
@@ -235,15 +241,16 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
     { pos: [0, 9.5, 12], look: [0, 0, 0] },
     { pos: [0, 10.5, 14], look: [0, 0.5, 0] },
     { pos: [0, 8, 13], look: [0, 0.6, 0] },
-    { pos: [0, 8.5, 16.5], look: [0, 2.8, 0] },
+    { pos: [0, 9.5, 19.5], look: [0, 3.4, 0] },
     { pos: [0, 7.5, 18.5], look: [0, 2.6, 1.5] },
     { pos: [0, 5.2, 16], look: [0, 1.4, 4.2] },
     { pos: [8, 8, 12], look: [0, 0.6, 0] },
     { pos: [-7, 7, 13], look: [0, 0.6, 0] },
+    { pos: [0, 10, 21], look: [0, 3.4, 0] },
   ];
-  const coreVisible = (s) => (s === 3 || s === 4 ? 1 : 0);
+  const coreVisible = (s) => (s === 3 || s === 4 || s === 8 ? 1 : 0);
   const beamVisible = (s) => (s === 4 ? 1 : 0);
-  const flowVisible = (s) => (s === 3 ? 1 : 0);
+  const flowVisible = (s) => (s === 3 || s === 8 ? 1 : 0);
 
   // ---- 3D ----------------------------------------------------------------------------------
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -289,6 +296,12 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
   scene.add(flow);
   const flowSrc = Array.from({ length: FLOW }, (_, k) => {
     const list = k % 4 === 3 ? cIdx : tIdx; return { i: list[Math.floor(rnd() * list.length)], phase: rnd(), core: k % 4 === 3 ? CORE_B : CORE_A };
+  });
+  // Step 9 draws from the shop's own campaign instead: texted Persuadables feed A, kept-back ones feed B.
+  const shopT = [], shopC = [];
+  people.forEach((p, i) => { if (p.label === "P") (p.kept ? shopC : shopT).push(i); });
+  const shopFlow = Array.from({ length: FLOW }, (_, k) => {
+    const list = k % 4 === 3 ? shopC : shopT; return { i: list[Math.floor(rnd() * list.length)], phase: rnd(), core: k % 4 === 3 ? CORE_B : CORE_A };
   });
 
   function beam(colour) {
@@ -364,10 +377,10 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
   // ---- labels ------------------------------------------------------------------------------
   const TAGS = {
     aisha: { el: $("tag-aisha"), text: { 4: "Aisha", 5: "Aisha +11", 6: "Aisha · Persuadable", 7: "Aisha" } },
-    amirah: { el: $("tag-amirah"), cls: "sure", text: { 5: "Amirah −5", 6: "Amirah · Sure Thing" } },
+    hafiz: { el: $("tag-hafiz"), cls: "sure", text: { 5: "Hafiz −1", 6: "Hafiz · Sure Thing" } },
     ravi: { el: $("tag-ravi"), cls: "lost", text: { 5: "Ravi +1", 6: "Ravi · Lost Cause" } },
-    coreA: { el: $("tag-coreA"), text: { 3: "Model A · learns from the texted", 4: "If texted: 39%" } },
-    coreB: { el: $("tag-coreB"), text: { 3: "Model B · learns from the rest", 4: "If not texted: 28%" } },
+    coreA: { el: $("tag-coreA"), text: { 3: "Model A · learns from the texted", 4: "If texted: 39%", 8: "Your model A · your texted customers" } },
+    coreB: { el: $("tag-coreB"), text: { 3: "Model B · learns from the rest", 4: "If not texted: 28%", 8: "Your model B · your kept-back customers" } },
   };
   Object.values(TAGS).forEach((t) => t.cls && t.el.classList.add(t.cls));
   const v3 = new THREE.Vector3();
@@ -432,7 +445,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
 
     const fv = scal.cur[2], t = now / 1500;
     for (let k2 = 0; k2 < FLOW; k2++) {
-      const f = flowSrc[k2], o = f.i * F, a = (t + f.phase) % 1;
+      const f = (step === 8 ? shopFlow : flowSrc)[k2], o = f.i * F, a = (t + f.phase) % 1;
       pos.set(cur[o] + (f.core.x - cur[o]) * a, 0.2 + (f.core.y - 0.2) * a, cur[o + 2] + (f.core.z - cur[o + 2]) * a);
       sc.setScalar(fv * (1 - a * 0.5) + 0.0001); flow.setMatrixAt(k2, m4.compose(pos, q, sc));
     }
@@ -451,7 +464,7 @@ body { background: var(--night); color: var(--paper); font-family: var(--body); 
     camera.lookAt(lx, ly, lz);
     renderer.render(scene, camera);
 
-    placeTag(TAGS.aisha, ...topOf(AISHA)); placeTag(TAGS.amirah, ...topOf(AMIRAH)); placeTag(TAGS.ravi, ...topOf(RAVI));
+    placeTag(TAGS.aisha, ...topOf(AISHA)); placeTag(TAGS.hafiz, ...topOf(HAFIZ)); placeTag(TAGS.ravi, ...topOf(RAVI));
     placeTag(TAGS.coreA, CORE_A.x, CORE_A.y + 1.5 * Math.max(cv, 0.01), CORE_A.z);
     placeTag(TAGS.coreB, CORE_B.x, CORE_B.y + 1.5 * Math.max(cv, 0.01), CORE_B.z);
   }
