@@ -1,7 +1,7 @@
 # Finals pitch and demo plan (Sat 14 Nov 2026)
 
-**Presenters:** Jack (story, how it works, difference, next step) · Dythan (live demo, playing the shop owner).
-**Off stage:** Thuta plays **Aisha** on her phone and watches the backend · Shareef keeps time and holds the backup video.
+**Presenters:** Jack (story, how it works, difference, next step) · **Shareef** (live demo, playing the shop owner).
+**Off stage:** Thuta plays **Aisha** on their phone and watches the backend · Dythan keeps time, runs the slides and holds the backup video.
 **Format (organisers' advisory):** 7:00 hard stop, then 5:00 Q&A. One complete use case. Never present simulated output as live.
 
 Everything shown is fictional (Kampung Fresh, Mei Ling, Aisha, Hafiz) or our own test data. Numbers come only from [Numbers.md](Numbers.md).
@@ -15,7 +15,7 @@ One shop, one owner, two customers. The intro sets them up; the demo pays them o
 
 | Who | Role in the story | In our data |
 |---|---|---|
-| **Mei Ling**, 52 | Runs **Kampung Fresh**, a neighbourhood grocer in Tampines. Knows her regulars by face, sends a Sunday-night WhatsApp blast to everyone | The dashboard user (Dythan plays her) |
+| **Mei Ling**, 52 | Runs **Kampung Fresh**, a neighbourhood grocer in Tampines. Knows her regulars by face, sends a Sunday-night WhatsApp blast to everyone | The dashboard user (Shareef plays her) |
 | **Aisha Rahman**, 34 | Asked *"can tell me when oat milk is back?"* three weeks ago, and is planning her son's birthday party. Nobody followed up. She's drifting to the supermarket | C001 · *Persuadable*, highest predicted uplift |
 | **Hafiz Rahim**, 61 | Comes every Saturday for rice, eggs and kai lan. Gets the "10% off" blast anyway, so Mei Ling gives away margin for nothing | C021 · *Sure Thing* |
 
@@ -32,7 +32,7 @@ Speaking speed: about 140 words a minute. Word counts below are the limit, not a
 |---|---|---|---|
 | 0:00–0:20 | Problem | Jack | Slide 1 → 2 |
 | 0:20–0:40 | Result | Jack | Slide 3 |
-| 0:40–4:40 | **Live demo** | Dythan | Slide 4 (2 s), then the dashboard + Aisha's WhatsApp |
+| 0:40–4:40 | **Live demo** | Shareef | Slide 4 (2 s), then the dashboard + Aisha's WhatsApp |
 | 4:40–5:40 | How it works | Jack | Slides 5 and 6 |
 | 5:40–6:20 | Difference | Jack | Slide 7 |
 | 6:20–7:00 | Next step | Jack | Slide 8 (QR stays up into Q&A) |
@@ -50,9 +50,9 @@ Slide 2: illustration of the shop with three phone bubbles: the blast, Hafiz's "
 
 Slide 3: "+0.7 points" big (Lenta, Numbers.md #3) → arrow → "Measured: extra visits per message vs a no-message group".
 
-Handover line (Jack): **"Dythan is Mei Ling for the next four minutes."** Dythan steps to the laptop while Jack says it. Do not wait in silence.
+Handover line (Jack): **"Shareef is Mei Ling for the next four minutes."** Shareef steps to the laptop while Jack says it. Do not wait in silence.
 
-### 0:40–4:40 · Live demo (Dythan, 4:00): see section 3
+### 0:40–4:40 · Live demo (Shareef, 4:00): see section 3
 
 ### 4:40–5:40 · How it works (Jack, ≤ 140 words)
 
@@ -76,21 +76,21 @@ Slide 8: "Limitation → Pilot ask", with the judges' QR in the corner.
 
 > "Our honest limitation: the evidence is overseas. On a public grocery dataset our top 30% captured 57% of the extra visits, about 1.9 times random, though it ranged from 38 to 85% across tests. A Singapore shop still has to prove it. So the next step is a four-week pilot: one shop, its WhatsApp number, a sales export, and a no-message group. Scan the code and talk to Kampung Fresh yourselves. Thank you."
 
-**Stop at 7:00 even mid-sentence.** Shareef shows a "1:00" card at 6:00 and "STOP" at 6:50.
+**Stop at 7:00 even mid-sentence.** Dythan shows a "1:00" card at 6:00 and "STOP" at 6:50.
 
 ---
 
-## 3. The live demo, click by click (Dythan, 4:00)
+## 3. The live demo, click by click (Shareef, 4:00)
 
 ### Screen layout on the projector
 
 - **Left 60%:** Chrome window, dashboard at https://nudgely-navy.vercel.app/dashboard, signed in, zoom 110%.
 - **Right 40%:** **WhatsApp Web** in a separate Chrome profile, linked to the Aisha phone, opened straight on the chat with **+1 555-164-9508** (save the contact as "Kampung Fresh"). Chat list collapsed / scrolled so no other chats or numbers show. Notifications off.
-- Thuta (as Aisha) types on the phone; it appears in WhatsApp Web on screen. If mirroring fails, Dythan reads the phone aloud.
+- Thuta (as Aisha) types on the phone; it appears in WhatsApp Web on screen. If mirroring fails, Shareef reads the phone aloud.
 
 ### Beat by beat
 
-| # | Clock | Do (Dythan) | Say (Dythan) | Checklist item |
+| # | Clock | Do (Shareef) | Say (Shareef) | Checklist item |
 |---|---|---|---|---|
 | 1 | 0:40 | **Customers** → search "Aisha" → open **Aisha Rahman** | "Here's Aisha in Mei Ling's customer book. Nudgely read her chats and kept two things, with her own words: she wants oat milk back, and her son's birthday party. The model marks her *Persuadable*: a message is likely to bring her back." | Customer + segment |
 | 2 | 1:10 | Close; point at **Hafiz Rahim** in the list | "Hafiz is a *Sure Thing*: he comes every Saturday. Messaging him only gives away a discount." | Personalisation by history |
@@ -117,11 +117,11 @@ Use these, never silence: "It's checking her history…" · "Every reply is chec
 
 | What happens | Do |
 |---|---|
-| Send says "24 hours" | Aisha never messaged this morning. Thuta sends "hi" from the phone, Dythan clicks Send again after 5 s |
-| Send errors anything else | Say "Let me show you the recorded run of this step," Shareef plays the backup video from beat 4. Say clearly it's the recording |
+| Send says "24 hours" | Aisha never messaged this morning. Thuta sends "hi" from the phone, Shareef clicks Send again after 5 s |
+| Send errors anything else | Say "Let me show you the recorded run of this step," Dythan plays the backup video from beat 4. Say clearly it's the recording |
 | No reply after 20 s | "The AI is slow on venue Wi-Fi; here's the recording of this step." Backup video |
 | Dashboard doesn't update | Refresh once; else read the reply from WhatsApp Web |
-| Projector / laptop dies | Jack continues with slides on the spare laptop; Dythan shows the phone to the front row |
+| Projector / laptop dies | Jack continues with slides on the spare laptop; Shareef shows the phone to the front row |
 | Over time at 4:40 | Skip beats 10–11 (STOP); Jack mentions opt-out in How it works |
 
 ---
@@ -145,19 +145,19 @@ Style: the landing page look (cream, green, Outfit font). One idea per slide, �
 
 ## 6. Q&A (5:00): answer first, 30–45 s, then the trade-off
 
-**Jack answers:** AI, data, model, measurement, safety. **Dythan answers:** product, flow, what's live. If unsure, the other adds one sentence, no more.
+**Jack answers:** AI, data, model, measurement, safety. **Shareef answers:** product, flow, what's live, the business case. If unsure, the other adds one sentence, no more.
 
 | Question | Answer | Who |
 |---|---|---|
-| What is working now, and what is proposed? | Working: WhatsApp and web chat with live AI, tags with evidence, handover, STOP, the dashboard, live send to a demo phone, the uplift model on public data. Proposed: a real business number, sales import, the local pilot | Dythan |
+| What is working now, and what is proposed? | Working: WhatsApp and web chat with live AI, tags with evidence, handover, STOP, the dashboard, live send to a demo phone, the uplift model on public data. Proposed: a real business number, sales import, the local pilot | Shareef |
 | Why this segment? | Neighbourhood shops already run on WhatsApp but have no marketing team; their customers are few enough that every wasted or annoying message matters | Jack |
-| What starts and ends the conversation? | Starts: the owner approves a nudge for someone the model picked, or the customer messages first. Ends: question answered, a person takes over, or STOP | Dythan |
+| What starts and ends the conversation? | Starts: the owner approves a nudge for someone the model picked, or the customer messages first. Ends: question answered, a person takes over, or STOP | Shareef |
 | When does it hand over? | Refunds and complaints, HUMAN, photos or voice notes, anything it can't verify like a price or stock not in the shop's list, and if the daily AI budget runs out | Jack |
 | How do you measure retention? | Every campaign holds back a random no-message group. We match the shop's sales to both groups and compare return visits. The difference is the lift | Jack |
 | What data does it use? | The shop's own chats and receipts. No age, gender or children, on purpose. Phone numbers are never stored; names are removed before the AI | Jack |
-| What needs human approval? | Every outgoing campaign message. The AI only answers customers who wrote first, and hands over when unsure | Dythan |
+| What needs human approval? | Every outgoing campaign message. The AI only answers customers who wrote first, and hands over when unsure | Shareef |
 | What if a service fails? | The AI falls back to other models; if all fail, a person takes over. If WhatsApp is down nothing is sent, and the owner sees it | Jack |
-| How does the owner verify the result? | Every campaign keeps a held-back group. In a pilot, the shop's sales export is matched to both groups and the difference in return visits is the lift. Today the Results page shows the public-data evidence; per-campaign results need the pilot's sales | Dythan |
+| How does the owner verify the result? | Every campaign keeps a held-back group. In a pilot, the shop's sales export is matched to both groups and the difference in return visits is the lift. Today the Results page shows the public-data evidence; per-campaign results need the pilot's sales | Shareef |
 | What would a pilot need? | One shop, a WhatsApp business number, a 4-week sales export, consent wording at signup, and a no-message group | Jack |
 | Why not MantaGO? | We started on MantaGO. Its API doesn't share incoming chat text and its WhatsApp delivery didn't work on our account, so we built on WhatsApp's official API, which is what makes the AI conversation possible. MantaGO-style platforms are natural delivery partners | Jack |
 | Your evidence is overseas | True, and we say so: 57% from the top 30%, about 1.9x random, ranged 38–85%. That's why we ask for a pilot, not a sale | Jack |
@@ -173,11 +173,11 @@ Style: the landing page look (cream, green, Outfit font). One idea per slide, �
 | Fri before noon | Freeze. Tag `finals-v1`. No pushes after | Thuta |
 | Fri | Slides 1–8 done in the landing style | Dythan (+Shareef slides 7–8) |
 | Fri | **Two timed full rehearsals** on the presenting laptop, with the real send each time. Reset Aisha between runs: `python scripts/reset_demo_customer.py --yes`, then Aisha phone says "hi" | All |
-| Fri | Record the backup video of the full 4:00 demo; save it on the laptop desktop and on Shareef's laptop | Dythan |
-| Fri | Set up WhatsApp Web in its own Chrome profile on the presenting laptop, linked to the Aisha phone | Thuta + Dythan |
+| Fri | Record the backup video of the full 4:00 demo; save it on the presenting laptop's desktop and on Dythan's laptop | Dythan (Shareef clicks, so it matches the live run) |
+| Fri | Set up WhatsApp Web in its own Chrome profile on the presenting laptop, linked to the Aisha phone | Thuta + Shareef |
 | Sat 7:30 | Reset Aisha. Aisha phone sends "hi" to the bot. Open /health. Sign in to the dashboard. Check Campaign → Live shows Aisha | Thuta |
 | Sat 8:30 | Report to MPH A. Laptop charged, charger, HDMI/USB-C adapter, phone hotspot ready | All |
-| Before going on | Notifications off (laptop and Aisha phone), sleep off, browser zoom set, both windows arranged, slides on slide 1 | Dythan |
+| Before going on | Notifications off (laptop and Aisha phone), sleep off, browser zoom set, both windows arranged, slides on slide 1 | Shareef + Dythan |
 
 ### Rehearsal scorecard (fill in each run)
 
