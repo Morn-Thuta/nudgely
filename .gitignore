@@ -7,12 +7,13 @@ data/test_accounts.json
 data/send_log.csv
 data/campaign_log.csv
 data/run_daily.log
-data/model_transferable.pkl
 
 # big raw data - keep only small CSV/JSON in data/
 data/raw/
 *.parquet
 *.pkl
+# Model 2 (2.4 MB) is the exception: the backend scores shops with it
+!data/model_transferable.pkl
 *.joblib
 lenta*.csv.gz
 

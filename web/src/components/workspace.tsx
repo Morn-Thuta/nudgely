@@ -14,6 +14,7 @@ import {
   Users,
   Send,
   ChartNoAxesCombined,
+  FileSpreadsheet,
   LogOut,
   ArrowUpRight,
   RefreshCw,
@@ -57,7 +58,9 @@ export function Workspace({
       ? "Campaign"
       : path.endsWith("/results")
         ? "Results"
-        : "Conversations";
+        : path.endsWith("/sales")
+          ? "Your sales"
+          : "Conversations";
   const [data, setData] = useState<Dataset>(
       demo ? (demoData as Dataset) : empty,
     ),
@@ -218,6 +221,7 @@ export function Workspace({
                 label: "Results",
                 icon: ChartNoAxesCombined,
               },
+              { href: `${base}/sales`, label: "Your sales", icon: FileSpreadsheet },
             ].map((n) => (
               <Link
                 href={n.href}

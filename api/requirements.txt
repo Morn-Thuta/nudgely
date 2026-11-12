@@ -4,3 +4,11 @@ uvicorn==0.54.0
 requests
 python-dotenv
 segno==1.6.6  # QR code for the /qr judge screen
+# Shop scoring (/api/shop/score): Model 2 is a saved scikit-learn model, which only loads
+# reliably on the versions that built it, so these are pinned to match data/model_transferable.pkl.
+numpy==2.4.6
+pandas==3.0.6
+scikit-learn==1.9.1
+scikit-uplift==0.5.1
+joblib==1.6.0
+openpyxl==3.1.5  # reads .xlsx uploads

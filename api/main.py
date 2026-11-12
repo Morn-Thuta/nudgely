@@ -212,6 +212,53 @@ def campaign_send(body: SendIn, request: Request):
     return out
 
 
+# ---- shop scoring: a sales export in, every customer ranked by uplift out ----------------------
+# Public like /api/chat (the demo page uses it without a login), but it never calls the AI, stores
+# nothing and logs no numbers. The limits keep one visitor from tying up the free server.
+
+class ScoreIn(BaseModel):
+    filename: str = Field("sales.csv", max_length=120)
+    data_base64: str = Field(..., min_length=4, max_length=2_800_000)  # ~2 MB file once decoded
+
+
+SCORE_WINDOW_S, SCORE_MAX = 60, 6  # at most 6 scorings a minute per visitor
+_score_hits = {}
+_score_lock = threading.Lock()
+
+
+def _visitor(request: Request):
+    """Best guess at who is calling: the first forwarded address, else the socket peer."""
+    forwarded = request.headers.get("x-forwarded-for", "")
+    return forwarded.split(",")[0].strip() or (request.client.host if request.client else "?")
+
+
+@app.post("/api/shop/score")
+def shop_score(body: ScoreIn, request: Request):
+    import base64
+    import binascii
+
+    from nudgely import shop_scores
+
+    who, now = _visitor(request), time.monotonic()
+    with _score_lock:
+        recent = [t for t in _score_hits.get(who, []) if now - t < SCORE_WINDOW_S]
+        if len(recent) >= SCORE_MAX:
+            raise HTTPException(429, "That's a lot of uploads in a minute. Wait a moment and try again.")
+        _score_hits[who] = recent + [now]
+    try:
+        data = base64.b64decode(body.data_base64, validate=True)
+    except (binascii.Error, ValueError):
+        raise HTTPException(400, "The file didn't arrive intact. Try uploading it again.")
+    try:
+        out = shop_scores.score_upload(data, body.filename)
+    except shop_scores.ScoreError as e:
+        raise HTTPException(400, str(e))
+    except FileNotFoundError:
+        raise HTTPException(503, "The scoring model isn't on the server yet.")
+    print(f"[score] {out['summary']['customers']} customers from {out['rows_used']} rows", flush=True)
+    return out
+
+
 # ---- judge pages: /try (phone chat) and /qr (projector screen) ----------------------------------
 
 STATIC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
