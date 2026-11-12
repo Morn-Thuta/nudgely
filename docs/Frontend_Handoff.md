@@ -54,6 +54,6 @@ Migration 003 changes the broad authenticated-user policies to an administrator-
 
 ## Validation
 
-Validation includes production build, lint, TypeScript, nine unit tests and desktop/mobile browser tests. Browser tests cover responsive layouts across product routes, landing-to-app navigation, customer dialogs and focus restoration, password visibility, reduced-motion and manual pause behavior, opt-out filtering, reviewed simulation, keyboard chat submission, handover/null replies, rate limits, stable chat sessions and signed-out redirects. Tests mock chat; they do not establish real AI quality, live delivery or cross-device Realtime behavior.
+Verified on 12 November: production build (including TypeScript), lint, **nine unit tests and fourteen desktop/mobile browser tests all pass**. Browser tests cover responsive layouts across product routes, landing-to-app navigation, customer dialogs and focus restoration, password visibility, reduced-motion and manual pause behavior, opt-out filtering, reviewed simulation, keyboard chat submission, handover/null replies, rate limits, stable chat sessions and signed-out redirects. Tests mock chat; they do not establish real AI quality, live delivery or cross-device Realtime behavior.
 
 Feature freeze: **Friday 13 November, noon SGT**. Finals: **Saturday 14 November**. If the live path is not reliable by the freeze, use the team's Streamlit + Live WhatsApp fallback and label prerecorded or simulated sections clearly.
