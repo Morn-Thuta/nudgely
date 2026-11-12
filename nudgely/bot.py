@@ -11,10 +11,31 @@ Rules (same on every channel):
 - a repeated message id (Meta retries) is answered once
 """
 
+import os
+import threading
+
 from nudgely import conversations, supabase_sync
 
 STOP_REPLY = "You won't get any more messages from us. Reply START if you change your mind."
 START_REPLY = "Welcome back! You'll hear from us again. Reply STOP anytime to opt out."
+BUSY_REPLY = "Thanks for your message! We're very busy today, so a person from the shop will get back to you."
+
+# Daily AI budget: each answered message costs two AI calls (tag + reply). Past DAILY_AI_CAP
+# answered messages in a day (all channels, per server process) a person takes over instead.
+_ai_day = {"date": None, "count": 0}
+_ai_lock = threading.Lock()
+
+
+def _ai_budget_ok():
+    cap = int(os.getenv("DAILY_AI_CAP", "2000"))
+    with _ai_lock:
+        today = conversations.today()
+        if _ai_day["date"] != today:
+            _ai_day.update(date=today, count=0)
+        if _ai_day["count"] >= cap:
+            return False
+        _ai_day["count"] += 1
+        return True
 
 
 def handle(key, name, text, msg_id=None, prefix="WA", kind="text", max_messages=None):
@@ -73,6 +94,10 @@ def handle(key, name, text, msg_id=None, prefix="WA", kind="text", max_messages=
         return finish()
     if rec.get("opted_out"):  # said STOP: keep what they sent, never answer automatically
         out["reason"] = "opted out, not answered"
+        return finish()
+    if not _ai_budget_ok():
+        rec["handover"] = out["handover"] = True
+        out["reply"], out["reason"] = BUSY_REPLY, "daily AI cap reached, flagged for a person"
         return finish()
 
     first = rec["name"].split()[0] if rec.get("name") else ""

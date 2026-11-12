@@ -8,8 +8,13 @@ Environment (.env locally, host settings in production):
   WA_TOKEN, WA_PHONE_NUMBER_ID, WA_VERIFY_TOKEN, WA_APP_SECRET, WA_GRAPH_VERSION   WhatsApp
   SUPABASE_URL, SUPABASE_SERVICE_KEY           optional: mirror turns to Supabase for the dashboard
   ALLOWED_ORIGINS                               comma-separated, e.g. https://nudgely.vercel.app
+  LIVE_RECIPIENTS                               {"C001": "65..."}: demo customers the dashboard may send to for real
+  DAILY_AI_CAP                                answered messages per day before a person takes over (2000)
+  TRY_URL                                       where the /qr code points (default: this server's /try)
 """
 
+import html
+import io
 import os
 import re
 import sys
@@ -25,6 +30,7 @@ load_dotenv(os.path.join(ROOT, ".env"))
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import HTMLResponse, RedirectResponse  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
 from nudgely import bot, supabase_sync  # noqa: E402
@@ -34,7 +40,7 @@ from nudgely.whatsapp import (WhatsApp, WhatsAppError, parse_webhook, valid_sign
 app = FastAPI(title="Nudgely API", version="1.0")
 origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "*").split(",") if o.strip()]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST"],
-                   allow_headers=["Content-Type"])
+                   allow_headers=["Content-Type", "Authorization"])
 
 # ---- web chat --------------------------------------------------------------------------------
 
@@ -146,6 +152,107 @@ async def whatsapp_webhook(request: Request, background: BackgroundTasks):
         else:
             background.add_task(_whatsapp_turn, m)  # answer Meta at once, reply in the background
     return {"ok": True}
+
+
+# ---- live campaign send (team only, opted-in demo phones only) ----------------------------------
+
+class SendIn(BaseModel):
+    customer_id: str = Field(..., pattern=r"^[A-Z]{1,4}\d{1,5}$")
+    message: str = Field(..., min_length=1, max_length=600)
+
+
+_last_send = {}  # customer_id -> time of last live send
+_send_lock = threading.Lock()
+
+
+def _team_user(request: Request):
+    """The signed-in dashboard user, checked with Supabase. Only nudgely_team accounts may send."""
+    import requests
+
+    auth = request.headers.get("authorization", "")
+    url, key = supabase_sync._config()
+    if not auth.lower().startswith("bearer ") or not (url and key):
+        raise HTTPException(401, "Sign in to the dashboard first.")
+    try:
+        r = requests.get(f"{url}/auth/v1/user", timeout=10,
+                         headers={"apikey": key, "Authorization": auth})
+    except requests.RequestException:
+        raise HTTPException(503, "Couldn't check your sign-in. Try again.")
+    user = r.json() if r.ok else {}
+    if not (user.get("app_metadata") or {}).get("nudgely_team"):
+        raise HTTPException(403, "This account isn't on the Nudgely team.")
+    return user
+
+
+@app.get("/api/campaign/live")
+def campaign_live(request: Request):
+    """Which customers can be sent to for real (ids only, never numbers)."""
+    from nudgely import live_send
+
+    _team_user(request)
+    return {"customer_ids": sorted(live_send.recipients())}
+
+
+@app.post("/api/campaign/send")
+def campaign_send(body: SendIn, request: Request):
+    from nudgely import live_send
+
+    user = _team_user(request)
+    with _send_lock:
+        if time.monotonic() - _last_send.get(body.customer_id, -1e9) < 30:
+            raise HTTPException(429, "Just sent to this customer. Wait 30 seconds before sending again.")
+        _last_send[body.customer_id] = time.monotonic()
+    try:
+        out = live_send.send(body.customer_id, body.message)
+    except live_send.SendError as e:
+        with _send_lock:
+            _last_send.pop(body.customer_id, None)
+        raise HTTPException(e.status, str(e))
+    print(f"[campaign] sent by {user.get('id', '?')[:8]}", flush=True)
+    return out
+
+
+# ---- judge pages: /try (phone chat) and /qr (projector screen) ----------------------------------
+
+STATIC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+
+def _page(name):
+    with open(os.path.join(STATIC, name), encoding="utf-8") as fh:
+        return fh.read()
+
+
+def _try_url(request: Request):
+    """Where the QR code points. TRY_URL overrides it (e.g. Dythan's Vercel /try once it's live)."""
+    if os.getenv("TRY_URL"):
+        return os.getenv("TRY_URL")
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8000"
+    local = host.startswith(("localhost", "127.0.0.1"))
+    return f"{'http' if local else 'https'}://{host}/try"
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/try")
+
+
+@app.get("/try", response_class=HTMLResponse, include_in_schema=False)
+def try_page():
+    return HTMLResponse(_page("try.html"), headers={"Cache-Control": "no-cache"})
+
+
+@app.get("/qr", response_class=HTMLResponse, include_in_schema=False)
+def qr_page(request: Request):
+    return HTMLResponse(_page("qr.html").replace("{{TRY_URL}}", html.escape(_try_url(request))))
+
+
+@app.get("/qr.svg", include_in_schema=False)
+def qr_svg(request: Request):
+    import segno
+
+    buf = io.BytesIO()
+    segno.make(_try_url(request), error="m").save(buf, kind="svg", scale=10, border=2, dark="#123D35")
+    return Response(buf.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "no-cache"})
 
 
 # ---- health --------------------------------------------------------------------------------

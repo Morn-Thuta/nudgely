@@ -1,0 +1,1424 @@
+{
+  "customers": [
+    {
+      "id": "C001",
+      "channel": "demo",
+      "name": "Aisha Rahman",
+      "label": "Persuadable",
+      "uplift": 0.1116,
+      "p_no_msg": 0.2833,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C002",
+      "channel": "demo",
+      "name": "Marcus Lim",
+      "label": "Persuadable",
+      "uplift": 0.1099,
+      "p_no_msg": 0.2911,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C003",
+      "channel": "demo",
+      "name": "Priya Nair",
+      "label": "Persuadable",
+      "uplift": 0.1076,
+      "p_no_msg": 0.6592,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C004",
+      "channel": "demo",
+      "name": "Daniel Tan",
+      "label": "Persuadable",
+      "uplift": 0.0774,
+      "p_no_msg": 0.2727,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C005",
+      "channel": "demo",
+      "name": "Siti Nurhaliza Osman",
+      "label": "Persuadable",
+      "uplift": 0.0484,
+      "p_no_msg": 0.3189,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C006",
+      "channel": "demo",
+      "name": "Kelvin Ong",
+      "label": "Persuadable",
+      "uplift": 0.048,
+      "p_no_msg": 0.0975,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C007",
+      "channel": "demo",
+      "name": "Meera Pillai",
+      "label": "Persuadable",
+      "uplift": 0.0358,
+      "p_no_msg": 0.1419,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C008",
+      "channel": "demo",
+      "name": "Jason Goh",
+      "label": "Persuadable",
+      "uplift": 0.034,
+      "p_no_msg": 0.1883,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C009",
+      "channel": "demo",
+      "name": "Nurul Huda",
+      "label": "Persuadable",
+      "uplift": 0.0312,
+      "p_no_msg": 0.0751,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C010",
+      "channel": "demo",
+      "name": "Cheryl Teo",
+      "label": "Persuadable",
+      "uplift": 0.0283,
+      "p_no_msg": 0.191,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C011",
+      "channel": "demo",
+      "name": "Ravi Kumar",
+      "label": "Lost Cause",
+      "uplift": 0.0071,
+      "p_no_msg": 0.0184,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C012",
+      "channel": "demo",
+      "name": "Grace Chua",
+      "label": "Lost Cause",
+      "uplift": 0.0049,
+      "p_no_msg": 0.0213,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C013",
+      "channel": "demo",
+      "name": "Farid Ismail",
+      "label": "Lost Cause",
+      "uplift": 0.0029,
+      "p_no_msg": 0.0218,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C014",
+      "channel": "demo",
+      "name": "Wei Ling Ng",
+      "label": "Lost Cause",
+      "uplift": 0.0018,
+      "p_no_msg": 0.0314,
+      "handover": false,
+      "opted_out": true,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C015",
+      "channel": "demo",
+      "name": "Arjun Menon",
+      "label": "Lost Cause",
+      "uplift": 0.0008,
+      "p_no_msg": 0.0257,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C016",
+      "channel": "demo",
+      "name": "Hui Min Koh",
+      "label": "Sure Thing",
+      "uplift": -0.0005,
+      "p_no_msg": 0.236,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C017",
+      "channel": "demo",
+      "name": "Zainal Abidin",
+      "label": "Lost Cause",
+      "uplift": -0.0007,
+      "p_no_msg": 0.022,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C018",
+      "channel": "demo",
+      "name": "Rachel Seah",
+      "label": "Lost Cause",
+      "uplift": -0.0018,
+      "p_no_msg": 0.0239,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C019",
+      "channel": "demo",
+      "name": "Vikram Singh",
+      "label": "Lost Cause",
+      "uplift": -0.0032,
+      "p_no_msg": 0.0552,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C020",
+      "channel": "demo",
+      "name": "Joanne Lee",
+      "label": "Lost Cause",
+      "uplift": -0.0092,
+      "p_no_msg": 0.0696,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C021",
+      "channel": "demo",
+      "name": "Hafiz Rahim",
+      "label": "Sure Thing",
+      "uplift": -0.0107,
+      "p_no_msg": 0.3406,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C022",
+      "channel": "demo",
+      "name": "Michelle Yeo",
+      "label": "Sure Thing",
+      "uplift": -0.0126,
+      "p_no_msg": 0.163,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C023",
+      "channel": "demo",
+      "name": "Suresh Raman",
+      "label": "Sure Thing",
+      "uplift": -0.0154,
+      "p_no_msg": 0.154,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C024",
+      "channel": "demo",
+      "name": "Emily Wong",
+      "label": "Lost Cause",
+      "uplift": -0.0186,
+      "p_no_msg": 0.0906,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C025",
+      "channel": "demo",
+      "name": "Iskandar Yusof",
+      "label": "Sure Thing",
+      "uplift": -0.0186,
+      "p_no_msg": 0.2055,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C026",
+      "channel": "demo",
+      "name": "Pei Shan Lau",
+      "label": "Sure Thing",
+      "uplift": -0.0217,
+      "p_no_msg": 0.1339,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C027",
+      "channel": "demo",
+      "name": "Lakshmi Devi",
+      "label": "Sure Thing",
+      "uplift": -0.0295,
+      "p_no_msg": 0.1423,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C028",
+      "channel": "demo",
+      "name": "Benjamin Ho",
+      "label": "Sure Thing",
+      "uplift": -0.0452,
+      "p_no_msg": 0.1675,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C029",
+      "channel": "demo",
+      "name": "Amirah Salleh",
+      "label": "Sure Thing",
+      "uplift": -0.0519,
+      "p_no_msg": 0.6796,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": "C030",
+      "channel": "demo",
+      "name": "Terence Quek",
+      "label": "Sure Thing",
+      "uplift": -0.0821,
+      "p_no_msg": 0.2827,
+      "handover": false,
+      "opted_out": false,
+      "created_at": "2026-10-21T04:00:00Z",
+      "last_seen_at": "2026-10-21T04:00:00Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "customer_id": "C001",
+      "sender": "customer",
+      "text": "Hi, can tell me when oat milk is back? Been out for 2 weeks already",
+      "handover": false,
+      "created_at": "2026-09-28T04:00:00Z"
+    },
+    {
+      "id": 2,
+      "customer_id": "C001",
+      "sender": "store",
+      "text": "Sorry ah! Supplier delay. We'll let you know once it's in",
+      "handover": false,
+      "created_at": "2026-09-28T04:00:00Z"
+    },
+    {
+      "id": 3,
+      "customer_id": "C001",
+      "sender": "customer",
+      "text": "Ok thanks. Also planning my son's birthday party end Oct, you all got party snack packs?",
+      "handover": false,
+      "created_at": "2026-09-30T04:00:00Z"
+    },
+    {
+      "id": 4,
+      "customer_id": "C001",
+      "sender": "store",
+      "text": "Yes we have! $12 and $20 sizes",
+      "handover": false,
+      "created_at": "2026-09-30T04:00:00Z"
+    },
+    {
+      "id": 5,
+      "customer_id": "C002",
+      "sender": "customer",
+      "text": "My order supposed to come 4pm, now 7pm still nothing",
+      "handover": false,
+      "created_at": "2026-10-02T04:00:00Z"
+    },
+    {
+      "id": 6,
+      "customer_id": "C002",
+      "sender": "store",
+      "text": "So sorry Marcus, driver got stuck. It's on the way now",
+      "handover": false,
+      "created_at": "2026-10-02T04:00:00Z"
+    },
+    {
+      "id": 7,
+      "customer_id": "C002",
+      "sender": "customer",
+      "text": "Reached already but the frozen dumplings all soft. Not happy leh",
+      "handover": false,
+      "created_at": "2026-10-02T04:00:00Z"
+    },
+    {
+      "id": 8,
+      "customer_id": "C002",
+      "sender": "store",
+      "text": "Really sorry about that. We'll do better",
+      "handover": false,
+      "created_at": "2026-10-03T04:00:00Z"
+    },
+    {
+      "id": 9,
+      "customer_id": "C003",
+      "sender": "customer",
+      "text": "Hello, Deepavali coming, you all bring in ghee and the spice packs again this year?",
+      "handover": false,
+      "created_at": "2026-10-05T04:00:00Z"
+    },
+    {
+      "id": 10,
+      "customer_id": "C003",
+      "sender": "store",
+      "text": "Yes! Deepavali ghee and spice packs coming in mid Oct",
+      "handover": false,
+      "created_at": "2026-10-05T04:00:00Z"
+    },
+    {
+      "id": 11,
+      "customer_id": "C003",
+      "sender": "customer",
+      "text": "Great, I need a lot, cooking for the whole family",
+      "handover": false,
+      "created_at": "2026-10-05T04:00:00Z"
+    },
+    {
+      "id": 12,
+      "customer_id": "C004",
+      "sender": "customer",
+      "text": "Got durian this season or not?",
+      "handover": false,
+      "created_at": "2026-09-20T04:00:00Z"
+    },
+    {
+      "id": 13,
+      "customer_id": "C004",
+      "sender": "store",
+      "text": "Seasonal durian in stock now, limited boxes",
+      "handover": false,
+      "created_at": "2026-09-20T04:00:00Z"
+    },
+    {
+      "id": 14,
+      "customer_id": "C004",
+      "sender": "customer",
+      "text": "Nice. Also your frozen dumplings which brand ah? My kids like",
+      "handover": false,
+      "created_at": "2026-09-21T04:00:00Z"
+    },
+    {
+      "id": 15,
+      "customer_id": "C004",
+      "sender": "store",
+      "text": "Our own Kampung Fresh brand, pork and chive",
+      "handover": false,
+      "created_at": "2026-09-21T04:00:00Z"
+    },
+    {
+      "id": 16,
+      "customer_id": "C005",
+      "sender": "customer",
+      "text": "Assalamualaikum, free-range eggs finish already?",
+      "handover": false,
+      "created_at": "2026-09-25T04:00:00Z"
+    },
+    {
+      "id": 17,
+      "customer_id": "C005",
+      "sender": "store",
+      "text": "Waalaikumsalam, yes sold out, next batch next week",
+      "handover": false,
+      "created_at": "2026-09-25T04:00:00Z"
+    },
+    {
+      "id": 18,
+      "customer_id": "C005",
+      "sender": "customer",
+      "text": "Ok please tell me when come, I only buy those",
+      "handover": false,
+      "created_at": "2026-09-25T04:00:00Z"
+    },
+    {
+      "id": 19,
+      "customer_id": "C006",
+      "sender": "customer",
+      "text": "Why your eggs more ex than NTUC ah",
+      "handover": false,
+      "created_at": "2026-09-18T04:00:00Z"
+    },
+    {
+      "id": 20,
+      "customer_id": "C006",
+      "sender": "store",
+      "text": "Ours are free-range from Malaysia farms, but we hear you",
+      "handover": false,
+      "created_at": "2026-09-18T04:00:00Z"
+    },
+    {
+      "id": 21,
+      "customer_id": "C006",
+      "sender": "customer",
+      "text": "Ok la quality is good. Just delivery fee also quite ex",
+      "handover": false,
+      "created_at": "2026-09-18T04:00:00Z"
+    },
+    {
+      "id": 22,
+      "customer_id": "C007",
+      "sender": "customer",
+      "text": "Hi! Office potluck next Friday, you all got party snack packs?",
+      "handover": false,
+      "created_at": "2026-10-08T04:00:00Z"
+    },
+    {
+      "id": 23,
+      "customer_id": "C007",
+      "sender": "store",
+      "text": "Yes we do, $12 and $20 sizes, can deliver to office",
+      "handover": false,
+      "created_at": "2026-10-08T04:00:00Z"
+    },
+    {
+      "id": 24,
+      "customer_id": "C007",
+      "sender": "customer",
+      "text": "Ok let me check with colleagues how many people first",
+      "handover": false,
+      "created_at": "2026-10-08T04:00:00Z"
+    },
+    {
+      "id": 25,
+      "customer_id": "C008",
+      "sender": "customer",
+      "text": "If I order Gardenia bread at 1pm can reach today?",
+      "handover": false,
+      "created_at": "2026-09-15T04:00:00Z"
+    },
+    {
+      "id": 26,
+      "customer_id": "C008",
+      "sender": "store",
+      "text": "Yes, same-day delivery for orders before 2pm",
+      "handover": false,
+      "created_at": "2026-09-15T04:00:00Z"
+    },
+    {
+      "id": 27,
+      "customer_id": "C008",
+      "sender": "customer",
+      "text": "Ok good to know",
+      "handover": false,
+      "created_at": "2026-09-15T04:00:00Z"
+    },
+    {
+      "id": 28,
+      "customer_id": "C009",
+      "sender": "customer",
+      "text": "Delivery came 2 hours late and the ice cream melted",
+      "handover": false,
+      "created_at": "2026-09-27T04:00:00Z"
+    },
+    {
+      "id": 29,
+      "customer_id": "C009",
+      "sender": "store",
+      "text": "We're very sorry Nurul. We'll refund the ice cream",
+      "handover": false,
+      "created_at": "2026-09-27T04:00:00Z"
+    },
+    {
+      "id": 30,
+      "customer_id": "C009",
+      "sender": "customer",
+      "text": "Ok thanks for the refund. Hope next time ok",
+      "handover": false,
+      "created_at": "2026-09-28T04:00:00Z"
+    },
+    {
+      "id": 31,
+      "customer_id": "C010",
+      "sender": "customer",
+      "text": "Pokka green tea carton got stock?",
+      "handover": false,
+      "created_at": "2026-10-01T04:00:00Z"
+    },
+    {
+      "id": 32,
+      "customer_id": "C010",
+      "sender": "store",
+      "text": "Out for now, restocking soon",
+      "handover": false,
+      "created_at": "2026-10-01T04:00:00Z"
+    },
+    {
+      "id": 33,
+      "customer_id": "C010",
+      "sender": "customer",
+      "text": "Ok I wait. Usually I buy 2 cartons a month",
+      "handover": false,
+      "created_at": "2026-10-01T04:00:00Z"
+    },
+    {
+      "id": 34,
+      "customer_id": "C011",
+      "sender": "customer",
+      "text": "Do you deliver to Jurong West?",
+      "handover": false,
+      "created_at": "2026-08-10T04:00:00Z"
+    },
+    {
+      "id": 35,
+      "customer_id": "C011",
+      "sender": "store",
+      "text": "Sorry, we only deliver within Tampines and Pasir Ris for now",
+      "handover": false,
+      "created_at": "2026-08-10T04:00:00Z"
+    },
+    {
+      "id": 36,
+      "customer_id": "C012",
+      "sender": "customer",
+      "text": "Your opening hours on Sunday?",
+      "handover": false,
+      "created_at": "2026-07-19T04:00:00Z"
+    },
+    {
+      "id": 37,
+      "customer_id": "C012",
+      "sender": "store",
+      "text": "8am to 9pm daily",
+      "handover": false,
+      "created_at": "2026-07-19T04:00:00Z"
+    },
+    {
+      "id": 38,
+      "customer_id": "C012",
+      "sender": "customer",
+      "text": "Ok thanks",
+      "handover": false,
+      "created_at": "2026-07-19T04:00:00Z"
+    },
+    {
+      "id": 39,
+      "customer_id": "C013",
+      "sender": "customer",
+      "text": "Your rice quite ex compared to supermarket",
+      "handover": false,
+      "created_at": "2026-08-02T04:00:00Z"
+    },
+    {
+      "id": 40,
+      "customer_id": "C013",
+      "sender": "store",
+      "text": "Thanks for the feedback, ours is premium Thai jasmine",
+      "handover": false,
+      "created_at": "2026-08-02T04:00:00Z"
+    },
+    {
+      "id": 41,
+      "customer_id": "C013",
+      "sender": "customer",
+      "text": "I just buy the cheap one la",
+      "handover": false,
+      "created_at": "2026-08-02T04:00:00Z"
+    },
+    {
+      "id": 42,
+      "customer_id": "C014",
+      "sender": "customer",
+      "text": "Hi I moved to Woodlands already, can remove me from list?",
+      "handover": false,
+      "created_at": "2026-06-30T04:00:00Z"
+    },
+    {
+      "id": 43,
+      "customer_id": "C014",
+      "sender": "store",
+      "text": "Noted, thanks for shopping with us all these years!",
+      "handover": false,
+      "created_at": "2026-06-30T04:00:00Z"
+    },
+    {
+      "id": 44,
+      "customer_id": "C015",
+      "sender": "customer",
+      "text": "Got kai lan today?",
+      "handover": false,
+      "created_at": "2026-08-22T04:00:00Z"
+    },
+    {
+      "id": 45,
+      "customer_id": "C015",
+      "sender": "store",
+      "text": "Yes fresh kai lan in this morning",
+      "handover": false,
+      "created_at": "2026-08-22T04:00:00Z"
+    },
+    {
+      "id": 46,
+      "customer_id": "C016",
+      "sender": "customer",
+      "text": "Morning! The usual please, 2 loaves Gardenia and kai lan",
+      "handover": false,
+      "created_at": "2026-10-10T04:00:00Z"
+    },
+    {
+      "id": 47,
+      "customer_id": "C016",
+      "sender": "store",
+      "text": "Morning Hui Min! Will pack for you, ready at 10",
+      "handover": false,
+      "created_at": "2026-10-10T04:00:00Z"
+    },
+    {
+      "id": 48,
+      "customer_id": "C016",
+      "sender": "customer",
+      "text": "Thank you, you all always so fast",
+      "handover": false,
+      "created_at": "2026-10-10T04:00:00Z"
+    },
+    {
+      "id": 49,
+      "customer_id": "C017",
+      "sender": "customer",
+      "text": "Hi, you sell lottery tickets?",
+      "handover": false,
+      "created_at": "2026-05-04T04:00:00Z"
+    },
+    {
+      "id": 50,
+      "customer_id": "C017",
+      "sender": "store",
+      "text": "Sorry we don't",
+      "handover": false,
+      "created_at": "2026-05-04T04:00:00Z"
+    },
+    {
+      "id": 51,
+      "customer_id": "C018",
+      "sender": "customer",
+      "text": "Is the shop near Tampines MRT?",
+      "handover": false,
+      "created_at": "2026-07-01T04:00:00Z"
+    },
+    {
+      "id": 52,
+      "customer_id": "C018",
+      "sender": "store",
+      "text": "Yes, 5 min walk from exit B",
+      "handover": false,
+      "created_at": "2026-07-01T04:00:00Z"
+    },
+    {
+      "id": 53,
+      "customer_id": "C019",
+      "sender": "customer",
+      "text": "Bought chicken last time not fresh",
+      "handover": false,
+      "created_at": "2026-06-12T04:00:00Z"
+    },
+    {
+      "id": 54,
+      "customer_id": "C019",
+      "sender": "store",
+      "text": "Very sorry to hear, can we offer a refund?",
+      "handover": false,
+      "created_at": "2026-06-12T04:00:00Z"
+    },
+    {
+      "id": 55,
+      "customer_id": "C019",
+      "sender": "customer",
+      "text": "Never mind already",
+      "handover": false,
+      "created_at": "2026-06-13T04:00:00Z"
+    },
+    {
+      "id": 56,
+      "customer_id": "C020",
+      "sender": "customer",
+      "text": "Got promotion this week?",
+      "handover": false,
+      "created_at": "2026-08-15T04:00:00Z"
+    },
+    {
+      "id": 57,
+      "customer_id": "C020",
+      "sender": "store",
+      "text": "Free delivery for orders above $30 this week",
+      "handover": false,
+      "created_at": "2026-08-15T04:00:00Z"
+    },
+    {
+      "id": 58,
+      "customer_id": "C020",
+      "sender": "customer",
+      "text": "Ok maybe next time",
+      "handover": false,
+      "created_at": "2026-08-15T04:00:00Z"
+    },
+    {
+      "id": 59,
+      "customer_id": "C021",
+      "sender": "customer",
+      "text": "Weekly order: rice, eggs, kai lan as usual",
+      "handover": false,
+      "created_at": "2026-10-11T04:00:00Z"
+    },
+    {
+      "id": 60,
+      "customer_id": "C021",
+      "sender": "store",
+      "text": "Got it Hafiz! Delivering this afternoon",
+      "handover": false,
+      "created_at": "2026-10-11T04:00:00Z"
+    },
+    {
+      "id": 61,
+      "customer_id": "C021",
+      "sender": "customer",
+      "text": "Terima kasih, best neighbourhood shop",
+      "handover": false,
+      "created_at": "2026-10-11T04:00:00Z"
+    },
+    {
+      "id": 62,
+      "customer_id": "C022",
+      "sender": "customer",
+      "text": "The durian last week was very good!",
+      "handover": false,
+      "created_at": "2026-09-29T04:00:00Z"
+    },
+    {
+      "id": 63,
+      "customer_id": "C022",
+      "sender": "store",
+      "text": "Glad you liked it Michelle!",
+      "handover": false,
+      "created_at": "2026-09-29T04:00:00Z"
+    },
+    {
+      "id": 64,
+      "customer_id": "C022",
+      "sender": "customer",
+      "text": "Will come back for more this weekend",
+      "handover": false,
+      "created_at": "2026-09-29T04:00:00Z"
+    },
+    {
+      "id": 65,
+      "customer_id": "C023",
+      "sender": "customer",
+      "text": "Can add 2 packs of frozen dumplings to my Saturday order?",
+      "handover": false,
+      "created_at": "2026-10-09T04:00:00Z"
+    },
+    {
+      "id": 66,
+      "customer_id": "C023",
+      "sender": "store",
+      "text": "Added! See you Saturday",
+      "handover": false,
+      "created_at": "2026-10-09T04:00:00Z"
+    },
+    {
+      "id": 67,
+      "customer_id": "C024",
+      "sender": "customer",
+      "text": "How much is delivery?",
+      "handover": false,
+      "created_at": "2026-09-01T04:00:00Z"
+    },
+    {
+      "id": 68,
+      "customer_id": "C024",
+      "sender": "store",
+      "text": "Free above $50, otherwise $5",
+      "handover": false,
+      "created_at": "2026-09-01T04:00:00Z"
+    },
+    {
+      "id": 69,
+      "customer_id": "C024",
+      "sender": "customer",
+      "text": "Ok",
+      "handover": false,
+      "created_at": "2026-09-01T04:00:00Z"
+    },
+    {
+      "id": 70,
+      "customer_id": "C025",
+      "sender": "customer",
+      "text": "Your oat milk back yet? I always buy here",
+      "handover": false,
+      "created_at": "2026-10-12T04:00:00Z"
+    },
+    {
+      "id": 71,
+      "customer_id": "C025",
+      "sender": "store",
+      "text": "Yes just came in today!",
+      "handover": false,
+      "created_at": "2026-10-12T04:00:00Z"
+    },
+    {
+      "id": 72,
+      "customer_id": "C025",
+      "sender": "customer",
+      "text": "Shiok, I'll drop by after work",
+      "handover": false,
+      "created_at": "2026-10-12T04:00:00Z"
+    },
+    {
+      "id": 73,
+      "customer_id": "C026",
+      "sender": "customer",
+      "text": "Thanks for packing my order so nicely yesterday",
+      "handover": false,
+      "created_at": "2026-10-06T04:00:00Z"
+    },
+    {
+      "id": 74,
+      "customer_id": "C026",
+      "sender": "store",
+      "text": "Our pleasure Pei Shan!",
+      "handover": false,
+      "created_at": "2026-10-06T04:00:00Z"
+    },
+    {
+      "id": 75,
+      "customer_id": "C027",
+      "sender": "customer",
+      "text": "Please keep 1 box durian for me, coming Sunday",
+      "handover": false,
+      "created_at": "2026-09-24T04:00:00Z"
+    },
+    {
+      "id": 76,
+      "customer_id": "C027",
+      "sender": "store",
+      "text": "Reserved for you!",
+      "handover": false,
+      "created_at": "2026-09-24T04:00:00Z"
+    },
+    {
+      "id": 77,
+      "customer_id": "C027",
+      "sender": "customer",
+      "text": "Thank you so much",
+      "handover": false,
+      "created_at": "2026-09-24T04:00:00Z"
+    },
+    {
+      "id": 78,
+      "customer_id": "C028",
+      "sender": "customer",
+      "text": "Can I pay by PayNow on delivery?",
+      "handover": false,
+      "created_at": "2026-10-03T04:00:00Z"
+    },
+    {
+      "id": 79,
+      "customer_id": "C028",
+      "sender": "store",
+      "text": "Yes PayNow is fine",
+      "handover": false,
+      "created_at": "2026-10-03T04:00:00Z"
+    },
+    {
+      "id": 80,
+      "customer_id": "C028",
+      "sender": "customer",
+      "text": "Great, same order as last week then",
+      "handover": false,
+      "created_at": "2026-10-03T04:00:00Z"
+    },
+    {
+      "id": 81,
+      "customer_id": "C029",
+      "sender": "customer",
+      "text": "Morning! Same as usual, eggs, bread, green tea",
+      "handover": false,
+      "created_at": "2026-10-13T04:00:00Z"
+    },
+    {
+      "id": 82,
+      "customer_id": "C029",
+      "sender": "store",
+      "text": "Morning Amirah, ready in 15 min",
+      "handover": false,
+      "created_at": "2026-10-13T04:00:00Z"
+    },
+    {
+      "id": 83,
+      "customer_id": "C029",
+      "sender": "customer",
+      "text": "Love this shop, so convenient",
+      "handover": false,
+      "created_at": "2026-10-13T04:00:00Z"
+    },
+    {
+      "id": 84,
+      "customer_id": "C029",
+      "sender": "store",
+      "text": "Thank you, see you soon!",
+      "handover": false,
+      "created_at": "2026-10-13T04:00:00Z"
+    },
+    {
+      "id": 85,
+      "customer_id": "C030",
+      "sender": "customer",
+      "text": "Your kai lan always very fresh, my wife very happy",
+      "handover": false,
+      "created_at": "2026-10-07T04:00:00Z"
+    },
+    {
+      "id": 86,
+      "customer_id": "C030",
+      "sender": "store",
+      "text": "Thank you Terence! Fresh every morning",
+      "handover": false,
+      "created_at": "2026-10-07T04:00:00Z"
+    },
+    {
+      "id": 87,
+      "customer_id": "C030",
+      "sender": "customer",
+      "text": "See you tomorrow",
+      "handover": false,
+      "created_at": "2026-10-07T04:00:00Z"
+    }
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "customer_id": "C001",
+      "type": "restock_request",
+      "value": "Oat milk restock notification",
+      "evidence": "Hi, can tell me when oat milk is back? Been out for 2 weeks already",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 2,
+      "customer_id": "C001",
+      "type": "upcoming_event",
+      "value": "Son's birthday party at the end of October",
+      "evidence": "Also planning my son's birthday party end Oct",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 3,
+      "customer_id": "C001",
+      "type": "product_interest",
+      "value": "Party snack packs in $12 and $20 sizes",
+      "evidence": "you all got party snack packs?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 4,
+      "customer_id": "C002",
+      "type": "complaint_delivery",
+      "value": "Order did not arrive by the expected 4pm time",
+      "evidence": "My order supposed to come 4pm, now 7pm still nothing",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 5,
+      "customer_id": "C002",
+      "type": "complaint_delivery",
+      "value": "Frozen dumplings were soft when the order arrived",
+      "evidence": "Reached already but the frozen dumplings all soft. Not happy leh",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 6,
+      "customer_id": "C003",
+      "type": "restock_request",
+      "value": "Ghee and spice packs for Deepavali",
+      "evidence": "you all bring in ghee and the spice packs again this year?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 7,
+      "customer_id": "C003",
+      "type": "upcoming_event",
+      "value": "Deepavali",
+      "evidence": "Deepavali coming",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 8,
+      "customer_id": "C003",
+      "type": "product_interest",
+      "value": "Ghee and spice packs",
+      "evidence": "ghee and the spice packs",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 9,
+      "customer_id": "C004",
+      "type": "product_interest",
+      "value": "seasonal durian",
+      "evidence": "Got durian this season or not?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 10,
+      "customer_id": "C005",
+      "type": "restock_request",
+      "value": "Notify when free-range eggs arrive",
+      "evidence": "Ok please tell me when come, I only buy those",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 11,
+      "customer_id": "C005",
+      "type": "product_interest",
+      "value": "Free-range eggs",
+      "evidence": "free-range eggs finish already?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 12,
+      "customer_id": "C005",
+      "type": "loyal_regular",
+      "value": "Usually buys free-range eggs",
+      "evidence": "I only buy those",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 13,
+      "customer_id": "C006",
+      "type": "complaint_price",
+      "value": "Eggs are more expensive than NTUC",
+      "evidence": "Why your eggs more ex than NTUC ah",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 14,
+      "customer_id": "C006",
+      "type": "complaint_delivery",
+      "value": "Delivery fee is expensive",
+      "evidence": "Just delivery fee also quite ex",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 15,
+      "customer_id": "C007",
+      "type": "upcoming_event",
+      "value": "Office potluck next Friday",
+      "evidence": "Office potluck next Friday",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 16,
+      "customer_id": "C007",
+      "type": "product_interest",
+      "value": "Party snack packs",
+      "evidence": "you all got party snack packs?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 17,
+      "customer_id": "C008",
+      "type": "product_interest",
+      "value": "Gardenia bread",
+      "evidence": "If I order Gardenia bread at 1pm can reach today?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 18,
+      "customer_id": "C009",
+      "type": "complaint_delivery",
+      "value": "Delivery was 2 hours late and the ice cream melted",
+      "evidence": "Delivery came 2 hours late and the ice cream melted",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 19,
+      "customer_id": "C010",
+      "type": "restock_request",
+      "value": "Pokka green tea carton restock",
+      "evidence": "Out for now, restocking soon",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 20,
+      "customer_id": "C010",
+      "type": "product_interest",
+      "value": "Pokka green tea",
+      "evidence": "Pokka green tea carton got stock?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 21,
+      "customer_id": "C010",
+      "type": "loyal_regular",
+      "value": "Usually buys 2 cartons a month",
+      "evidence": "Usually I buy 2 cartons a month",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 22,
+      "customer_id": "C013",
+      "type": "complaint_price",
+      "value": "Rice is more expensive than supermarket prices",
+      "evidence": "Your rice quite ex compared to supermarket",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 23,
+      "customer_id": "C013",
+      "type": "product_interest",
+      "value": "Cheap rice",
+      "evidence": "I just buy the cheap one la",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 24,
+      "customer_id": "C015",
+      "type": "product_interest",
+      "value": "kai lan",
+      "evidence": "Got kai lan today?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 25,
+      "customer_id": "C016",
+      "type": "restock_request",
+      "value": "2 loaves Gardenia and kai lan",
+      "evidence": "The usual please, 2 loaves Gardenia and kai lan",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 26,
+      "customer_id": "C016",
+      "type": "product_interest",
+      "value": "Gardenia and kai lan",
+      "evidence": "2 loaves Gardenia and kai lan",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 27,
+      "customer_id": "C016",
+      "type": "loyal_regular",
+      "value": "The usual",
+      "evidence": "The usual please, 2 loaves Gardenia and kai lan",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 28,
+      "customer_id": "C017",
+      "type": "product_interest",
+      "value": "Lottery tickets",
+      "evidence": "Hi, you sell lottery tickets?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 29,
+      "customer_id": "C020",
+      "type": "upcoming_event",
+      "value": "Free delivery promotion for orders above $30",
+      "evidence": "Free delivery for orders above $30 this week",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 30,
+      "customer_id": "C021",
+      "type": "restock_request",
+      "value": "rice, eggs, kai lan",
+      "evidence": "Weekly order: rice, eggs, kai lan as usual",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 31,
+      "customer_id": "C021",
+      "type": "loyal_regular",
+      "value": "weekly regular order",
+      "evidence": "Weekly order: rice, eggs, kai lan as usual",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 32,
+      "customer_id": "C022",
+      "type": "product_interest",
+      "value": "Durian",
+      "evidence": "The durian last week was very good!",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 33,
+      "customer_id": "C022",
+      "type": "loyal_regular",
+      "value": "Plans to return for more durian",
+      "evidence": "Will come back for more this weekend",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 34,
+      "customer_id": "C023",
+      "type": "product_interest",
+      "value": "frozen dumplings",
+      "evidence": "2 packs of frozen dumplings",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 35,
+      "customer_id": "C023",
+      "type": "loyal_regular",
+      "value": "Saturday order",
+      "evidence": "my Saturday order",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 36,
+      "customer_id": "C025",
+      "type": "restock_request",
+      "value": "oat milk",
+      "evidence": "Your oat milk back yet?",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 37,
+      "customer_id": "C025",
+      "type": "loyal_regular",
+      "value": "customer",
+      "evidence": "I always buy here",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 38,
+      "customer_id": "C025",
+      "type": "product_interest",
+      "value": "oat milk",
+      "evidence": "Shiok, I'll drop by after work",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 39,
+      "customer_id": "C027",
+      "type": "product_interest",
+      "value": "durian",
+      "evidence": "Please keep 1 box durian for me, coming Sunday",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 40,
+      "customer_id": "C027",
+      "type": "upcoming_event",
+      "value": "Durian pickup/reservation",
+      "evidence": "Please keep 1 box durian for me, coming Sunday",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 41,
+      "customer_id": "C028",
+      "type": "loyal_regular",
+      "value": true,
+      "evidence": "same order as last week",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 42,
+      "customer_id": "C029",
+      "type": "loyal_regular",
+      "value": "usual order",
+      "evidence": "Same as usual, eggs, bread, green tea",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 43,
+      "customer_id": "C029",
+      "type": "loyal_regular",
+      "value": "appreciates convenience",
+      "evidence": "Love this shop, so convenient",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 44,
+      "customer_id": "C030",
+      "type": "loyal_regular",
+      "value": "kai lan",
+      "evidence": "Your kai lan always very fresh",
+      "created_at": "2026-10-21T04:00:00Z"
+    },
+    {
+      "id": 45,
+      "customer_id": "C030",
+      "type": "product_interest",
+      "value": "kai lan",
+      "evidence": "Your kai lan always very fresh",
+      "created_at": "2026-10-21T04:00:00Z"
+    }
+  ]
+}

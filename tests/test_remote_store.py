@@ -49,6 +49,12 @@ class FakePostgrest:
         elif method == "POST":
             new = json if isinstance(json, list) else [json]
             for row in new:
+                prefer = (headers or {}).get("Prefer", "")
+                if (table == "customers" and "ignore-duplicates" in prefer
+                        and any(c.get("key_hash") == row.get("key_hash") for c in rows)):
+                    r.status_code, r.text = 201, "x"
+                    r.json.return_value = []
+                    return r
                 if table == "customers" and any(c["id"] == row["id"] for c in rows):
                     existing = next(c for c in rows if c["id"] == row["id"])
                     if "merge-duplicates" in (headers or {}).get("Prefer", ""):
@@ -79,9 +85,7 @@ class RemoteStoreTests(unittest.TestCase):
     def setUp(self):
         self.db = FakePostgrest()
         self.patches = [patch.dict(os.environ, ENV),
-                        patch("nudgely.remote_store.requests.request", side_effect=self.db),
-                        patch("nudgely.supabase_sync.requests.post",
-                              side_effect=lambda url, json=None, timeout=None, headers=None: self.db("POST", url, json, timeout, headers)),
+                        patch("nudgely.supabase_sync.http", side_effect=self.db),
                         patch("nudgely.llm.tag_message", return_value={"tags": [
                             {"type": "product_interest", "value": "durian", "evidence": "durian"}]}),
                         patch("nudgely.reply.answer", return_value={"reply": "Yes, durian is in!", "handover": False,
@@ -113,6 +117,23 @@ class RemoteStoreTests(unittest.TestCase):
         c = bot.handle("6591234567", "", "hi", prefix="WA")["customer_id"]
         again = bot.handle("web:aaaaaaaa", "", "hi again", prefix="WEB")["customer_id"]
         self.assertEqual((a, b, c, again), ("WEB001", "WEB002", "WA001", "WEB001"))
+
+    def test_new_ids_skip_taken_and_deleted_ones(self):
+        self.db.t["customers"].append({"id": "WEB007", "key_hash": "other", "channel": "web"})
+        self.assertEqual(bot.handle("web:newnew01", "", "hi", prefix="WEB")["customer_id"], "WEB008")
+        self.assertEqual(bot.handle("web:newnew01", "", "again", prefix="WEB")["customer_id"], "WEB008")
+
+    def test_parallel_first_messages_get_different_ids(self):
+        real = remote_store._req
+
+        def stale(method, path, json=None, prefer="return=representation"):
+            if method == "GET" and "id=like" in path:  # both requests looked before either inserted
+                return []
+            return real(method, path, json, prefer)
+
+        self.db.t["customers"].append({"id": "WEB001", "key_hash": "racer", "channel": "web"})
+        with patch("nudgely.remote_store._req", side_effect=stale),                 patch("nudgely.remote_store.random.randint", return_value=1):
+            self.assertEqual(remote_store.get_or_create("web:second01", prefix="WEB")["customer_id"], "WEB002")
 
     def test_cap_and_duplicates(self):
         for i in range(3):

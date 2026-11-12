@@ -8,10 +8,10 @@ is never stored, and the dashboard cannot read key_hash (column grants in 002).
 import hashlib
 import hmac
 import os
+import random
 from datetime import datetime, timezone
 
-import requests
-
+from nudgely import supabase_sync
 from nudgely.supabase_sync import _config
 
 FIELDS = "id,name,label,replied,opted_out,handover,memory,seen_ids,msg_count"
@@ -32,7 +32,7 @@ def _req(method, path, json=None, prefer="return=representation"):
     url, k = _config()
     if not (url and k):
         raise RemoteStoreError("SUPABASE_URL / SUPABASE_SERVICE_KEY not set")
-    r = requests.request(method, f"{url}/rest/v1/{path}", json=json, timeout=10, headers={
+    r = supabase_sync.http(method, f"{url}/rest/v1/{path}", json=json, timeout=10, headers={
         "apikey": k, "Authorization": f"Bearer {k}", "Content-Type": "application/json", "Prefer": prefer})
     if r.status_code == 409:
         return None  # conflict: caller decides
@@ -65,17 +65,23 @@ def get_or_create(key, name="", prefix="WA", max_chat=30):
         return _to_rec(row, _chat(row["id"], max_chat))
 
     channel = "web" if prefix == "WEB" else "whatsapp"
-    taken = _req("GET", f"customers?id=like.{prefix}*&select=id")
-    n = len(taken or [])
-    for bump in range(1, 20):  # two first messages at once: the loser takes the next id
-        cid = f"{prefix}{n + bump:03d}"
-        made = _req("POST", "customers", {"id": cid, "channel": channel, "name": name or None,
-                                          "key_hash": h, "label": "New"})
+    taken = _req("GET", f"customers?id=like.{prefix}*&select=id") or []
+    nums = [int(r["id"][len(prefix):]) for r in taken if r["id"][len(prefix):].isdigit()]
+    cid_n = max(nums, default=0) + 1  # max, not count: ids of deleted test chats are never reused
+    for _ in range(30):
+        # ignore-duplicates on key_hash: [] means this person was created by a parallel request;
+        # None (409 on id) means another new person took this id, so try a little further on.
+        made = _req("POST", "customers?on_conflict=key_hash",
+                    {"id": f"{prefix}{cid_n:03d}", "channel": channel, "name": name or None,
+                     "key_hash": h, "label": "New"},
+                    "resolution=ignore-duplicates,return=representation")
         if made:
             return _to_rec(made[0], [])
-        again = _req("GET", f"customers?key_hash=eq.{h}&select={FIELDS}")  # same person, other request won
-        if again:
-            return _to_rec(again[0], _chat(again[0]["id"], max_chat))
+        if made == []:
+            again = _req("GET", f"customers?key_hash=eq.{h}&select={FIELDS}")
+            if again:
+                return _to_rec(again[0], _chat(again[0]["id"], max_chat))
+        cid_n += random.randint(1, 3)  # many first messages at once: spread out instead of queueing
     raise RemoteStoreError(f"could not allocate an id for {prefix}")
 
 

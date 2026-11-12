@@ -93,6 +93,16 @@ class ApiTests(unittest.TestCase):
             self.assertEqual(r.status_code, 200)
             wa.return_value.send_text.assert_called_once_with("6591234567", ANSWER["reply"])
 
+    def test_judge_pages(self):
+        self.assertIn("Kampung Fresh", self.client.get("/try").text)
+        self.assertEqual(self.client.get("/", follow_redirects=False).headers["location"], "/try")
+        self.assertIn("/try", self.client.get("/qr").text)
+        svg = self.client.get("/qr.svg")
+        self.assertEqual(svg.headers["content-type"], "image/svg+xml")
+        self.assertIn("<svg", svg.text)
+        with patch.dict(os.environ, {"TRY_URL": "https://nudgely.vercel.app/try"}):
+            self.assertIn("https://nudgely.vercel.app/try", self.client.get("/qr").text)
+
     def test_health(self):
         self.assertTrue(self.client.get("/health").json()["ok"])
 
