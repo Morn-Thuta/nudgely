@@ -1,7 +1,7 @@
 # Team plan: Finals (updated Thu 12 Nov 2026, afternoon)
 
 > Earlier plans: [3 Nov finals plan](docs/archive/TEAM_finals_plan_3nov.md) · [hackathon plan](docs/archive/TEAM_hackathon.md)
-> How the pieces fit: **[docs/V1_ARCHITECTURE.md](docs/V1_ARCHITECTURE.md)** · Stage plan: **[docs/Finals_Run_Sheet.md](docs/Finals_Run_Sheet.md)**
+> How the pieces fit: **[docs/V1_ARCHITECTURE.md](docs/V1_ARCHITECTURE.md)** · Pitch + demo plan: **[docs/Pitch_Plan.md](docs/Pitch_Plan.md)** · Competitors: [docs/Competitors.md](docs/Competitors.md)
 
 **Finals: Saturday 14 Nov**, report to MPH A (Block B, B2, SIM Clementi) **8:30–9:00 AM**. Feature freeze **Fri 13 Nov, noon**.
 Format (organisers' advisory): **7 minutes, hard stop**, of which **4:00 is the live demo of one complete use case**, then 5 minutes Q&A.
@@ -33,7 +33,7 @@ Format (organisers' advisory): **7 minutes, hard stop**, of which **4:00 is the 
 | Add `LIVE_RECIPIENTS` = `{"C001": "<Aisha phone, 65...>"}` in Render → Environment | Thuta |
 | First real live send from the dashboard to the Aisha phone; check the reply shows her history | Thuta + Dythan |
 | `gh auth refresh -h github.com -s workflow`, then Claude pushes the keep-awake job | Thuta |
-| Rework the deck to the advisory timing (max 8 slides); stage path from the run sheet | Dythan |
+| Slides 1–8 and rehearse the demo from docs/Pitch_Plan.md (Dythan demo, Jack the rest) | Dythan + Jack |
 | **Record the backup video** of the full Aisha journey, save it on the presenting laptop | Dythan |
 | Business slide: problem size, pricing, cost per shop, competitors (sourced) | Shareef |
 | Jailbreak / Singlish / fake product checks on the live bot | Jack |
