@@ -30,7 +30,7 @@ export function Chat({ mock }: { mock: boolean }) {
   const busy = useRef(false);
   const composer = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    end.current?.scrollIntoView({ block: "nearest" });
+    if (turns.length || pending) end.current?.scrollIntoView({ block: "nearest" });
   }, [turns, pending]);
   async function send(event: FormEvent) {
     event.preventDefault();

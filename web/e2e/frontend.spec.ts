@@ -27,6 +27,7 @@ test("product screens fit the viewport and sign-in has an accessible password to
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), route).toBe(true);
     if (route === "/try") {
+      await expect(page.getByRole("heading", { name: "Hello, neighbour." })).toBeInViewport();
       const messages = await page.locator(".chat-main").boundingBox();
       const composer = await page.locator(".chat-composer").boundingBox();
       expect(messages).not.toBeNull();
