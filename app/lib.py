@@ -315,26 +315,7 @@ def example_campaign():
     return frame if len(frame) else None
 
 
-def lift_range(back_m, n_m, back_h, n_h, z=1.645):
-    """90% range for (messaged return rate - kept-back return rate).
-
-    Newcombe's method on two Wilson intervals: it behaves on the tiny groups a
-    small shop has, where the textbook formula gives nonsense such as 0 +/- 0.
-    """
-    if not n_m or not n_h:
-        return None
-
-    def wilson(x, n):
-        p = x / n
-        mid = (p + z * z / (2 * n)) / (1 + z * z / n)
-        half = z * np.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
-        return p, mid - half, mid + half
-
-    pm, lm, um = wilson(back_m, n_m)
-    ph, lh, uh = wilson(back_h, n_h)
-    d = pm - ph
-    return (float(d - np.sqrt((pm - lm) ** 2 + (uh - ph) ** 2)),
-            float(d + np.sqrt((um - pm) ** 2 + (ph - lh) ** 2)))
+from nudgely.returns import lift_range  # noqa: E402,F401  (shared with the shop campaigns)
 
 
 # ---- ui bits ---------------------------------------------------------------

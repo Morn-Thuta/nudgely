@@ -259,6 +259,12 @@ def shop_score(body: ScoreIn, request: Request):
     return out
 
 
+# ---- shop owners: sign up, upload sales, run their own campaign (api/owner.py) ------------------
+from api.owner import router as owner_router  # noqa: E402
+
+app.include_router(owner_router)
+
+
 # ---- judge pages: /try (phone chat) and /qr (projector screen) ----------------------------------
 
 STATIC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")

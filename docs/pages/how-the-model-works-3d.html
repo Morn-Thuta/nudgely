@@ -1,0 +1,460 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Nudgely Uplift Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one full-screen 3D stage at night; a caption card bottom-left and a step rail top-right float over it.
+   Single dark look on purpose: it's a stage, and the colours of the dots carry the meaning. */
+:root {
+  --night: #0b1f19;
+  --deep: #123d35;
+  --panel: rgba(13, 36, 29, 0.86);
+  --paper: #eaf3ec;
+  --muted: #a3b8ad;
+  --lime: #d2ef9b;
+  --mint: #3fd79a;
+  --sky: #86b9ff;
+  --stone: #7d8c85;
+  --line: rgba(210, 239, 155, 0.2);
+  --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--night); color: var(--paper); font-family: var(--body); overflow: hidden; }
+#stage { position: fixed; inset: 0; touch-action: none; cursor: grab; }
+#stage:active { cursor: grabbing; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+
+.ui {
+  position: fixed; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(16px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-bottom, 0px));
+}
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
+.brand span { color: var(--lime); }
+.brand small { display: block; font-family: var(--body); font-weight: 500; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; margin-top: 2px; }
+.rail { display: flex; gap: 6px; pointer-events: auto; flex-wrap: wrap; justify-content: flex-end; }
+.rail button {
+  position: relative; overflow: hidden; width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--line); background: rgba(11, 31, 25, 0.7); color: var(--muted);
+  font: 600 13px var(--body); cursor: pointer; font-variant-numeric: tabular-nums;
+}
+.rail button[aria-current="step"] { color: var(--night); background: var(--lime); border-color: var(--lime); }
+.rail button:focus-visible, .controls button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+
+.card {
+  pointer-events: auto; width: min(460px, 100%); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 16px; padding: 18px 20px 16px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: grid; gap: 10px;
+}
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); }
+.card h1 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 3.2vw, 30px); line-height: 1.1; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.card p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--paper); max-width: 60ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips:empty { display: none; }
+.chip { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: rgba(210, 239, 155, 0.12); color: var(--lime); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.chip.mint { color: var(--mint); background: rgba(63, 215, 154, 0.12); }
+.chip.sky { color: var(--sky); background: rgba(134, 185, 255, 0.12); }
+.chip.stone { color: #b9c6c0; background: rgba(125, 140, 133, 0.16); }
+.controls { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.controls button {
+  border: 1px solid var(--line); background: transparent; color: var(--paper); border-radius: 10px;
+  height: 36px; padding: 0 14px; font: 600 13px var(--body); cursor: pointer;
+}
+.controls button.primary { background: var(--lime); color: var(--night); border-color: var(--lime); }
+.controls button:disabled { opacity: 0.35; cursor: default; }
+.progress { flex: 1; height: 3px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--lime); }
+.note { font-size: 11px; color: var(--muted); }
+
+.tag {
+  position: fixed; left: 0; top: 0; pointer-events: none; transform: translate(-50%, -100%);
+  font: 600 12px var(--body); white-space: nowrap; color: var(--night); background: var(--lime);
+  padding: 4px 9px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); transition: opacity 0.3s;
+}
+.tag.model { background: var(--deep); color: var(--lime); border: 1px solid var(--lime); }
+.tag.sure { background: var(--sky); }
+.tag.lost { background: #c4cfca; }
+.tag[hidden] { display: none !important; }
+
+.fallback { position: fixed; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; padding: 24px; text-align: center; }
+
+@media (max-width: 560px) {
+  .card { padding: 14px 16px 12px; gap: 8px; }
+  .card p { font-size: 14px; }
+  .rail button { width: 30px; height: 30px; font-size: 12px; }
+}
+</style>
+
+<div id="stage" aria-hidden="true"></div>
+
+<div class="ui">
+  <div class="top">
+    <div class="brand">nudgely<span>↗</span><small>How the uplift model works</small></div>
+    <nav class="rail" id="rail" aria-label="Steps"></nav>
+  </div>
+  <section class="card" aria-live="polite">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title"></h1>
+    <p id="body"></p>
+    <div class="chips" id="chips"></div>
+    <div class="controls">
+      <button id="prev" aria-label="Previous step">Back</button>
+      <button id="play" class="primary">Pause</button>
+      <button id="next" aria-label="Next step">Next</button>
+      <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    </div>
+    <div class="note">Illustration: the dots stand in for customers. Aisha, Amirah and Ravi use their real demo scores. Drag to turn the view.</div>
+  </section>
+</div>
+
+<div class="tag" id="tag-aisha" hidden></div>
+<div class="tag" id="tag-amirah" hidden></div>
+<div class="tag" id="tag-ravi" hidden></div>
+<div class="tag model" id="tag-coreA" hidden></div>
+<div class="tag model" id="tag-coreB" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // ---- the story -----------------------------------------------------------------------------
+  const STEPS = [
+    { eyebrow: "The data", title: "687,000 real shoppers.",
+      body: "A Russian supermarket, Lenta, ran a real experiment on its customers. Each dot here stands in for a few thousand of them.",
+      chips: [["687,029 customers", ""]] },
+    { eyebrow: "The experiment", title: "A coin flip decides who gets a text.",
+      body: "75% got an SMS (green), 25% got nothing (grey). Because it was random, the two groups are alike in every other way, so any difference later is caused by the text.",
+      chips: [["75% texted", "mint"], ["25% not", "stone"]] },
+    { eyebrow: "The result", title: "Then they watched who came back.",
+      body: "The dots that rise came back to the shop. 11.0% of the texted group returned, against 10.3% of the rest. A small lift, but a real one.",
+      chips: [["11.0% texted", "mint"], ["10.3% not texted", "stone"]] },
+    { eyebrow: "Training", title: "Two models, one for each group.",
+      body: "One model learns only from the texted shoppers, the other only from the ones who got nothing. Each learns to guess one thing: will this person come back?",
+      chips: [["Model A: texted", "mint"], ["Model B: not texted", "stone"]] },
+    { eyebrow: "Scoring one customer", title: "Ask both models about Aisha.",
+      body: "The model that learned from texted shoppers says she has a 39% chance of coming back. The other says 28% if we send nothing.",
+      chips: [["If texted: 39%", "mint"], ["If not: 28%", "stone"]] },
+    { eyebrow: "The trick", title: "Subtract. That gap is uplift.",
+      body: "39 minus 28 is +11 points, so a text really moves Aisha. Amirah drops 5 points: she's coming back anyway and the text slightly puts her off. Ravi barely moves.",
+      chips: [["Aisha +11", "mint"], ["Amirah −5", "sky"], ["Ravi +1", "stone"]] },
+    { eyebrow: "Every customer", title: "Each customer gets a height.",
+      body: "Height is how much a text changes them. Tall green ones are Persuadable: message these. Blue are Sure Things, coming back anyway. Grey are Lost Causes. A shop messages only the tall ones.",
+      chips: [["Persuadable", "mint"], ["Sure Thing", "sky"], ["Lost Cause", "stone"]] },
+    { eyebrow: "Model 2", title: "The same idea, from a shop's receipts.",
+      body: "A real shop only has phone, date and amount. Model 2 learns from ten numbers worked out from those: how long they've been a customer, how regular their visits are, how much their basket varies, and whether they've replied before.",
+      chips: [["Top 30% caught 57% of extra visits", ""], ["about 1.9x random", "mint"], ["range 38–85%", "stone"]] },
+  ];
+  const DWELL_MS = 8000;
+
+  // ---- customers ---------------------------------------------------------------------------
+  let seed = 20261114;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const N = 384, TREATED = 288; // 75% texted
+  const AISHA = 0, AMIRAH = 1, RAVI = 2;
+
+  const order = Array.from({ length: N }, (_, i) => i);
+  for (let i = N - 1; i > 3; i--) { const j = 3 + Math.floor(rnd() * (i - 2)); [order[i], order[j]] = [order[j], order[i]]; }
+  const people = Array.from({ length: N }, () => ({}));
+  order.forEach((idx, k) => { people[idx].treated = k < TREATED; });
+
+  const tIdx = [], cIdx = [];
+  people.forEach((p, i) => (p.treated ? tIdx : cIdx).push(i));
+  const pick = (list, n) => { const copy = list.slice(); const out = new Set(); while (out.size < n) out.add(copy[Math.floor(rnd() * copy.length)]); return out; };
+  const backT = pick(tIdx, Math.round(TREATED * 0.11)), backC = pick(cIdx, Math.round((N - TREATED) * 0.103));
+  people.forEach((p, i) => { p.back = p.treated ? backT.has(i) : backC.has(i); });
+
+  people.forEach((p, i) => {
+    const movable = rnd() < 0.3;
+    p.u = movable ? 0.03 + rnd() * 0.07 : -0.045 + rnd() * 0.055;
+    p.p0 = rnd() * 0.7;
+  });
+  Object.assign(people[AISHA], { u: 0.11, p0: 0.28 });
+  Object.assign(people[AMIRAH], { u: -0.05, p0: 0.68 });
+  Object.assign(people[RAVI], { u: 0.01, p0: 0.02 });
+  const byU = people.map((p, i) => i).sort((a, b) => people[b].u - people[a].u);
+  const pers = new Set(byU.slice(0, Math.round(N * 0.3)));
+  const rest = byU.filter((i) => !pers.has(i)).sort((a, b) => people[b].p0 - people[a].p0);
+  const sure = new Set(rest.slice(0, Math.round(rest.length * 0.3)));
+  people.forEach((p, i) => { p.label = pers.has(i) ? "P" : sure.has(i) ? "S" : "L"; });
+  people[AISHA].label = "P"; people[AMIRAH].label = "S"; people[RAVI].label = "L";
+
+  // positions
+  const S = 0.5;
+  const base = people.map((_, i) => [(i % 24) * S - 5.75, (Math.floor(i / 24)) * S - 3.75]);
+  const groupPos = people.map((p, i) => {
+    if (p.treated) { const k = tIdx.indexOf(i); return [(k % 18) * S - 9.25, Math.floor(k / 18) * S - 3.75]; }
+    const k = cIdx.indexOf(i); return [(k % 8) * S + 3.5, Math.floor(k / 8) * S - 2.75];
+  });
+  // keep the three named customers easy to find in the full grid: front row, near the middle.
+  // Swap places with whoever sits there, so the grid stays whole.
+  [[AISHA, 12], [AMIRAH, 8], [RAVI, 16]].forEach(([who, col]) => {
+    const occupant = 15 * 24 + col; // last row is the front row
+    [base[who], base[occupant]] = [base[occupant], base[who]];
+  });
+
+  const CORE_A = { x: -5, y: 5.6, z: 0 };
+  const CORE_B = { x: 5.25, y: 5.6, z: 0 };
+  const FRONT = { [AMIRAH]: [-2.6, 4.4], [AISHA]: [0, 4.4], [RAVI]: [2.6, 4.4] };
+
+  // ---- colours -----------------------------------------------------------------------------
+  const hex = (h) => { const c = parseInt(h.slice(1), 16); return [(c >> 16 & 255) / 255, (c >> 8 & 255) / 255, (c & 255) / 255]; };
+  const C = {
+    neutral: hex("#b9cbc1"), mint: hex("#3fd79a"), stone: hex("#5f6f69"), lime: hex("#d2ef9b"),
+    sky: hex("#86b9ff"), lost: hex("#7d8c85"), dim: hex("#1d3a31"), white: hex("#f3fbf5"),
+  };
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  const labelColour = (l) => (l === "P" ? C.mint : l === "S" ? C.sky : C.lost);
+  const H = (u) => { const h = u * 40; return Math.abs(h) < 0.14 ? (h < 0 ? -0.14 : 0.14) : h; };
+
+  // target for customer i at step s: [x, lift, z, height, size, r, g, b]
+  function target(i, s) {
+    const p = people[i], named = i <= RAVI;
+    const g = groupPos[i], b = base[i];
+    const groupCol = p.treated ? C.mint : C.stone;
+    switch (s) {
+      case 0: return [b[0], 0, b[1], 0.14, 0.3, ...C.neutral];
+      case 1: return [g[0], 0, g[1], 0.14, 0.3, ...groupCol];
+      case 2: return p.back ? [g[0], 0.9, g[1], 0.14, 0.34, ...C.lime] : [g[0], 0, g[1], 0.14, 0.3, ...mix(groupCol, C.dim, 0.55)];
+      case 3: return [g[0], p.back ? 0.35 : 0, g[1], 0.14, 0.3, ...groupCol];
+      case 4: return i === AISHA ? [FRONT[AISHA][0], 0, FRONT[AISHA][1], 0.14, 0.5, ...C.white]
+                                 : [g[0], 0, g[1], 0.14, 0.3, ...mix(groupCol, C.dim, 0.7)];
+      case 5: return named ? [FRONT[i][0], 0, FRONT[i][1], H(p.u), 0.62, ...labelColour(p.label)]
+                           : [b[0], 0, b[1], 0.1, 0.3, ...mix(C.neutral, C.dim, 0.82)];
+      case 6: return [b[0], 0, b[1], H(p.u), named ? 0.42 : 0.3, ...labelColour(p.label)];
+      default: return [b[0], 0, b[1], H(p.u), named ? 0.42 : 0.3, ...(p.label === "P" ? C.mint : mix(labelColour(p.label), C.dim, 0.5))];
+    }
+  }
+  const CAMERA = [
+    { pos: [0, 9.5, 12], look: [0, 0, 0] },
+    { pos: [0, 10.5, 14], look: [0, 0.5, 0] },
+    { pos: [0, 8, 13], look: [0, 0.6, 0] },
+    { pos: [0, 8.5, 16.5], look: [0, 2.8, 0] },
+    { pos: [0, 7.5, 18.5], look: [0, 2.6, 1.5] },
+    { pos: [0, 5.2, 16], look: [0, 1.4, 4.2] },
+    { pos: [8, 8, 12], look: [0, 0.6, 0] },
+    { pos: [-7, 7, 13], look: [0, 0.6, 0] },
+  ];
+  const coreVisible = (s) => (s === 3 || s === 4 ? 1 : 0);
+  const beamVisible = (s) => (s === 4 ? 1 : 0);
+  const flowVisible = (s) => (s === 3 ? 1 : 0);
+
+  // ---- 3D ----------------------------------------------------------------------------------
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stageEl = document.getElementById("stage");
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+  } catch (e) {
+    stageEl.innerHTML = '<div class="fallback">This browser can’t show 3D. The steps below still explain the model.</div>';
+  }
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#0b1f19");
+  scene.fog = new THREE.Fog("#0b1f19", 22, 44);
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  scene.add(new THREE.HemisphereLight(0xeaf3ec, 0x0b1f19, 0.85));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.65); sun.position.set(6, 12, 8); scene.add(sun);
+
+  const grid = new THREE.GridHelper(34, 68, 0x2c5546, 0x183a30);
+  grid.material.transparent = true; grid.material.opacity = 0.55; grid.position.y = -0.005; scene.add(grid);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(34, 34),
+    new THREE.MeshBasicMaterial({ color: 0x0f2a22, transparent: true, opacity: 0.55, depthWrite: false }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -0.01; scene.add(floor);
+
+  const dots = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0.05 }), N);
+  dots.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(dots);
+
+  function makeCore(pos, colour) {
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1),
+      new THREE.MeshBasicMaterial({ color: colour, wireframe: true, transparent: true, opacity: 0.9 })));
+    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 2),
+      new THREE.MeshStandardMaterial({ color: colour, emissive: colour, emissiveIntensity: 0.6 })));
+    g.position.set(pos.x, pos.y, pos.z); scene.add(g); return g;
+  }
+  const coreA = makeCore(CORE_A, 0x3fd79a), coreB = makeCore(CORE_B, 0x9aaba4);
+
+  const FLOW = 90;
+  const flow = new THREE.InstancedMesh(new THREE.SphereGeometry(0.07, 8, 8),
+    new THREE.MeshBasicMaterial({ color: 0xd2ef9b }), FLOW);
+  scene.add(flow);
+  const flowSrc = Array.from({ length: FLOW }, (_, k) => {
+    const list = k % 4 === 3 ? cIdx : tIdx; return { i: list[Math.floor(rnd() * list.length)], phase: rnd(), core: k % 4 === 3 ? CORE_B : CORE_A };
+  });
+
+  function beam(colour) {
+    const geo = new THREE.BufferGeometry().setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: colour, transparent: true, opacity: 0 }));
+    scene.add(line); return line;
+  }
+  const beamA = beam(0x3fd79a), beamB = beam(0xc4cfca);
+
+  // ---- animation state ---------------------------------------------------------------------
+  const F = 8;
+  const from = new Float32Array(N * F), to = new Float32Array(N * F), cur = new Float32Array(N * F);
+  const fill = (arr, s) => { for (let i = 0; i < N; i++) arr.set(target(i, s), i * F); };
+  fill(cur, 0);
+  const scal = { from: [0, 0, 0], to: [0, 0, 0], cur: [0, 0, 0] }; // core, beam, flow
+  const cam = { from: null, to: null, cur: { pos: CAMERA[0].pos.slice(), look: CAMERA[0].look.slice() } };
+
+  let step = 0, stepStart = performance.now(), tween = 1, playing = !reduce, yaw = 0;
+  const TWEEN_MS = reduce ? 1 : 1700;
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  function go(s) {
+    step = (s + STEPS.length) % STEPS.length;
+    from.set(cur); fill(to, step);
+    scal.from = scal.cur.slice(); scal.to = [coreVisible(step), beamVisible(step), flowVisible(step)];
+    cam.from = { pos: cam.cur.pos.slice(), look: cam.cur.look.slice() }; cam.to = CAMERA[step];
+    tween = 0; stepStart = performance.now();
+    renderText();
+    if (typeof clearCard === "function") clearCard(); // the card's height changes with each step's text
+  }
+
+  // ---- text and controls -------------------------------------------------------------------
+  const $ = (id) => document.getElementById(id);
+  const rail = $("rail");
+  STEPS.forEach((st, k) => {
+    const b = document.createElement("button");
+    b.textContent = k + 1; b.setAttribute("aria-label", `Step ${k + 1}: ${st.title}`);
+    b.addEventListener("click", () => { go(k); });
+    rail.appendChild(b);
+  });
+  function renderText() {
+    const st = STEPS[step];
+    $("eyebrow").textContent = `Step ${step + 1} of ${STEPS.length} · ${st.eyebrow}`;
+    $("title").textContent = st.title;
+    $("body").textContent = st.body;
+    $("chips").innerHTML = "";
+    st.chips.forEach(([text, kind]) => { const c = document.createElement("span"); c.className = "chip " + kind; c.textContent = text; $("chips").appendChild(c); });
+    [...rail.children].forEach((b, k) => {
+      if (k === step) b.setAttribute("aria-current", "step");
+      else b.removeAttribute("aria-current");
+    });
+    $("play").textContent = playing ? "Pause" : step === STEPS.length - 1 ? "Replay" : "Play";
+  }
+  $("prev").addEventListener("click", () => go(step - 1));
+  $("next").addEventListener("click", () => go(step + 1));
+  $("play").addEventListener("click", () => {
+    if (!playing && step === STEPS.length - 1) { playing = true; go(0); return; }
+    playing = !playing; stepStart = performance.now(); renderText();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") go(step + 1);
+    else if (e.key === "ArrowLeft") go(step - 1);
+    else if (e.key === " ") { e.preventDefault(); $("play").click(); }
+  });
+
+  // drag to turn
+  let dragX = null;
+  stageEl.addEventListener("pointerdown", (e) => { dragX = e.clientX; stageEl.setPointerCapture(e.pointerId); });
+  stageEl.addEventListener("pointermove", (e) => { if (dragX === null) return; yaw = Math.max(-1.3, Math.min(1.3, yaw + (e.clientX - dragX) * 0.006)); dragX = e.clientX; });
+  const endDrag = () => { dragX = null; };
+  stageEl.addEventListener("pointerup", endDrag); stageEl.addEventListener("pointercancel", endDrag);
+
+  // ---- labels ------------------------------------------------------------------------------
+  const TAGS = {
+    aisha: { el: $("tag-aisha"), text: { 4: "Aisha", 5: "Aisha +11", 6: "Aisha · Persuadable", 7: "Aisha" } },
+    amirah: { el: $("tag-amirah"), cls: "sure", text: { 5: "Amirah −5", 6: "Amirah · Sure Thing" } },
+    ravi: { el: $("tag-ravi"), cls: "lost", text: { 5: "Ravi +1", 6: "Ravi · Lost Cause" } },
+    coreA: { el: $("tag-coreA"), text: { 3: "Model A · learns from the texted", 4: "If texted: 39%" } },
+    coreB: { el: $("tag-coreB"), text: { 3: "Model B · learns from the rest", 4: "If not texted: 28%" } },
+  };
+  Object.values(TAGS).forEach((t) => t.cls && t.el.classList.add(t.cls));
+  const v3 = new THREE.Vector3();
+  function placeTag(tag, x, y, z) {
+    const text = tag.text[step];
+    if (!text || tween < 0.6) { tag.el.hidden = true; return; }
+    v3.set(x, y, z).project(camera);
+    if (v3.z > 1) { tag.el.hidden = true; return; }
+    tag.el.hidden = false; tag.el.textContent = text;
+    const half = tag.el.offsetWidth / 2 + 8; // keep the whole label on screen
+    const left = Math.min(Math.max(((v3.x + 1) / 2) * innerWidth, half), innerWidth - half);
+    tag.el.style.left = left + "px";
+    tag.el.style.top = Math.max(((1 - v3.y) / 2) * innerHeight, tag.el.offsetHeight + 72) + "px"; // below the header
+  }
+  const topOf = (i) => { const o = i * F; return [cur[o], cur[o + 1] + Math.max(cur[o + 3], 0) + 0.45, cur[o + 2]]; };
+
+  // ---- loop --------------------------------------------------------------------------------
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), sc = new THREE.Vector3(), col = new THREE.Color();
+  function resize() {
+    if (!renderer) return;
+    const w = stageEl.clientWidth, h = stageEl.clientHeight;
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.fov = w < 600 ? 60 : 45;
+    clearCard();
+  }
+  // Slide the picture away from the caption card: to the right on wide screens, up on narrow ones.
+  function clearCard() {
+    if (!renderer) return;
+    const w = stageEl.clientWidth, h = stageEl.clientHeight, card = document.querySelector(".card").getBoundingClientRect();
+    if (w >= 900) camera.setViewOffset(w, h, -card.width * 0.42, 0, w, h);
+    else camera.setViewOffset(w, h, 0, Math.min(card.height * 0.55, h * 0.3), w, h);
+    camera.updateProjectionMatrix();
+  }
+  if (renderer) { stageEl.appendChild(renderer.domElement); resize(); addEventListener("resize", resize); }
+  go(0);
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const k = Math.min(1, (now - stepStart) / TWEEN_MS); tween = k; const e = ease(k);
+    for (let j = 0; j < N * F; j++) cur[j] = from[j] + (to[j] - from[j]) * e;
+    for (let j = 0; j < 3; j++) scal.cur[j] = scal.from[j] + (scal.to[j] - scal.from[j]) * e;
+    cam.cur.pos = cam.from.pos.map((v, j) => v + (cam.to.pos[j] - v) * e);
+    cam.cur.look = cam.from.look.map((v, j) => v + (cam.to.look[j] - v) * e);
+
+    if (playing) {
+      const p = Math.min(1, (now - stepStart) / DWELL_MS);
+      $("bar").style.width = p * 100 + "%";
+      if (p >= 1) { if (step === STEPS.length - 1) { playing = false; renderText(); } else go(step + 1); }
+    } else $("bar").style.width = "0%";
+
+    if (!renderer) return;
+    for (let i = 0; i < N; i++) {
+      const o = i * F, h = cur[o + 3], size = cur[o + 4];
+      const bob = reduce ? 0 : (people[i].back && step === 2 ? Math.sin(now / 400 + i) * 0.06 : 0);
+      pos.set(cur[o], cur[o + 1] + h / 2 + bob, cur[o + 2]); sc.set(size, Math.max(Math.abs(h), 0.02), size);
+      dots.setMatrixAt(i, m4.compose(pos, q, sc)); dots.setColorAt(i, col.setRGB(cur[o + 5], cur[o + 6], cur[o + 7]));
+    }
+    dots.instanceMatrix.needsUpdate = true; if (dots.instanceColor) dots.instanceColor.needsUpdate = true;
+
+    const cv = scal.cur[0], spin = reduce ? 0 : now / 2600;
+    [coreA, coreB].forEach((c, n) => { c.scale.setScalar(Math.max(cv, 0.0001)); c.visible = cv > 0.01; c.rotation.set(spin * 0.6, spin + n, 0); });
+
+    const fv = scal.cur[2], t = now / 1500;
+    for (let k2 = 0; k2 < FLOW; k2++) {
+      const f = flowSrc[k2], o = f.i * F, a = (t + f.phase) % 1;
+      pos.set(cur[o] + (f.core.x - cur[o]) * a, 0.2 + (f.core.y - 0.2) * a, cur[o + 2] + (f.core.z - cur[o + 2]) * a);
+      sc.setScalar(fv * (1 - a * 0.5) + 0.0001); flow.setMatrixAt(k2, m4.compose(pos, q, sc));
+    }
+    flow.instanceMatrix.needsUpdate = true; flow.visible = fv > 0.01;
+
+    const bv = scal.cur[1], ao = AISHA * F, ax = cur[ao], ay = cur[ao + 1] + 0.2, az = cur[ao + 2];
+    [[beamA, CORE_A], [beamB, CORE_B]].forEach(([ln, c]) => {
+      const p = ln.geometry.attributes.position; p.setXYZ(0, ax, ay, az); p.setXYZ(1, c.x, c.y, c.z); p.needsUpdate = true;
+      ln.material.opacity = bv;
+    });
+
+    const sway = reduce ? 0 : Math.sin(now / 5200) * 0.12, ang = yaw + sway;
+    const [px, py, pz] = cam.cur.pos, [lx, ly, lz] = cam.cur.look;
+    const dx = px - lx, dz = pz - lz;
+    camera.position.set(lx + dx * Math.cos(ang) + dz * Math.sin(ang), py, lz - dx * Math.sin(ang) + dz * Math.cos(ang));
+    camera.lookAt(lx, ly, lz);
+    renderer.render(scene, camera);
+
+    placeTag(TAGS.aisha, ...topOf(AISHA)); placeTag(TAGS.amirah, ...topOf(AMIRAH)); placeTag(TAGS.ravi, ...topOf(RAVI));
+    placeTag(TAGS.coreA, CORE_A.x, CORE_A.y + 1.5 * Math.max(cv, 0.01), CORE_A.z);
+    placeTag(TAGS.coreB, CORE_B.x, CORE_B.y + 1.5 * Math.max(cv, 0.01), CORE_B.z);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
