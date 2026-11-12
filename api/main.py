@@ -10,6 +10,8 @@ Environment (.env locally, host settings in production):
   ALLOWED_ORIGINS                               comma-separated, e.g. https://nudgely.vercel.app
 """
 
+import html
+import io
 import os
 import re
 import sys
@@ -25,6 +27,7 @@ load_dotenv(os.path.join(ROOT, ".env"))
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import HTMLResponse, RedirectResponse  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
 from nudgely import bot, supabase_sync  # noqa: E402
@@ -146,6 +149,49 @@ async def whatsapp_webhook(request: Request, background: BackgroundTasks):
         else:
             background.add_task(_whatsapp_turn, m)  # answer Meta at once, reply in the background
     return {"ok": True}
+
+
+# ---- judge pages: /try (phone chat) and /qr (projector screen) ----------------------------------
+
+STATIC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+
+def _page(name):
+    with open(os.path.join(STATIC, name), encoding="utf-8") as fh:
+        return fh.read()
+
+
+def _try_url(request: Request):
+    """Where the QR code points. TRY_URL overrides it (e.g. Dythan's Vercel /try once it's live)."""
+    if os.getenv("TRY_URL"):
+        return os.getenv("TRY_URL")
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8000"
+    local = host.startswith(("localhost", "127.0.0.1"))
+    return f"{'http' if local else 'https'}://{host}/try"
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/try")
+
+
+@app.get("/try", response_class=HTMLResponse, include_in_schema=False)
+def try_page():
+    return HTMLResponse(_page("try.html"), headers={"Cache-Control": "no-cache"})
+
+
+@app.get("/qr", response_class=HTMLResponse, include_in_schema=False)
+def qr_page(request: Request):
+    return HTMLResponse(_page("qr.html").replace("{{TRY_URL}}", html.escape(_try_url(request))))
+
+
+@app.get("/qr.svg", include_in_schema=False)
+def qr_svg(request: Request):
+    import segno
+
+    buf = io.BytesIO()
+    segno.make(_try_url(request), error="m").save(buf, kind="svg", scale=10, border=2, dark="#123D35")
+    return Response(buf.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "no-cache"})
 
 
 # ---- health --------------------------------------------------------------------------------

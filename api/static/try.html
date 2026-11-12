@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123D35">
+<title>Chat with Kampung Fresh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#123D35; --brand-ink:#E8F3EE; --lime:#D2EF9B; --teal:#087F73;
+    --bg:#EEF2EE; --card:#FFFFFF; --ink:#183B36; --muted:#6F827A; --line:#DEE7E1;
+    --me:#DDEEC4; --me-ink:#1B493D; --chip:#ECF4E7; --chip-ink:#3A6350; --warn:#FFF4DC; --warn-ink:#7A5310;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+       display:flex;justify-content:center}
+  .app{width:100%;max-width:520px;height:100dvh;display:flex;flex-direction:column;background:var(--bg)}
+  header{background:var(--brand);color:var(--brand-ink);padding:14px 16px calc(14px) ;display:flex;align-items:center;gap:12px;
+         padding-top:calc(14px + env(safe-area-inset-top))}
+  .logo{width:40px;height:40px;border-radius:12px;background:var(--lime);color:var(--brand);display:grid;place-items:center;
+        font-weight:700;font-size:15px;flex-shrink:0}
+  .who{min-width:0}
+  .who b{display:block;font-size:16px;font-weight:600;letter-spacing:-.01em}
+  .who small{display:block;font-size:12px;color:#B1C9BC}
+  .who small i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#7EE08A;margin-right:6px;vertical-align:1px}
+  .powered{margin-left:auto;font-size:11px;color:#B1C9BC;text-align:right;line-height:1.3}
+  .powered strong{color:var(--lime);font-weight:700;font-size:13px;display:block;letter-spacing:-.02em}
+
+  main{flex:1;overflow-y:auto;padding:16px 14px 8px;scroll-behavior:smooth}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+  .intro h1{font-size:17px;margin:0 0 6px;letter-spacing:-.02em}
+  .intro p{margin:0 0 10px;color:var(--muted);font-size:14px}
+  .intro label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin:10px 0 4px}
+  .intro input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#F7FAF7;color:var(--ink)}
+  .suggest{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .suggest button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--chip);color:var(--chip-ink);
+                  padding:7px 12px;border-radius:99px;cursor:pointer}
+  .suggest button:active{transform:scale(.97)}
+
+  .row{display:flex;margin:6px 0}
+  .row.me{justify-content:flex-end}
+  .bubble{max-width:82%;padding:10px 13px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;
+          box-shadow:0 1px 0 rgba(18,61,53,.06)}
+  .me .bubble{background:var(--me);color:var(--me-ink);border-bottom-right-radius:4px}
+  .shop .bubble{background:var(--card);border-bottom-left-radius:4px}
+  .meta{margin:2px 0 10px 4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .tag{font-size:11.5px;background:var(--chip);color:var(--chip-ink);border-radius:99px;padding:3px 9px;font-weight:600}
+  .tag em{font-style:normal;font-weight:500;opacity:.75}
+  .noted{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  .handover{font-size:12px;background:var(--warn);color:var(--warn-ink);border-radius:10px;padding:6px 10px;font-weight:600}
+  .system{text-align:center;font-size:12.5px;color:var(--muted);margin:10px 18px}
+  .typing{display:inline-flex;gap:4px;padding:13px 14px}
+  .typing span{width:7px;height:7px;border-radius:50%;background:#9AB0A6;animation:b 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+  @keyframes b{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+  .wake{font-size:12px;color:var(--muted);margin:0 0 8px 6px}
+
+  form{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+  textarea{flex:1;font:inherit;resize:none;border:1px solid var(--line);border-radius:22px;padding:10px 15px;max-height:120px;
+           background:var(--card);color:var(--ink);outline:none}
+  textarea:focus{border-color:var(--teal)}
+  .send{width:44px;height:44px;border-radius:50%;border:0;background:var(--teal);color:#fff;cursor:pointer;flex-shrink:0;
+        display:grid;place-items:center}
+  .send:disabled{opacity:.45;cursor:default}
+  .foot{font-size:11px;color:var(--muted);text-align:center;padding:0 16px 6px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo" aria-hidden="true">KF</div>
+    <div class="who"><b>Kampung Fresh</b><small><i></i>usually replies in seconds</small></div>
+    <div class="powered">powered by<strong>nudgely↗</strong></div>
+  </header>
+
+  <main id="log" aria-live="polite">
+    <section class="intro">
+      <h1>Chat with a real shop's AI assistant</h1>
+      <p>Ask Kampung Fresh, a demo grocery shop, anything a customer would. Nudgely replies, notes what you care about, and hands you to a person when it isn't sure.</p>
+      <label for="name">Your first name (optional)</label>
+      <input id="name" maxlength="40" autocomplete="given-name" placeholder="e.g. Aisha">
+      <div class="suggest" id="suggest">
+        <button type="button">Do you have durian today?</button>
+        <button type="button">Is oat milk back in stock?</button>
+        <button type="button">Got party snacks for a birthday?</button>
+        <button type="button">My delivery was late, I want a refund</button>
+      </div>
+    </section>
+  </main>
+
+  <form id="f" autocomplete="off">
+    <textarea id="t" rows="1" maxlength="500" placeholder="Type a message" aria-label="Message"></textarea>
+    <button class="send" id="s" aria-label="Send" disabled>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+    </button>
+  </form>
+  <div class="foot">Demo for AI-GNITION 2026 · Don't share personal details · Reply STOP to opt out</div>
+</div>
+
+<script>
+(() => {
+  const API = "/api/chat";
+  const log = document.getElementById("log"), f = document.getElementById("f"),
+        t = document.getElementById("t"), s = document.getElementById("s"), nameEl = document.getElementById("name");
+  const store = {
+    get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+    set(k,v){ try { localStorage.setItem(k,v); } catch {} }
+  };
+  const newId = () => (crypto.randomUUID ? crypto.randomUUID()
+                      : Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12));
+  let sid = store.get("nudgely_sid");
+  if (!sid || !/^[A-Za-z0-9-]{8,64}$/.test(sid)) { sid = newId(); store.set("nudgely_sid", sid); }
+  nameEl.value = store.get("nudgely_name") || "";
+  nameEl.addEventListener("change", () => store.set("nudgely_name", nameEl.value.trim()));
+
+  const LABELS = {product_interest:"interested in", restock_request:"wants restock of", complaint_delivery:"delivery complaint",
+                  complaint_price:"price complaint", upcoming_event:"upcoming event",
+                  loyal_regular:"regular"};
+  let busy = false;
+
+  function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function scroll(){ log.scrollTop = log.scrollHeight; }
+  function bubble(who, text){
+    const r = el("div", "row " + who); r.appendChild(el("div", "bubble", text)); log.appendChild(r); scroll(); return r;
+  }
+  function system(text){ log.appendChild(el("div", "system", text)); scroll(); }
+
+  function typing(){
+    const r = el("div", "row shop"), b = el("div", "bubble typing");
+    b.innerHTML = "<span></span><span></span><span></span>"; r.appendChild(b); log.appendChild(r);
+    const wake = el("div", "wake", "Waking the server up, this first reply can take up to a minute…");
+    const timer = setTimeout(() => { log.appendChild(wake); scroll(); }, 8000);
+    scroll();
+    return () => { clearTimeout(timer); r.remove(); wake.remove(); };
+  }
+
+  function meta(data){
+    const tags = data.tags || [];
+    if (!tags.length && !data.handover) return;
+    const m = el("div", "meta");
+    if (tags.length) m.appendChild(el("span", "noted", "Nudgely noted"));
+    for (const tg of tags) {
+      const c = el("span", "tag");
+      c.appendChild(el("em", null, (LABELS[tg.type] || tg.type.replace(/_/g, " ")) + " "));
+      c.appendChild(document.createTextNode(tg.value));
+      m.appendChild(c);
+    }
+    if (data.handover) m.appendChild(el("span", "handover", "Handed to a person at the shop"));
+    log.appendChild(m); scroll();
+  }
+
+  async function send(text){
+    text = text.trim();
+    if (!text || busy) return;
+    busy = true; s.disabled = true;
+    bubble("me", text);
+    t.value = ""; t.style.height = "";
+    const done = typing();
+    try {
+      const ctrl = new AbortController(), to = setTimeout(() => ctrl.abort(), 90000);
+      const res = await fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, signal: ctrl.signal,
+                                    body: JSON.stringify({session_id: sid, name: nameEl.value.trim(), text})});
+      clearTimeout(to);
+      const data = await res.json().catch(() => ({}));
+      done();
+      if (!res.ok) { system(typeof data.detail === "string" ? data.detail : "Something went wrong. Please try again."); return; }
+      if (data.reply) bubble("shop", data.reply);
+      else system("You've opted out, so the shop won't reply. Send START to chat again.");
+      meta(data);
+    } catch (e) {
+      done();
+      system(e.name === "AbortError" ? "That took too long. Please send it again." : "Couldn't reach the shop. Check your connection and try again.");
+    } finally {
+      busy = false; s.disabled = !t.value.trim(); t.focus();
+    }
+  }
+
+  f.addEventListener("submit", e => { e.preventDefault(); send(t.value); });
+  t.addEventListener("input", () => { s.disabled = busy || !t.value.trim(); t.style.height = ""; t.style.height = Math.min(t.scrollHeight, 120) + "px"; });
+  t.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(t.value); } });
+  document.getElementById("suggest").addEventListener("click", e => { if (e.target.tagName === "BUTTON") send(e.target.textContent); });
+  fetch("/health").catch(() => {});  // start waking a sleeping server as soon as the page opens
+})();
+</script>
+</body>
+</html>
