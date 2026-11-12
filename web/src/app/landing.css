@@ -1556,3 +1556,156 @@
     scroll-behavior: auto;
   }
 }
+
+/* ---- Final section without the QR: one centred column ---- */
+.n-final {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+}
+.n-final-copy .n-kicker {
+  justify-content: center;
+}
+
+/* ---- Story: vertical scroll rail beside the chapter text ---- */
+.n-story-rail {
+  position: absolute;
+  left: 3.2%;
+  top: 50%;
+  height: 300px;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 24px;
+}
+.n-rail-track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: #d4dac4;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.n-rail-track > span {
+  display: block;
+  height: 100%;
+  background: #64835c;
+  transform-origin: top;
+}
+.n-rail-dot {
+  position: absolute;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  border: 2px solid #c9d1b7;
+  background: #eeeede;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.n-rail-dot.is-on {
+  border-color: #64835c;
+  background: #64835c;
+}
+.n-rail-dot[aria-current="step"] {
+  transform: scale(1.25);
+}
+.n-rail-dot:hover,
+.n-rail-dot:focus-visible {
+  border-color: #64835c;
+}
+.n-rail-hint {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64835c;
+  transition: opacity 0.3s;
+  animation: n-rail-bob 1.6s ease-in-out infinite;
+}
+.n-rail-hint.is-hidden {
+  opacity: 0;
+}
+@keyframes n-rail-bob {
+  50% {
+    translate: 0 5px;
+  }
+}
+@media (max-width: 1000px) {
+  .n-story-rail {
+    left: 2%;
+  }
+}
+@media (max-width: 700px) {
+  .n-story-rail {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-rail-hint {
+    animation: none;
+  }
+}
+
+/* ---- Desktop hero: always fits one screen, shop never cut off ---- */
+@media (min-width: 701px) {
+  .n-hero {
+    height: 100dvh;
+    min-height: 600px;
+    max-height: 1200px;
+    padding-top: clamp(96px, 13dvh, 165px);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .nudgely-landing .n-hero h1 {
+    font-size: clamp(42px, min(6vw, 8dvh), 82px);
+    margin-block: clamp(12px, 2dvh, 23px) clamp(14px, 2.4dvh, 26px);
+  }
+  .n-actions {
+    margin-top: clamp(14px, 2.5dvh, 27px);
+  }
+  .n-hero-world {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 200px;
+    margin-top: clamp(4px, 1.5dvh, 18px);
+  }
+  .n-hero-world > .n-shop-canvas {
+    height: 100%;
+  }
+  .n-hero-disc {
+    height: 46%;
+    width: min(560px, 60%);
+    bottom: 9%;
+  }
+  .n-floating-note {
+    top: 14%;
+  }
+  .n-floating-success {
+    top: max(38%, 150px);
+  }
+  .n-round-badge {
+    top: 4%;
+  }
+  .n-hand-arrow {
+    top: auto;
+    bottom: 18%;
+  }
+  .n-hero-bottom {
+    flex: none;
+    margin-top: 12px;
+    padding-bottom: 16px;
+  }
+}

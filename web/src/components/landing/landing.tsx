@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import {
   motion,
   useInView,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -13,13 +14,13 @@ import {
 } from "motion/react";
 import {
   ArrowDown,
-  ArrowRight,
   ArrowUpRight,
   Check,
   CheckCheck,
   Heart,
   Leaf,
   MessageCircle,
+  Mouse,
   Pause,
   Play,
   ShieldCheck,
@@ -28,7 +29,6 @@ import {
   Users,
 } from "lucide-react";
 import { Brand } from "@/components/brand";
-import { QRPanel } from "@/components/qr-panel";
 import { ShopFallback } from "./shop-fallback";
 import evidence from "@/data/evidence.json";
 import { cn } from "@/lib/utils";
@@ -151,6 +151,19 @@ function Story({ still }: { still: boolean }) {
     target: ref,
     offset: ["start start", "end end"],
   });
+  const [active, setActive] = useState(0),
+    [started, setStarted] = useState(false);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setActive(Math.min(2, Math.floor(v * 3)));
+    setStarted(v > 0.04);
+  });
+  function goTo(i: number) {
+    const el = ref.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const travel = el.offsetHeight - window.innerHeight;
+    window.scrollTo({ top: top + travel * ((i + 0.45) / 3), behavior: "smooth" });
+  }
   return (
     <section
       ref={ref}
@@ -180,6 +193,27 @@ function Story({ still }: { still: boolean }) {
             />
           ))}
         </div>
+        {!still && (
+          <div className="n-story-rail" aria-label="Story chapters">
+            <div className="n-rail-track">
+              <motion.span style={{ scaleY: scrollYProgress }} />
+            </div>
+            {["Remember", "Nudge", "Learn"].map((label, i) => (
+              <button
+                key={label}
+                className={cn("n-rail-dot", i <= active && "is-on")}
+                style={{ top: `${(i / 2) * 100}%` }}
+                onClick={() => goTo(i)}
+                aria-label={`Go to chapter ${i + 1}: ${label}`}
+                aria-current={i === active ? "step" : undefined}
+                title={`${i + 1}. ${label}`}
+              />
+            ))}
+            <span className={cn("n-rail-hint", started && "is-hidden")}>
+              <Mouse size={15} /> Scroll
+            </span>
+          </div>
+        )}
         <div className="n-story-progress">
           <div>
             <motion.span style={{ scaleX: still ? 1 : scrollYProgress }} />
@@ -257,7 +291,7 @@ export function Landing() {
               Give them a reason to come back.
             </p>
             <div className="n-actions">
-              <Link className="n-button n-button-green" href="/try">
+              <Link className="n-button n-button-green" href="/demo">
                 Try a conversation <ArrowUpRight size={17} />
               </Link>
               <a className="n-button n-button-outline" href="#how">
@@ -537,8 +571,8 @@ export function Landing() {
             {[
               {
                 icon: MessageCircle,
-                title: "Start a conversation.",
-                text: "Ask our fictional shop about oat milk, snack bundles, or your next party.",
+                title: "Read the conversations.",
+                text: "See what customers asked our fictional shop about oat milk, snack bundles and parties.",
               },
               {
                 icon: Sparkles,
@@ -576,15 +610,9 @@ export function Landing() {
               <span>a little space.</span>
             </h2>
             <p>Meet Nudgely at Kampung Fresh.</p>
-            <Link className="n-button n-button-green" href="/try">
-              Let’s have a chat <ArrowUpRight size={17} />
+            <Link className="n-button n-button-green" href="/demo">
+              Step inside the app <ArrowUpRight size={17} />
             </Link>
-            <Link className="n-final-secondary" href="/demo">
-              Or explore the shop workspace <ArrowRight size={16} />
-            </Link>
-          </div>
-          <div className="n-final-qr">
-            <QRPanel />
             <p className="n-team-note">
               Made with care by Thuta, Dythan, Jack & Shareef.
               <br />
