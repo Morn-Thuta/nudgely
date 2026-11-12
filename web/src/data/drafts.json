@@ -1,0 +1,181 @@
+{
+  "C001": {
+    "customer_id": "C001",
+    "message": "Hi Aisha! Planning your son's end-of-Oct birthday party? 🎉 We have party snack packs ($12/$20) for easy celebrations! Good news, your favourite oat milk is back in stock too! Enjoy 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["upcoming_event", "product_interest", "restock_request"],
+    "reason": "Addressed birthday party, snack packs, oat milk restock, and offered a discount as she is persuadable."
+  },
+  "C002": {
+    "customer_id": "C002",
+    "message": "So sorry about your order on Oct 2, Marcus! We really messed up with the late delivery & those soft frozen dumplings. Not good enough, lah. As our apology, please take 10% off your next order. We're working hard to do better! Reply STOP to opt out",
+    "tags_used": ["complaint_delivery", "Persuadable"],
+    "reason": "Apologised for delivery issues and soft frozen items, offered discount as compensation for a 'Persuadable' customer."
+  },
+  "C003": {
+    "customer_id": "C003",
+    "message": "Hello Priya, the Deepavali ghee and spice packs you asked about are in. You mentioned cooking for the whole family - how much would you need? We can set it aside, and there is 10% off your next order. Reply STOP to opt out",
+    "tags_used": [
+      "restock_request",
+      "upcoming_event",
+      "product_interest",
+      "discount_offer"
+    ],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C004": {
+    "customer_id": "C004",
+    "message": "Hello Daniel, the seasonal durian is in and boxes are limited. You also asked about our frozen dumplings, which are our own pork and chive. Would you like us to keep a durian box for you? 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["product_interest", "discount", "delivery_offer"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C005": {
+    "customer_id": "C005",
+    "message": "Hello Siti, you asked us to let you know when the free-range eggs arrive - the new batch is in. Would you like us to set some aside for you? Please enjoy 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["restock_request", "product_interest", "loyal_regular"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C006": {
+    "customer_id": "C006",
+    "message": "Hello Kelvin, thank you for the honest feedback on our prices. Delivery is free this week on orders above $30, which may help. May we ask what would make the value feel right to you? 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["complaint_price", "complaint_delivery", "Persuadable"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C021": {
+    "customer_id": "C021",
+    "message": "Hello Hafiz, thank you for your kind words about the shop. Your weekly rice, eggs and kai lan are all available - would you like us to pack the usual this week? Reply STOP to opt out",
+    "tags_used": ["restock_request", "loyal_regular"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C022": {
+    "customer_id": "C022",
+    "message": "Hello Michelle, we are glad last week's durian was good. The new boxes are in and limited. Are you still coming by this weekend? We can keep one for you. Reply STOP to opt out",
+    "tags_used": ["product_interest", "loyal_regular"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C023": {
+    "customer_id": "C023",
+    "message": "Hello Suresh, the frozen dumplings are in stock again. Would you like the usual two packs added to your Saturday order? Reply STOP to opt out",
+    "tags_used": ["product_interest", "loyal_regular"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C024": {
+    "customer_id": "C024",
+    "message": "Hello Emily, to follow up on your question: delivery is $5, or free on orders above $50. Would a regular weekly delivery suit you better? Reply STOP to opt out",
+    "tags_used": ["Delivery offer", "Fresh produce", "Staples", "Frozen food"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C025": {
+    "customer_id": "C025",
+    "message": "Hello Iskandar, the oat milk you asked about is in. Are you still planning to drop by after work? We can put one by for you. Reply STOP to opt out",
+    "tags_used": ["restock_request", "loyal_regular", "product_interest"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C026": {
+    "customer_id": "C026",
+    "message": "Hello Pei Shan, thank you for the kind note about your last order. Delivery is free this week on orders above $30. Is there anything you would like us to prepare for you? Reply STOP to opt out",
+    "tags_used": ["Delivery Promotion", "Fresh Produce"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C007": {
+    "customer_id": "C007",
+    "message": "Hi Meera! Saw you're planning for an office potluck next Friday! 🎉 Grab our party snack packs ($12/$20) to make it a hit! Enjoy 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["upcoming_event", "product_interest"],
+    "reason": "Persuadable customer with upcoming event and product interest"
+  },
+  "C008": {
+    "customer_id": "C008",
+    "message": "Hello Jason, Gardenia bread is in today. As we mentioned, orders placed before 2pm reach you the same day. Would a standing weekly delivery suit you? Please enjoy 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["Persuadable", "product_interest"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C009": {
+    "customer_id": "C009",
+    "message": "Hello Nurul, we are sorry again about the late delivery and the melted ice cream, and thank you for your patience over the refund. Would you give us another chance? Please accept 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["complaint_delivery", "Persuadable"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C010": {
+    "customer_id": "C010",
+    "message": "Hello Cheryl, the Pokka green tea cartons are in stock again. You mentioned you usually take two a month - would you like us to put two by for you? Please enjoy 10% off your next order. Reply STOP to opt out",
+    "tags_used": ["loyal_regular", "product_interest", "restock_request"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C011": {
+    "customer_id": "C011",
+    "message": "Hello Ravi, thank you for asking. We deliver only within Tampines and Pasir Ris at the moment, so Jurong West is outside our range. Would you like us to tell you if that changes? Reply STOP to opt out",
+    "tags_used": ["best_hook", "avoid"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C012": {
+    "customer_id": "C012",
+    "message": "Hello Grace, following up on your question about our hours: we are open 8am to 9pm daily, Sundays included. Is there anything you were hoping to pick up? Reply STOP to opt out",
+    "tags_used": ["opening_hours"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C013": {
+    "customer_id": "C013",
+    "message": "Hello Farid, thank you for telling us our rice felt expensive - we would rather know. Delivery is free this week on orders above $30 if you are stocking up. What would you like to see us carry? Reply STOP to opt out",
+    "tags_used": ["complaint_price", "product_interest"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C015": {
+    "customer_id": "C015",
+    "message": "Hello Arjun, fresh kai lan came in this morning, the one you asked about. Would you like us to put some by for you today? Reply STOP to opt out",
+    "tags_used": ["product_interest"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C016": {
+    "customer_id": "C016",
+    "message": "Hello Hui Min, fresh kai lan came in this morning and we have Gardenia bread as well. Would you like your usual two loaves and kai lan packed for 10am? Reply STOP to opt out",
+    "tags_used": ["restock_request", "product_interest", "loyal_regular"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C018": {
+    "customer_id": "C018",
+    "message": "Hello Rachel, as mentioned we are a five-minute walk from Tampines MRT exit B. Fresh kai lan and Gardenia bread arrive daily. Would you like us to let you know when we run a promotion? Reply STOP to opt out",
+    "tags_used": ["best_hook"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C017": {
+    "customer_id": "C017",
+    "message": "Hello Zainal, to follow up on your question, we do not sell lottery tickets. We do carry fresh kai lan, Gardenia bread and frozen dumplings. Is there anything you would like us to bring in? Reply STOP to opt out",
+    "tags_used": ["product_interest"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C019": {
+    "customer_id": "C019",
+    "message": "Hello Vikram, we are sorry the chicken was not up to standard. You said never mind, but we would still like to put it right. What would you like us to do? Reply STOP to opt out",
+    "tags_used": ["Customer Service"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C020": {
+    "customer_id": "C020",
+    "message": "Hello Joanne, the free delivery on orders above $30 runs this week, in case it is useful. Was there something in particular you were waiting for? Reply STOP to opt out",
+    "tags_used": ["upcoming_event"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C027": {
+    "customer_id": "C027",
+    "message": "Hello Lakshmi, durian season is still on and boxes are limited. Would you like us to keep one for you again this Sunday? Reply STOP to opt out",
+    "tags_used": ["product_interest", "upcoming_event"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C028": {
+    "customer_id": "C028",
+    "message": "Hello Benjamin, PayNow on delivery is no problem at all. Would you like the same order as last week again? Delivery is free this week on orders above $30. Reply STOP to opt out",
+    "tags_used": ["loyal_regular", "delivery_offer"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C029": {
+    "customer_id": "C029",
+    "message": "Hello Amirah, thank you for the kind words about the shop. Would you like your usual free-range eggs, Gardenia bread and Pokka green tea this week? We can have it packed in 15 minutes. Reply STOP to opt out",
+    "tags_used": ["loyal_regular"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  },
+  "C030": {
+    "customer_id": "C030",
+    "message": "Hello Terence, thank you - we are glad your wife enjoys the kai lan. It arrives fresh every morning. Will we see you tomorrow, as you mentioned? Reply STOP to opt out",
+    "tags_used": ["loyal_regular", "product_interest"],
+    "reason": "Rewritten by hand: respectful tone, ends with a question inviting a reply. (hand-checked by Jack)"
+  }
+}
