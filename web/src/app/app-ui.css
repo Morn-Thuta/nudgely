@@ -2073,3 +2073,23 @@ input[type="range"] {
     scroll-behavior: auto;
   }
 }
+.live-send {
+  margin-top: 25px;
+}
+.live-send .draft-card {
+  margin-top: 18px;
+  background: var(--surface);
+}
+.live-text {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  margin-top: 6px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  resize: vertical;
+  background: var(--surface);
+  color: inherit;
+}

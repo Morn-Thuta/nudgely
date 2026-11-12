@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { ArrowDown, Send, ShieldCheck } from "lucide-react";
 import { useWorkspace } from "./workspace";
+import { LiveSend } from "./live-send";
 import { planCampaign, draftProblems } from "@/lib/campaign";
 import type { Draft } from "@/lib/types";
 import draftsJson from "@/data/drafts.json";
@@ -42,11 +43,12 @@ export function Campaign() {
           <h1>A little intention goes a long way.</h1>
           <p>Choose an audience. Keep a comparison group. Review every word.</p>
         </div>
-        <span className="pill">Rehearsal only</span>
+        <span className="pill">Rehearsal + live demo phones</span>
       </div>
       <p className="notice">
-        <ShieldCheck size={18} /> This is a rehearsal. Explore the audience and
-        review the drafts. No messages will be sent.
+        <ShieldCheck size={18} /> The campaign below is a rehearsal: no messages go to
+        these customers. Only opted-in demo phones can be sent to for real, in
+        the Live section at the bottom.
       </p>
       <nav className="campaign-steps" aria-label="Campaign steps">
         <a href="#campaign-audience">
@@ -204,6 +206,7 @@ export function Campaign() {
           not a persistent delivery record.
         </p>
       </section>
+      <LiveSend plan={plan} drafts={drafts} />
     </>
   );
 }
