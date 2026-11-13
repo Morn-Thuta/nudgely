@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nudgely: Jack's Finals Script</title>
+<!-- Words from docs/Pitch_Plan.md (sections 2 and 6). Slide numbers match docs/Nudgely_Finals_Pitch.pptx. Print > Save as PDF. -->
+<style>
+  @page { size: A4; margin: 13mm 15mm 14mm; }
+  :root { --ink: #173E35; --muted: #5E7169; --line: #DCE6E0; --brand: #087F73; --deep: #123D35; --lime: #D2EF9B;
+          --tint: #EEF5EF; --warm: #F2E9D8; --warmInk: #82613D; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; }
+  body { font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.5;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cover { background: var(--deep); color: #F3F8F4; border-radius: 4mm; padding: 5.5mm 8mm; margin-bottom: 4mm; }
+  .brand { font-weight: 800; font-size: 12pt; } .brand span { color: var(--lime); }
+  .cover h1 { font-size: 18pt; margin: 1.5mm 0 1mm; letter-spacing: -0.02em; }
+  .cover p { margin: 0; color: #C5D6CD; font-size: 9.5pt; }
+  .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2mm; margin: 0 0 4mm; }
+  .timeline div { background: var(--tint); border: 1px solid var(--line); border-radius: 2.5mm; padding: 2mm 2.5mm; font-size: 8.4pt; line-height: 1.35; }
+  .timeline div.demo { background: var(--warm); border-color: #E7D8BC; }
+  .timeline b { display: block; font-size: 9pt; }
+  .timeline span { color: var(--muted); }
+  .part { border: 1px solid var(--line); border-radius: 3mm; padding: 3.2mm 4.5mm; margin: 0 0 3.2mm; break-inside: avoid; page-break-inside: avoid; }
+  .part.demo { background: #FBF8F2; border-color: #E7D8BC; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; margin-bottom: 2mm; }
+  .head h2 { font-size: 12.5pt; margin: 0; }
+  .head .when { font-size: 9pt; color: var(--brand); font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .cue { display: inline-block; font-size: 8pt; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--deep);
+         background: var(--lime); border-radius: 99px; padding: 0.4mm 2.4mm; margin: 0 1.5mm 1.5mm 0; }
+  .cue.alt { background: var(--warm); color: var(--warmInk); }
+  .say { font-size: 11.5pt; line-height: 1.55; margin: 1mm 0 2mm; padding-left: 4mm; border-left: 3px solid var(--brand); }
+  .say + .say { margin-top: 2.5mm; }
+  .note { font-size: 8.8pt; color: var(--muted); margin: 1.5mm 0 0; }
+  .note b { color: var(--ink); }
+  .beats { width: 100%; border-collapse: collapse; font-size: 8.8pt; margin-top: 1.5mm; }
+  .beats td { padding: 1.2mm 2mm; border-bottom: 1px solid #EADFCB; vertical-align: top; }
+  .beats td:first-child { width: 12mm; color: var(--warmInk); font-weight: 700; font-variant-numeric: tabular-nums; }
+  h2.section { font-size: 14pt; margin: 6mm 0 3mm; break-after: avoid; page-break-after: avoid; }
+  .qa { break-inside: avoid; page-break-inside: avoid; margin: 0 0 3.2mm; }
+  .qa .q { font-weight: 700; font-size: 10pt; }
+  .qa .a { margin: 0.8mm 0 0; padding-left: 4mm; border-left: 2px solid var(--line); }
+  .qa .who { font-size: 7.8pt; color: var(--muted); font-weight: 600; margin-left: 1.5mm; }
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 6mm; }
+  .rules div { background: var(--tint); border-radius: 2.5mm; padding: 2.5mm 3.5mm; font-size: 9pt; break-inside: avoid; }
+  .rules b { display: block; margin-bottom: 0.5mm; }
+  .page-break { break-before: page; page-break-before: always; }
+  footer { margin-top: 4mm; padding-top: 2mm; border-top: 1px solid var(--line); color: var(--muted); font-size: 7.8pt; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="brand">nudgely<span>↗</span></div>
+  <h1>Jack's script for the finals</h1>
+  <p>Sat 14 Nov 2026 · 7:00 hard stop, then 5:00 Q&amp;A. You speak 3:00 in five parts; Shareef runs the 4:00 live demo.
+     Speak at about 140 words a minute. Word counts below are the limit, not a target.</p>
+</section>
+
+<div class="timeline">
+  <div><b>0:00–0:20</b>Problem<br><span>Jack · slides 1→2</span></div>
+  <div><b>0:20–0:40</b>Result<br><span>Jack · slide 3</span></div>
+  <div class="demo"><b>0:40–4:40</b>Live demo<br><span>Shareef · slide 4</span></div>
+  <div><b>4:40–5:40</b>How it works<br><span>Jack · slides 6, 7</span></div>
+  <div><b>5:40–6:20</b>Difference<br><span>Jack · slide 8</span></div>
+  <div><b>6:20–7:00</b>Next step<br><span>Jack · slide 9</span></div>
+</div>
+
+<div class="part">
+  <div class="head"><h2>1 · Problem</h2><span class="when">0:00–0:20 · 50 words</span></div>
+  <span class="cue">Slide 1 for one breath</span><span class="cue">then slide 2</span>
+  <p class="say">"This is Mei Ling. She runs Kampung Fresh in Tampines. Every Sunday she sends the same '10% off' to all her
+  customers. Hafiz comes every Saturday anyway, so that's margin given away. Aisha asked about oat milk three weeks ago. Nobody
+  remembered. She shops at the supermarket now."</p>
+  <p class="note"><b>Point at</b> each bubble as you say its name: the blast, Hafiz, Aisha.</p>
+</div>
+
+<div class="part">
+  <div class="head"><h2>2 · Result</h2><span class="when">0:20–0:40 · 50 words</span></div>
+  <span class="cue">Slide 3</span>
+  <p class="say">"Blasting barely works: in a randomised test on 687,000 grocery shoppers, an SMS lifted visits from 10.3% to 11.0%.
+  Mei Ling needs the right message to the right person. We measure one thing: extra return visits per message, against customers
+  who got nothing."</p>
+  <p class="say">"Shareef is Mei Ling for the next four minutes."</p>
+  <p class="note"><b>Say the handover while Shareef walks to the laptop.</b> Never wait in silence. Move to slide 4.</p>
+</div>
+
+<div class="part demo">
+  <div class="head"><h2>Live demo (Shareef)</h2><span class="when">0:40–4:40</span></div>
+  <span class="cue alt">Slide 4 for 2 seconds</span><span class="cue alt">then dashboard + Aisha's WhatsApp</span>
+  <p class="note" style="margin-top:0">You don't speak here. Know where he is, so you're ready when he hands back.</p>
+  <table class="beats">
+    <tr><td>0:40</td><td>Customers → open Aisha: Persuadable, oat milk and party tags in her own words</td></tr>
+    <tr><td>1:10</td><td>Hafiz is a Sure Thing → 1:25 Campaign skips Hafiz, keeps a comparison group</td></tr>
+    <tr><td>1:55</td><td>Edit a word in Aisha's message, tick, Send on WhatsApp → 2:20 it arrives on her phone</td></tr>
+    <tr><td>2:30</td><td>Aisha asks about oat milk → the AI replies, new tags appear</td></tr>
+    <tr><td>3:15</td><td>Aisha asks for a refund → "Needs a person" → 3:50 STOP → "Opted out" badge</td></tr>
+    <tr><td>4:20</td><td>Shareef: <b>"Everything you just saw happened live. Jack?"</b> → slide 6 (the hidden run sheet is skipped)</td></tr>
+  </table>
+  <p class="note"><b>If something fails</b>, Shareef decides in 5 seconds and Dythan plays the backup video. We always say "this is the
+  recording". <b>Over time at 4:40?</b> Shareef skips STOP, and you mention opt-out in How it works.</p>
+</div>
+
+<div class="part">
+  <div class="head"><h2>3 · How it works</h2><span class="when">4:40–5:40 · 140 words across both slides</span></div>
+  <span class="cue">Slide 6</span>
+  <p class="say">"Three parts. First, an uplift model. It doesn't ask who might leave; it asks who a message actually changes. It runs
+  on ten things any shop's receipts have. Second, an AI reads each conversation and keeps the details with the customer's exact words
+  as evidence, then drafts the nudge from them. Third, every campaign keeps a no-message group, so the shop sees its own lift."</p>
+  <span class="cue">Slide 7, said as a list (~25 s)</span>
+  <p class="say">"Nothing is sent without a person approving it. Phone numbers are never stored, only scrambled. Names are removed
+  before text reaches the AI. Every reply is checked; if it can't verify a price or stock, or someone asks for a refund, a person
+  takes over. STOP works on every channel. And a daily cap stops runaway AI costs."</p>
+</div>
+
+<div class="part">
+  <div class="head"><h2>4 · Difference</h2><span class="when">5:40–6:20 · 95 words</span></div>
+  <span class="cue">Slide 8</span>
+  <p class="say">"WhatsApp tools like SleekFlow and WATI are great at sending, but you choose who gets what by hand, and you see opens,
+  not extra visits. Enterprise suites like Optimove measure lift, but they're built for big brands with marketing teams. Nudgely is
+  the only one that, for a corner shop, picks who a message changes, writes it from their own words, and proves it worked."</p>
+  <p class="note"><b>Point</b> at the bottom-left of the grid for the WhatsApp tools, the Optimove cell, then the green Nudgely cell.</p>
+</div>
+
+<div class="part">
+  <div class="head"><h2>5 · Next step</h2><span class="when">6:20–7:00 · 95 words</span></div>
+  <span class="cue">Slide 9 · QR stays up into Q&amp;A</span>
+  <p class="say">"Our honest limitation: the evidence is overseas. On a public grocery dataset our top 30% captured 57% of the extra
+  visits, about 1.9 times random, though it ranged from 38 to 85% across tests. A Singapore shop still has to prove it. So the next
+  step is a four-week pilot: one shop, its WhatsApp number, a sales export, and a no-message group. Scan the code and talk to Kampung
+  Fresh yourselves. Thank you."</p>
+  <p class="note"><b>Stop at 7:00, even mid-sentence.</b> Dythan shows "1:00" at 6:00 and "STOP" at 6:50.</p>
+</div>
+
+<h2 class="section">Q&amp;A (5:00): your questions</h2>
+<p class="note" style="margin:-1.5mm 0 3mm">Answer first in one sentence, then the trade-off. 30–45 seconds each. You take AI, data,
+the model, measurement and safety; Shareef takes product, flow and the business case. If you're unsure, the other adds one sentence,
+no more.</p>
+
+<div class="qa"><div class="q">Why uplift and not a churn score?</div>
+<p class="a">"Churn says who might leave. Uplift says who a message actually changes. A regular like Hafiz comes anyway, and someone gone
+for good won't come back whatever you send. Messaging either wastes money. Only uplift skips both."</p></div>
+
+<div class="qa"><div class="q">How accurate is the model?</div>
+<p class="a">"On customers it never saw, our top 30% caught 57% of the extra visits, against 30% at random, about 1.9 times better.
+It ranged from 38 to 85% across seven tests, because a single SMS only moves visits by about 0.75 of a point. So it's reliable for who
+to message first, not as an exact number per person, and every campaign measures itself anyway."</p></div>
+
+<div class="qa"><div class="q">Your evidence is Russian grocery data.</div>
+<p class="a">"True, and we say so. Lenta ran a real randomised test on 687,000 shoppers, which is why we can learn what the message
+itself caused. That's exactly why we're asking for a pilot, not a sale."</p></div>
+
+<div class="qa"><div class="q">What data does it use?</div>
+<p class="a">"The shop's own receipts and chats. The model needs only phone, date and amount, turned into ten numbers like how regular
+someone's visits are. No age, gender or children, on purpose. Phone numbers are never stored on the chat side; names are removed before
+the AI."</p></div>
+
+<div class="qa"><div class="q">How do you measure retention?</div>
+<p class="a">"Every campaign holds back a random no-message group. We match the shop's sales to both groups over 30 days and compare
+return rates. The difference is the lift, shown with the range it could really be."</p></div>
+
+<div class="qa"><div class="q">Does it learn from my shop?</div>
+<p class="a">"It starts from what it learned on public data. Every campaign records who was messaged, who was held back, and who came
+back. That's exactly what's needed to retrain on the shop's own customers once there are a few hundred."</p></div>
+
+<div class="qa"><div class="q">When does it hand over to a person?</div>
+<p class="a">"Refunds and complaints, when someone types HUMAN, photos or voice notes, anything it can't verify like a price or stock
+that isn't in the shop's list, and if the daily AI budget runs out."</p></div>
+
+<div class="qa"><div class="q">What if a service fails?</div>
+<p class="a">"The AI falls back to other models; if all of them fail, a person takes over. If WhatsApp is down nothing is sent, and the
+owner sees it."</p></div>
+
+<div class="qa"><div class="q">Why this segment?</div>
+<p class="a">"Neighbourhood shops already run on WhatsApp but have no marketing team. Their customers are few enough that every wasted or
+annoying message matters."</p></div>
+
+<div class="qa"><div class="q">Isn't this just SleekFlow or WATI?</div>
+<p class="a">"They send; we decide who and what, and prove it worked. We'd plug into them as the delivery layer."</p></div>
+
+<div class="qa"><div class="q">Why not MantaGO?</div>
+<p class="a">"We started on MantaGO. Its API doesn't share incoming chat text, and its WhatsApp delivery didn't work on our account, so
+we built on WhatsApp's official API, which is what makes the AI conversation possible. Platforms like MantaGO are natural delivery
+partners."</p></div>
+
+<div class="qa"><div class="q">What would a pilot need? · What does it cost?</div>
+<p class="a">"One shop, a WhatsApp business number, a four-week sales export, consent wording at signup, and a no-message group. It costs
+about $0.00025 per AI reply, plus WhatsApp's per-message fee."</p></div>
+
+<div class="qa"><div class="q">Why gradient boosting, not deep learning?</div>
+<p class="a">"It's the standard winner on small tabular data like receipts. Neural uplift models need tens of thousands of outcomes, which
+a small shop won't have for a long time."</p></div>
+
+<h2 class="section">Rules for the day</h2>
+<div class="rules">
+  <div><b>Never say</b>"53%", "1.8x", "proven in Singapore", or "the small model beats the big one". Say 57%, about 1.9x, ranged 38–85%.</div>
+  <div><b>Never present</b>a recording as live. If the backup video plays, say "this is the recording".</div>
+  <div><b>If you blank</b>look at the slide's one line and say it in your own words. The numbers are on slides 3 and 9.</div>
+  <div><b>Before you start</b>slides on slide 1, notifications off, phone silent. Shareef and Thuta have reset Aisha.</div>
+</div>
+
+<footer>From docs/Pitch_Plan.md (sections 2 and 6) and docs/Model_Technical_Notes.pdf · slide numbers match
+docs/Nudgely_Finals_Pitch.pptx (slide 5 is the hidden demo run sheet) · Kampung Fresh, Mei Ling, Hafiz and Aisha are fictional.</footer>
+</body>
+</html>
