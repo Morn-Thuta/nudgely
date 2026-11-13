@@ -242,9 +242,48 @@ function text(s, t, o) {
         "Beats (Pitch_Plan.md section 3): Aisha in Customers (Persuadable, oat milk + party tags) -> Hafiz is a Sure " +
         "Thing -> Campaign skips Hafiz, holds back a comparison group -> edit Aisha's draft, tick, Send on WhatsApp -> " +
         "it arrives -> Aisha asks about oat milk, AI replies with new tags -> refund request -> Needs a person -> STOP -> " +
-        "Opted out badge -> back to slide 8.\n\n" +
+        "Opted out badge -> back to slide 9 (the hidden run sheet, slide 5, is skipped in the show).\n\n" +
         "If anything fails, decide in 5 seconds (section 4). Never present the recording as live.\n\n" +
         "Close: \"Everything you just saw happened live. Jack?\"");
+  }
+
+  // ============================================================ 4b. Demo run sheet (hidden)
+  // Hidden in the slideshow: the team sees it when editing and rehearsing, the judges never do.
+  {
+    const s = newSlide("CONTENT", "Demo");
+    s.hidden = true;
+    s.addText("Demo run sheet (hidden in the show)", { placeholder: "title" });
+    const beats = [
+      ["0:40", "Shareef", "Customers → open Aisha", "Persuadable · oat milk + party tags"],
+      ["1:10", "Shareef", "Point at Hafiz", "Sure Thing: comes every Saturday anyway"],
+      ["1:25", "Shareef", "Campaign", "Skips Hafiz, keeps a comparison group"],
+      ["1:55", "Shareef", "Live → edit a word, tick, Send", "Nothing goes out until Mei Ling approves"],
+      ["2:20", "Aisha phone", "Message arrives", "A real WhatsApp message, just sent"],
+      ["2:30", "Thuta types", "\"Is the oat milk really back?\"", "Open Conversations: reply + new tags"],
+      ["3:15", "Thuta types", "\"Order was late, I want a refund\"", "Needs a person flag"],
+      ["3:50", "Thuta types", "STOP", "Opted out badge on the dashboard"],
+      ["4:20", "Shareef", "Back to slide 9", "\"Everything you saw happened live. Jack?\""],
+    ];
+    const cw = (12.1 - 2 * 0.25) / 3, chh = 1.5;
+    for (const [i, [time, who, act, see]] of beats.entries()) {
+      const x = M + (i % 3) * (cw + 0.25), y = 1.55 + Math.floor(i / 3) * (chh + 0.15);
+      card(s, x, y, cw, chh, C.background1, `beat-${i}`, false);
+      s.addShape(pres.ShapeType.ellipse, { x: x + 0.2, y: y + 0.2, w: 0.5, h: 0.5, fill: { color: C.accent1 },
+        line: { color: C.accent1 }, objectName: `beat-num-${i}` });
+      text(s, String(i + 1), { x: x + 0.2, y: y + 0.2, w: 0.5, h: 0.5, fontSize: 15, bold: true,
+        color: C.background1, align: "center", valign: "middle" });
+      text(s, `${time} · ${who}`, { x: x + 0.85, y: y + 0.22, w: cw - 1.0, h: 0.45, fontSize: 12, bold: true,
+        color: C.accent3, valign: "middle" });
+      text(s, act, { x: x + 0.2, y: y + 0.8, w: cw - 0.4, h: 0.4, fontSize: 14, bold: true, fontFace: HEAD });
+      text(s, see, { x: x + 0.2, y: y + 1.12, w: cw - 0.4, h: 0.32, fontSize: 12, color: C.accent3 });
+    }
+    text(s, "If anything fails: decide in 5 seconds. Dythan plays the backup video, and we say it's the recording.",
+      { x: M, y: 6.55, w: 12.1, h: 0.35, fontSize: 13, bold: true, color: C.accent4 });
+    s.addNotes(
+      "HIDDEN SLIDE: not shown in the slideshow. Rehearsal reference for Shareef (dashboard) and Thuta (Aisha's phone).\n\n" +
+        "Full beats, words and fallbacks: docs/Pitch_Plan.md sections 3 and 4. Reset Aisha before each run: " +
+        "python scripts/reset_demo_customer.py --yes, then the Aisha phone says \"hi\" to the bot.\n\n" +
+        "Over time at 4:40? Skip beat 8 (STOP); Jack mentions opt-out in How it works.");
   }
 
   // ============================================================ 5. How it works
