@@ -1,7 +1,8 @@
 # Finals pitch and demo plan (Sat 14 Nov 2026)
 
 **Presenters:** Jack (story, how it works, difference, next step) · **Shareef** (live demo, playing the shop owner).
-**Off stage:** Thuta plays **Aisha** on their phone and watches the backend · Dythan keeps time, runs the slides and holds the backup video.
+**Off stage:** Dythan keeps time, runs the slides and holds the backup video · Thuta watches the backend.
+**Shareef plays both sides on Thuta's laptop:** Mei Ling on the dashboard and Aisha in WhatsApp Web (Thuta's WhatsApp is the demo phone). Step-by-step guide with screenshots: [Shareef_Demo_Guide.md](Shareef_Demo_Guide.md).
 **Format (organisers' advisory):** 7:00 hard stop, then 5:00 Q&A. One complete use case. Never present simulated output as live.
 
 Everything shown is fictional (Kampung Fresh, Mei Ling, Aisha, Hafiz) or our own test data. Numbers come only from [Numbers.md](Numbers.md).
@@ -86,7 +87,7 @@ Slide 8: "Limitation → Pilot ask", with the judges' QR in the corner.
 
 - **Left 60%:** Chrome window, dashboard at https://nudgely-navy.vercel.app/dashboard, signed in, zoom 110%.
 - **Right 40%:** **WhatsApp Web** in a separate Chrome profile, linked to the Aisha phone, opened straight on the chat with **+1 555-164-9508** (save the contact as "Kampung Fresh"). Chat list collapsed / scrolled so no other chats or numbers show. Notifications off.
-- Thuta (as Aisha) types on the phone; it appears in WhatsApp Web on screen. If mirroring fails, Shareef reads the phone aloud.
+- Shareef types Aisha's messages in WhatsApp Web himself ("Now I'm Aisha"). Only the Kampung Fresh chat is visible; never the chat list.
 
 ### Beat by beat
 
