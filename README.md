@@ -16,6 +16,7 @@ AI-GNITION 2026 · Team Bongo Gang · **Top 10 finalist** · Finals **Sat 14 Nov
 - One-page brief: [docs/One_Page_Brief.md](docs/One_Page_Brief.md)
 - How the model works, in plain English: [docs/HOW_THE_MODEL_WORKS.md](docs/HOW_THE_MODEL_WORKS.md)
   (slides: [docs/How_the_model_works.pptx](docs/How_the_model_works.pptx), rebuilt with `node scripts/build_model_deck.js`)
+- The model in detail (method, both models, evaluation, limits): [docs/Model_Technical_Notes.pdf](docs/Model_Technical_Notes.pdf)
 - MantaGO API notes: [docs/MANTAGO_API.md](docs/MANTAGO_API.md)
 
 ## Setup (5 minutes)
