@@ -86,7 +86,11 @@ def verify_message(message, chat, tags):
             warnings.append(f"claims a live order ('{phrase}') - the chat is a past conversation")
 
     # 4. Anything described as in stock should be something the shop stocks.
-    if any(p in low for p in STOCK_PHRASES) and not _names_a_stocked_item(low):
+    # Whole words only ("is in" must not match "this information"), and an offer to tell the
+    # customer what's in stock is a question, not a claim.
+    stock_low = re.sub(r"what(?:'s|\s+is|\s+we\s+have|\s+you\s+have)?\s+in\s+stock", " ", low)
+    if (any(re.search(r"\b" + re.escape(p) + r"\b", stock_low) for p in STOCK_PHRASES)
+            and not _names_a_stocked_item(low)):
         warnings.append("says something is in stock but names nothing from STORE_INFO")
 
     # 5. The shop's two delivery terms are separate: same-day needs orders before

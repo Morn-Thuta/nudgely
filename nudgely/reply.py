@@ -188,7 +188,11 @@ def _engages_with(reply, incoming):
     word of 4+ letters from the other side.
     """
     stop = {"the", "and", "you", "your", "for", "are", "can", "have", "this", "that", "with",
-            "what", "when", "how", "any", "got", "will", "our", "please", "thanks", "hello"}
+            "what", "when", "how", "any", "got", "will", "our", "please", "thanks", "hello",
+            # chatty filler that names no topic ("so what do you guys have?")
+            "guys", "guy", "lah", "leh", "lor", "hey", "okay", "still", "now", "today", "just",
+            "want", "need", "also", "there", "here", "they", "yeah", "yes", "sell",
+            "available", "anything", "else", "other", "things"}
     asked = {w for w in re.findall(r"[a-z]{3,}", str(incoming).lower())} - stop
     said = {w for w in re.findall(r"[a-z]{3,}", reply.lower())} - stop
     if not asked:

@@ -20,6 +20,23 @@ class EngagesWithTests(unittest.TestCase):
     def test_short_words_do_not_fuzzy_match(self):
         self.assertFalse(_engages_with("We sell tea.", "any pie?"))
 
+    def test_chatty_questions_with_no_topic_word(self):
+        # Live 13 Nov: the full stock list was thrown away because "guys" wasn't in it.
+        self.assertTrue(_engages_with("Right now we have oat milk, eggs and durian.", "So what do you guys have?"))
+        self.assertTrue(_engages_with("In stock today: oat milk, kai lan and rice.", "what's in stock lah"))
+
+
+class StockClaimTests(unittest.TestCase):
+    def test_offering_to_say_what_is_in_stock_is_not_a_claim(self):
+        from nudgely.verify import verify_message
+        hi = "Hi Min, welcome to Kampung Fresh! How can I help you today? I can tell you what's in stock or how our delivery works."
+        self.assertFalse([w for w in verify_message(hi, [], {}) if "in stock" in w])
+
+    def test_unknown_item_in_stock_is_still_caught(self):
+        from nudgely.verify import verify_message
+        self.assertTrue([w for w in verify_message("Good news, it's back in stock!", [], {}) if "in stock" in w])
+        self.assertFalse([w for w in verify_message("This information is for you.", [], {}) if "in stock" in w])
+
 
 if __name__ == "__main__":
     unittest.main()
