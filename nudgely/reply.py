@@ -192,7 +192,9 @@ def _engages_with(reply, incoming):
             # chatty filler that names no topic ("so what do you guys have?")
             "guys", "guy", "lah", "leh", "lor", "hey", "okay", "still", "now", "today", "just",
             "want", "need", "also", "there", "here", "they", "yeah", "yes", "sell",
-            "available", "anything", "else", "other", "things"}
+            "available", "anything", "else", "other", "things",
+            # follow-ups that point back at the last message ("is it really available now?")
+            "really", "actually", "sure", "true", "right", "confirm", "real", "seriously"}
     asked = {w for w in re.findall(r"[a-z]{3,}", str(incoming).lower())} - stop
     said = {w for w in re.findall(r"[a-z]{3,}", reply.lower())} - stop
     if not asked:

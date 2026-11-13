@@ -16,7 +16,9 @@ from nudgely.llm import STORE_INFO
 # Phrases that assert a live order exists. The chats are past conversations, so
 # a draft can offer to pack an order but cannot announce one is already waiting.
 STATE_CLAIMS = [
-    "is ready", "are ready", "ready for pickup", "ready for collection",
+    # About the customer's order, not stock: "snack packs are ready" is a product, not a live order.
+    "order is ready", "order's ready", "orders are ready", "is ready for you", "are ready for you",
+    "ready for pickup", "ready for collection",
     "is reserved", "we have reserved", "is packed", "we have packed",
     "confirming your", "on the way", "out for delivery", "has shipped",
 ]

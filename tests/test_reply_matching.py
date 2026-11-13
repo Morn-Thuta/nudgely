@@ -38,5 +38,18 @@ class StockClaimTests(unittest.TestCase):
         self.assertFalse([w for w in verify_message("This information is for you.", [], {}) if "in stock" in w])
 
 
+class AishaDemoTests(unittest.TestCase):
+    """Live 13 Nov rehearsal: Aisha's follow-up got the canned handover twice."""
+
+    def test_follow_up_pointing_back_counts_as_engaged(self):
+        self.assertTrue(_engages_with("Yes, oat milk is back in stock now!", "Oh is it really available now?"))
+
+    def test_products_being_ready_is_not_a_live_order(self):
+        from nudgely.verify import verify_message
+        ok = "Yes, oat milk is back in stock. Our party snack packs are ready too."
+        self.assertFalse([w for w in verify_message(ok, [], {}) if "live order" in w])
+        self.assertTrue([w for w in verify_message("Your order is ready for pickup!", [], {}) if "live order" in w])
+
+
 if __name__ == "__main__":
     unittest.main()
