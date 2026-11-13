@@ -95,7 +95,9 @@ def send(customer_id, message, wa=None, now=None):
     # Link the phone to this customer so the reply carries their history and tags.
     if other:
         remote_store._req("PATCH", f"customers?id=eq.{other}", {"key_hash": None}, "return=minimal")
-    patch = {"key_hash": h, "replied": True, "last_seen_at": now.isoformat()}
+    # channel "whatsapp": the live inbox hides seeded demo customers, so without this the nudge
+    # stays invisible until the first reply.
+    patch = {"key_hash": h, "channel": "whatsapp", "replied": True, "last_seen_at": now.isoformat()}
     if not (row.get("memory") or {}).get("tags"):
         patch["memory"] = _memory_from_tags(customer_id)
     remote_store._req("PATCH", f"customers?id=eq.{customer_id}", patch, "return=minimal")

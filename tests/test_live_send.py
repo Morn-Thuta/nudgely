@@ -65,6 +65,7 @@ class LiveSendTests(unittest.TestCase):
         self.assertTrue(text.endswith("Reply STOP to opt out"))
         aisha = next(c for c in self.db.t["customers"] if c["id"] == "C001")
         self.assertEqual(aisha["key_hash"], remote_store.key_hash(PHONE))
+        self.assertEqual(aisha["channel"], "whatsapp")  # shows in the live inbox at once
         self.assertEqual(aisha["memory"]["tags"][0]["value"], "oat milk")
         self.assertIn(text, [m["text"] for m in self.db.t["messages"] if m["customer_id"] == "C001"])
         # The phone's reply now lands on C001, with the nudge in its history.
