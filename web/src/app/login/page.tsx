@@ -129,12 +129,7 @@ export default function Login() {
           <Link href="/demo" className="text-link">
             Explore the demo workspace <ArrowUpRight size={16} />
           </Link>
-          <Link href="/signup" className="text-link">
-            Running a shop? Create your account <ArrowUpRight size={16} />
-          </Link>
-          <p className="fine">
-            Shop owners go to their own workspace. Team accounts open the demo shop’s dashboard.
-          </p>
+          {/* Shop sign-up (/signup) is hidden for the finals: its Supabase tables aren't set up. */}
         </main>
       </div>
     </div>
